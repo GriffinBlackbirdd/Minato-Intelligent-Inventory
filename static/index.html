@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minato Enterprises - Document Processor</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Navigation Header -->
+        <nav class="nav-header">
+            <div class="nav-content">
+                <div class="brand">
+                    <i class="fas fa-file-invoice brand-icon"></i>
+                    <span class="brand-name">Minato Enterprises</span>
+                </div>
+                <div class="nav-subtitle">Intelligent Document Processing & Invoice Generation</div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <!-- Hero Section -->
+                <section class="hero-section">
+                    <div class="hero-content">
+                        <h1 class="hero-title">
+                            <i class="fas fa-search"></i>
+                            Document Processor & Invoice Generator
+                        </h1>
+                        <p class="hero-description">
+                            Smart customer search, automated document extraction, and instant invoice generation
+                        </p>
+                    </div>
+                </section>
+
+                <!-- Processing Steps -->
+                <div class="steps-container">
+                    <!-- Step 1: Customer Search -->
+                    <div class="step-card active" id="searchCard">
+                        <div class="step-header">
+                            <div class="step-indicator">
+                                <span class="step-number">1</span>
+                            </div>
+                            <div class="step-title">
+                                <h2>Customer Search</h2>
+                                <p>Type customer name for instant suggestions</p>
+                            </div>
+                        </div>
+
+                        <div class="search-container">
+                            <div class="search-input-wrapper">
+                                <div class="input-wrapper">
+                                    <i class="fas fa-user input-icon"></i>
+                                    <input
+                                        type="text"
+                                        id="customerSearch"
+                                        name="customerSearch"
+                                        placeholder="Start typing customer name (e.g., Nandu)"
+                                        class="form-input"
+                                        autocomplete="off"
+                                    >
+                                    <div class="search-loading" id="searchLoading" style="display: none;">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </div>
+                                </div>
+
+                                <!-- Suggestions Dropdown -->
+                                <div class="suggestions-dropdown" id="suggestionsDropdown" style="display: none;">
+                                    <div class="suggestions-list" id="suggestionsList">
+                                        <!-- Suggestions will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Information Extraction -->
+                    <div class="step-card" id="extractionCard" style="display: none;">
+                        <div class="step-header">
+                            <div class="step-indicator">
+                                <span class="step-number">2</span>
+                            </div>
+                            <div class="step-title">
+                                <h2>Information Extraction</h2>
+                                <p>Extracting and processing customer documents</p>
+                            </div>
+                        </div>
+
+                        <!-- Fetching State -->
+                        <div class="fetching-container" id="fetchingContainer">
+                            <div class="fetching-animation">
+                                <div class="fetching-spinner">
+                                    <div class="spinner-ring"></div>
+                                    <div class="spinner-ring"></div>
+                                    <div class="spinner-ring"></div>
+                                </div>
+                                <h3>Fetching Information</h3>
+                                <p>Please wait while we extract customer details from documents...</p>
+                                <div class="fetching-progress">
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" id="progressFill"></div>
+                                    </div>
+                                    <span class="progress-text" id="progressText">Initializing...</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Results and Edit State -->
+                        <div class="extraction-results" id="extractionResults" style="display: none;">
+                            <div class="customer-info-section">
+                                <div class="customer-header">
+                                    <div class="customer-avatar">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <div class="customer-details">
+                                        <h3 class="customer-title" id="customerTitle">Customer Information</h3>
+                                        <p class="customer-subtitle" id="customerSubtitle">Extracted and editable details</p>
+                                    </div>
+                                    <div class="edit-toggle">
+                                        <button class="btn-edit" id="editToggleBtn">
+                                            <i class="fas fa-edit"></i>
+                                            Edit
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="info-grid">
+                                    <div class="info-card">
+                                        <label for="editName" class="info-label">
+                                            <i class="fas fa-user"></i>
+                                            Customer Name
+                                        </label>
+                                        <div class="info-display" id="displayName">-</div>
+                                        <input type="text" id="editName" class="info-edit" style="display: none;">
+                                    </div>
+
+                                    <div class="info-card">
+                                        <label for="editAadhaar" class="info-label">
+                                            <i class="fas fa-id-card"></i>
+                                            Aadhaar Number
+                                        </label>
+                                        <div class="info-display" id="displayAadhaar">-</div>
+                                        <input type="text" id="editAadhaar" class="info-edit" style="display: none;">
+                                    </div>
+
+                                    <div class="info-card full-width">
+                                        <label for="editAddress" class="info-label">
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            Address
+                                        </label>
+                                        <div class="info-display" id="displayAddress">-</div>
+                                        <textarea id="editAddress" class="info-edit" rows="3" style="display: none;"></textarea>
+                                    </div>
+
+                                    <div class="info-card">
+                                        <label for="editFolder" class="info-label">
+                                            <i class="fas fa-folder"></i>
+                                            Folder Reference
+                                        </label>
+                                        <div class="info-display" id="displayFolder">-</div>
+                                        <input type="text" id="editFolder" class="info-edit" style="display: none;" readonly>
+                                    </div>
+                                </div>
+
+                                <div class="action-buttons" id="editActions" style="display: none;">
+                                    <button class="btn btn-success" id="saveChangesBtn">
+                                        <i class="fas fa-save"></i>
+                                        Save Changes
+                                    </button>
+                                    <button class="btn btn-outline" id="cancelEditBtn">
+                                        <i class="fas fa-times"></i>
+                                        Cancel
+                                    </button>
+                                </div>
+
+                                <div class="action-buttons" id="defaultActions">
+                                    <button class="btn btn-primary" id="proceedFinalBtn">
+                                        <i class="fas fa-file-invoice"></i>
+                                        Generate Invoice
+                                    </button>
+                                    <button class="btn btn-outline" id="backToSearchBtn">
+                                        <i class="fas fa-arrow-left"></i>
+                                        Back to Search
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Final Results -->
+                    <div class="step-card" id="resultsCard" style="display: none;">
+                        <div class="step-header">
+                            <div class="step-indicator success">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="step-title">
+                                <h2>Processing Complete</h2>
+                                <p>Document extraction and invoice generation results</p>
+                            </div>
+                        </div>
+
+                        <div id="resultsContent" class="results-content">
+                            <!-- Results will be populated here -->
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="resetBtn" class="btn btn-outline">
+                                <i class="fas fa-plus"></i>
+                                Process Another Customer
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Error Display -->
+                    <div class="step-card error" id="errorCard" style="display: none;">
+                        <div class="step-header">
+                            <div class="step-indicator error">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="step-title">
+                                <h2>Processing Error</h2>
+                                <p>An issue occurred during processing</p>
+                            </div>
+                        </div>
+
+                        <div class="error-content">
+                            <div id="errorMessage" class="error-message"></div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button id="errorResetBtn" class="btn btn-outline">
+                                <i class="fas fa-arrow-left"></i>
+                                Try Again
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <i class="fas fa-building"></i>
+                    <span>&copy; 2025 Minato Enterprises. All rights reserved.</span>
+                </div>
+                <div class="footer-tech">
+                    <span>Powered by Intelligent Document Processing & Invoice Generation Technology</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+        <div class="loading-content">
+            <div class="loading-animation">
+                <div class="loading-circle"></div>
+                <div class="loading-circle"></div>
+                <div class="loading-circle"></div>
+            </div>
+            <h3 id="loadingText">Processing Documents...</h3>
+            <p>Please wait while we extract the information</p>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
