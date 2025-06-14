@@ -1,0 +1,1181 @@
+2025-06-14 19:48:42,699 - INFO - Starting Aadhaar extraction process. Log file: D:\minato\Data\aadhaar_extraction_log_20250614_194842.log
+2025-06-14 19:48:42,700 - INFO - Summary log file: D:\minato\Data\aadhaar_summary_20250614_194842.log
+2025-06-14 19:48:42,701 - INFO - Starting to process folders in: D:\minato\Data
+2025-06-14 19:48:42,704 - INFO - Found 82 folders to process
+2025-06-14 19:48:42,704 - INFO - 
+============================================================
+2025-06-14 19:48:42,704 - INFO - Processing folder: 001 Nandu Singh
+2025-06-14 19:48:42,705 - INFO - Extracted name: Nandu Singh
+2025-06-14 19:48:42,705 - INFO - Looking for file: UID_NANDU_SINGH.pdf
+2025-06-14 19:48:42,706 - INFO - Found UID file: D:\minato\Data\001 Nandu Singh\UID_NANDU_SINGH.pdf
+2025-06-14 19:48:42,706 - INFO - Processing PDF: D:\minato\Data\001 Nandu Singh\UID_NANDU_SINGH.pdf
+2025-06-14 19:48:43,389 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:48:48,964 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:48:48,968 - INFO - AFC remote call 1 is done.
+2025-06-14 19:48:50,775 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:48:50,775 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:48:50,775 - INFO -   Aadhaar Number: 6874 8087 4343
+2025-06-14 19:48:50,775 - INFO -   Clean Aadhaar Number: 687480874343
+2025-06-14 19:48:50,791 - INFO - Renamed folder: 001 Nandu Singh -> 001 Nandu Singh_687480874343
+2025-06-14 19:48:50,791 - INFO - [SUCCESS] Successfully processed folder: 001 Nandu Singh
+2025-06-14 19:48:50,791 - INFO - 
+============================================================
+2025-06-14 19:48:50,793 - INFO - Processing folder: 002 Hasina Bibi - CLOSED
+2025-06-14 19:48:50,793 - INFO - Extracted name: Hasina Bibi - CLOSED
+2025-06-14 19:48:50,793 - INFO - Looking for file: UID_HASINA_BIBI_-_CLOSED.pdf
+2025-06-14 19:48:50,794 - INFO - Found UID file: D:\minato\Data\002 Hasina Bibi - CLOSED\UID_HASINA_BIBI.pdf
+2025-06-14 19:48:50,794 - INFO - Processing PDF: D:\minato\Data\002 Hasina Bibi - CLOSED\UID_HASINA_BIBI.pdf
+2025-06-14 19:48:50,797 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:48:53,798 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:48:53,800 - INFO - AFC remote call 1 is done.
+2025-06-14 19:48:55,764 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:48:55,765 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:48:55,766 - INFO -   Aadhaar Number: 8480 4416 1342
+2025-06-14 19:48:55,766 - INFO -   Clean Aadhaar Number: 848044161342
+2025-06-14 19:48:55,767 - INFO - Renamed folder: 002 Hasina Bibi - CLOSED -> 002 Hasina Bibi - CLOSED_848044161342
+2025-06-14 19:48:55,768 - INFO - [SUCCESS] Successfully processed folder: 002 Hasina Bibi - CLOSED
+2025-06-14 19:48:55,768 - INFO - 
+============================================================
+2025-06-14 19:48:55,769 - INFO - Processing folder: 003 Md Afzal
+2025-06-14 19:48:55,769 - INFO - Extracted name: Md Afzal
+2025-06-14 19:48:55,769 - INFO - Looking for file: UID_MD_AFZAL.pdf
+2025-06-14 19:48:55,770 - ERROR - UID file not found in folder: D:\minato\Data\003 Md Afzal
+2025-06-14 19:48:55,771 - INFO - 
+============================================================
+2025-06-14 19:48:55,771 - INFO - Processing folder: 004 Kunti Devi - CLOSED
+2025-06-14 19:48:55,772 - INFO - Extracted name: Kunti Devi - CLOSED
+2025-06-14 19:48:55,772 - INFO - Looking for file: UID_KUNTI_DEVI_-_CLOSED.pdf
+2025-06-14 19:48:55,773 - INFO - Found UID file: D:\minato\Data\004 Kunti Devi - CLOSED\UID_KUNTI_DEVI.pdf
+2025-06-14 19:48:55,773 - INFO - Processing PDF: D:\minato\Data\004 Kunti Devi - CLOSED\UID_KUNTI_DEVI.pdf
+2025-06-14 19:48:55,778 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:48:59,890 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:48:59,893 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:01,733 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:01,734 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:01,734 - INFO -   Aadhaar Number: 9439 6880 7303
+2025-06-14 19:49:01,734 - INFO -   Clean Aadhaar Number: 943968807303
+2025-06-14 19:49:01,736 - INFO - Renamed folder: 004 Kunti Devi - CLOSED -> 004 Kunti Devi - CLOSED_943968807303
+2025-06-14 19:49:01,736 - INFO - [SUCCESS] Successfully processed folder: 004 Kunti Devi - CLOSED
+2025-06-14 19:49:01,737 - INFO - 
+============================================================
+2025-06-14 19:49:01,737 - INFO - Processing folder: 005 Rahaman Khan
+2025-06-14 19:49:01,737 - INFO - Extracted name: Rahaman Khan
+2025-06-14 19:49:01,738 - INFO - Looking for file: UID_RAHAMAN_KHAN.pdf
+2025-06-14 19:49:01,738 - ERROR - UID file not found in folder: D:\minato\Data\005 Rahaman Khan
+2025-06-14 19:49:01,739 - INFO - 
+============================================================
+2025-06-14 19:49:01,739 - INFO - Processing folder: 006 Md Zahid
+2025-06-14 19:49:01,740 - INFO - Extracted name: Md Zahid
+2025-06-14 19:49:01,740 - INFO - Looking for file: UID_MD_ZAHID.pdf
+2025-06-14 19:49:01,741 - ERROR - UID file not found in folder: D:\minato\Data\006 Md Zahid
+2025-06-14 19:49:01,741 - INFO - 
+============================================================
+2025-06-14 19:49:01,742 - INFO - Processing folder: 007 Md Sajid Ansari
+2025-06-14 19:49:01,742 - INFO - Extracted name: Md Sajid Ansari
+2025-06-14 19:49:01,742 - INFO - Looking for file: UID_MD_SAJID_ANSARI.pdf
+2025-06-14 19:49:01,743 - ERROR - UID file not found in folder: D:\minato\Data\007 Md Sajid Ansari
+2025-06-14 19:49:01,744 - INFO - 
+============================================================
+2025-06-14 19:49:01,744 - INFO - Processing folder: 008 Pinki Pandit - CLOSED
+2025-06-14 19:49:01,744 - INFO - Extracted name: Pinki Pandit - CLOSED
+2025-06-14 19:49:01,744 - INFO - Looking for file: UID_PINKI_PANDIT_-_CLOSED.pdf
+2025-06-14 19:49:01,745 - ERROR - UID file not found in folder: D:\minato\Data\008 Pinki Pandit - CLOSED
+2025-06-14 19:49:01,746 - INFO - 
+============================================================
+2025-06-14 19:49:01,746 - INFO - Processing folder: 009 Akbari Khatun - CLOSED
+2025-06-14 19:49:01,746 - INFO - Extracted name: Akbari Khatun - CLOSED
+2025-06-14 19:49:01,746 - INFO - Looking for file: UID_AKBARI_KHATUN_-_CLOSED.pdf
+2025-06-14 19:49:01,747 - ERROR - UID file not found in folder: D:\minato\Data\009 Akbari Khatun - CLOSED
+2025-06-14 19:49:01,748 - INFO - 
+============================================================
+2025-06-14 19:49:01,748 - INFO - Processing folder: 010 Md Chand
+2025-06-14 19:49:01,749 - INFO - Extracted name: Md Chand
+2025-06-14 19:49:01,749 - INFO - Looking for file: UID_MD_CHAND.pdf
+2025-06-14 19:49:01,750 - INFO - Found UID file: D:\minato\Data\010 Md Chand\UID_MDCHAND.pdf
+2025-06-14 19:49:01,750 - INFO - Processing PDF: D:\minato\Data\010 Md Chand\UID_MDCHAND.pdf
+2025-06-14 19:49:01,756 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:05,852 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:05,859 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:07,734 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:07,737 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:07,738 - INFO -   Aadhaar Number: 8466 7115 9344
+2025-06-14 19:49:07,738 - INFO -   Clean Aadhaar Number: 846671159344
+2025-06-14 19:49:07,743 - INFO - Renamed folder: 010 Md Chand -> 010 Md Chand_846671159344
+2025-06-14 19:49:07,743 - INFO - [SUCCESS] Successfully processed folder: 010 Md Chand
+2025-06-14 19:49:07,745 - INFO - 
+============================================================
+2025-06-14 19:49:07,746 - INFO - Processing folder: 011 Shakun Mali
+2025-06-14 19:49:07,746 - INFO - Extracted name: Shakun Mali
+2025-06-14 19:49:07,747 - INFO - Looking for file: UID_SHAKUN_MALI.pdf
+2025-06-14 19:49:07,748 - INFO - Found UID file: D:\minato\Data\011 Shakun Mali\UID_SHAKUN_MALI.pdf
+2025-06-14 19:49:07,749 - INFO - Processing PDF: D:\minato\Data\011 Shakun Mali\UID_SHAKUN_MALI.pdf
+2025-06-14 19:49:07,761 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:12,381 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:12,386 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:14,344 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:14,346 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:14,347 - INFO -   Aadhaar Number: 8549 7434 3822
+2025-06-14 19:49:14,347 - INFO -   Clean Aadhaar Number: 854974343822
+2025-06-14 19:49:14,349 - INFO - Renamed folder: 011 Shakun Mali -> 011 Shakun Mali_854974343822
+2025-06-14 19:49:14,350 - INFO - [SUCCESS] Successfully processed folder: 011 Shakun Mali
+2025-06-14 19:49:14,352 - INFO - 
+============================================================
+2025-06-14 19:49:14,352 - INFO - Processing folder: 012 Kajal Das - CLOSED
+2025-06-14 19:49:14,353 - INFO - Extracted name: Kajal Das - CLOSED
+2025-06-14 19:49:14,353 - INFO - Looking for file: UID_KAJAL_DAS_-_CLOSED.pdf
+2025-06-14 19:49:14,354 - ERROR - UID file not found in folder: D:\minato\Data\012 Kajal Das - CLOSED
+2025-06-14 19:49:14,355 - INFO - 
+============================================================
+2025-06-14 19:49:14,356 - INFO - Processing folder: 013 Utpal Das
+2025-06-14 19:49:14,356 - INFO - Extracted name: Utpal Das
+2025-06-14 19:49:14,356 - INFO - Looking for file: UID_UTPAL_DAS.pdf
+2025-06-14 19:49:14,357 - ERROR - UID file not found in folder: D:\minato\Data\013 Utpal Das
+2025-06-14 19:49:14,358 - INFO - 
+============================================================
+2025-06-14 19:49:14,359 - INFO - Processing folder: 014 Md Kalim
+2025-06-14 19:49:14,359 - INFO - Extracted name: Md Kalim
+2025-06-14 19:49:14,359 - INFO - Looking for file: UID_MD_KALIM.pdf
+2025-06-14 19:49:14,360 - INFO - Found UID file: D:\minato\Data\014 Md Kalim\UID_KALIM.pdf
+2025-06-14 19:49:14,360 - INFO - Processing PDF: D:\minato\Data\014 Md Kalim\UID_KALIM.pdf
+2025-06-14 19:49:14,368 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:18,208 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:18,213 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:20,077 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:20,078 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:20,079 - INFO -   Aadhaar Number: 7587 8150 0040
+2025-06-14 19:49:20,079 - INFO -   Clean Aadhaar Number: 758781500040
+2025-06-14 19:49:20,080 - INFO - Renamed folder: 014 Md Kalim -> 014 Md Kalim_758781500040
+2025-06-14 19:49:20,081 - INFO - [SUCCESS] Successfully processed folder: 014 Md Kalim
+2025-06-14 19:49:20,081 - INFO - 
+============================================================
+2025-06-14 19:49:20,082 - INFO - Processing folder: 015 Pramod Mondal - CLOSED
+2025-06-14 19:49:20,082 - INFO - Extracted name: Pramod Mondal - CLOSED
+2025-06-14 19:49:20,082 - INFO - Looking for file: UID_PRAMOD_MONDAL_-_CLOSED.pdf
+2025-06-14 19:49:20,083 - INFO - Found UID file: D:\minato\Data\015 Pramod Mondal - CLOSED\UID_PRAMOD_MONDAL.pdf
+2025-06-14 19:49:20,083 - INFO - Processing PDF: D:\minato\Data\015 Pramod Mondal - CLOSED\UID_PRAMOD_MONDAL.pdf
+2025-06-14 19:49:20,090 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:24,086 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:24,092 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:25,890 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:25,891 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:25,891 - INFO -   Aadhaar Number: 7953 5280 1246
+2025-06-14 19:49:25,891 - INFO -   Clean Aadhaar Number: 795352801246
+2025-06-14 19:49:25,892 - INFO - Renamed folder: 015 Pramod Mondal - CLOSED -> 015 Pramod Mondal - CLOSED_795352801246
+2025-06-14 19:49:25,892 - INFO - [SUCCESS] Successfully processed folder: 015 Pramod Mondal - CLOSED
+2025-06-14 19:49:25,893 - INFO - 
+============================================================
+2025-06-14 19:49:25,894 - INFO - Processing folder: 016 Bikash Bauri
+2025-06-14 19:49:25,894 - INFO - Extracted name: Bikash Bauri
+2025-06-14 19:49:25,894 - INFO - Looking for file: UID_BIKASH_BAURI.pdf
+2025-06-14 19:49:25,895 - ERROR - UID file not found in folder: D:\minato\Data\016 Bikash Bauri
+2025-06-14 19:49:25,896 - INFO - 
+============================================================
+2025-06-14 19:49:25,897 - INFO - Processing folder: 017 Guddu Mali
+2025-06-14 19:49:25,897 - INFO - Extracted name: Guddu Mali
+2025-06-14 19:49:25,898 - INFO - Looking for file: UID_GUDDU_MALI.pdf
+2025-06-14 19:49:25,899 - INFO - Found UID file: D:\minato\Data\017 Guddu Mali\UID_MANOJ_MALI.pdf
+2025-06-14 19:49:25,899 - INFO - Processing PDF: D:\minato\Data\017 Guddu Mali\UID_MANOJ_MALI.pdf
+2025-06-14 19:49:25,903 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:28,580 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:28,583 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:30,310 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:30,310 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:30,310 - INFO -   Aadhaar Number: 7191 8175 1700
+2025-06-14 19:49:30,310 - INFO -   Clean Aadhaar Number: 719181751700
+2025-06-14 19:49:30,310 - INFO - Renamed folder: 017 Guddu Mali -> 017 Guddu Mali_719181751700
+2025-06-14 19:49:30,310 - INFO - [SUCCESS] Successfully processed folder: 017 Guddu Mali
+2025-06-14 19:49:30,310 - INFO - 
+============================================================
+2025-06-14 19:49:30,310 - INFO - Processing folder: 018 Md Nayeem
+2025-06-14 19:49:30,310 - INFO - Extracted name: Md Nayeem
+2025-06-14 19:49:30,310 - INFO - Looking for file: UID_MD_NAYEEM.pdf
+2025-06-14 19:49:30,310 - INFO - Found UID file: D:\minato\Data\018 Md Nayeem\UID_MD_NAYEEM.pdf
+2025-06-14 19:49:30,310 - INFO - Processing PDF: D:\minato\Data\018 Md Nayeem\UID_MD_NAYEEM.pdf
+2025-06-14 19:49:30,416 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:33,559 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:33,559 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:35,516 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:35,527 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:35,527 - INFO -   Aadhaar Number: 8335 1247 6398
+2025-06-14 19:49:35,527 - INFO -   Clean Aadhaar Number: 833512476398
+2025-06-14 19:49:35,527 - INFO - Renamed folder: 018 Md Nayeem -> 018 Md Nayeem_833512476398
+2025-06-14 19:49:35,527 - INFO - [SUCCESS] Successfully processed folder: 018 Md Nayeem
+2025-06-14 19:49:35,527 - INFO - 
+============================================================
+2025-06-14 19:49:35,532 - INFO - Processing folder: 019 Harisadhan Tapadar
+2025-06-14 19:49:35,532 - INFO - Extracted name: Harisadhan Tapadar
+2025-06-14 19:49:35,532 - INFO - Looking for file: UID_HARISADHAN_TAPADAR.pdf
+2025-06-14 19:49:35,532 - INFO - Found UID file: D:\minato\Data\019 Harisadhan Tapadar\UID_HARISADHAN_TAPADAR.pdf
+2025-06-14 19:49:35,532 - INFO - Processing PDF: D:\minato\Data\019 Harisadhan Tapadar\UID_HARISADHAN_TAPADAR.pdf
+2025-06-14 19:49:35,597 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:42,749 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:42,754 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:44,473 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:44,473 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:44,473 - INFO -   Aadhaar Number: 5919 2938 7110
+2025-06-14 19:49:44,473 - INFO -   Clean Aadhaar Number: 591929387110
+2025-06-14 19:49:44,473 - INFO - Renamed folder: 019 Harisadhan Tapadar -> 019 Harisadhan Tapadar_591929387110
+2025-06-14 19:49:44,473 - INFO - [SUCCESS] Successfully processed folder: 019 Harisadhan Tapadar
+2025-06-14 19:49:44,473 - INFO - 
+============================================================
+2025-06-14 19:49:44,473 - INFO - Processing folder: 020 Samim Khan
+2025-06-14 19:49:44,473 - INFO - Extracted name: Samim Khan
+2025-06-14 19:49:44,473 - INFO - Looking for file: UID_SAMIM_KHAN.pdf
+2025-06-14 19:49:44,473 - INFO - Found UID file: D:\minato\Data\020 Samim Khan\UID_SAMIM_KHAN.pdf
+2025-06-14 19:49:44,473 - INFO - Processing PDF: D:\minato\Data\020 Samim Khan\UID_SAMIM_KHAN.pdf
+2025-06-14 19:49:44,546 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:48,178 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:48,180 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:50,050 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:50,051 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:50,051 - INFO -   Aadhaar Number: 5175 1337 6575
+2025-06-14 19:49:50,052 - INFO -   Clean Aadhaar Number: 517513376575
+2025-06-14 19:49:50,053 - INFO - Renamed folder: 020 Samim Khan -> 020 Samim Khan_517513376575
+2025-06-14 19:49:50,053 - INFO - [SUCCESS] Successfully processed folder: 020 Samim Khan
+2025-06-14 19:49:50,054 - INFO - 
+============================================================
+2025-06-14 19:49:50,054 - INFO - Processing folder: 021 Sahaman Khan
+2025-06-14 19:49:50,055 - INFO - Extracted name: Sahaman Khan
+2025-06-14 19:49:50,055 - INFO - Looking for file: UID_SAHAMAN_KHAN.pdf
+2025-06-14 19:49:50,055 - INFO - Found UID file: D:\minato\Data\021 Sahaman Khan\UID_SAHAMAN_KHAN.pdf
+2025-06-14 19:49:50,056 - INFO - Processing PDF: D:\minato\Data\021 Sahaman Khan\UID_SAHAMAN_KHAN.pdf
+2025-06-14 19:49:50,140 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:52,770 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:52,780 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:54,249 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:54,249 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:54,249 - INFO -   Aadhaar Number: 2696 7800 9050
+2025-06-14 19:49:54,249 - INFO -   Clean Aadhaar Number: 269678009050
+2025-06-14 19:49:54,249 - INFO - Renamed folder: 021 Sahaman Khan -> 021 Sahaman Khan_269678009050
+2025-06-14 19:49:54,249 - INFO - [SUCCESS] Successfully processed folder: 021 Sahaman Khan
+2025-06-14 19:49:54,249 - INFO - 
+============================================================
+2025-06-14 19:49:54,249 - INFO - Processing folder: 022 Sagir Sheikh
+2025-06-14 19:49:54,249 - INFO - Extracted name: Sagir Sheikh
+2025-06-14 19:49:54,249 - INFO - Looking for file: UID_SAGIR_SHEIKH.pdf
+2025-06-14 19:49:54,249 - INFO - Found UID file: D:\minato\Data\022 Sagir Sheikh\UID_ALI_REZA.pdf
+2025-06-14 19:49:54,249 - INFO - Processing PDF: D:\minato\Data\022 Sagir Sheikh\UID_ALI_REZA.pdf
+2025-06-14 19:49:54,319 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:49:57,368 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:49:57,370 - INFO - AFC remote call 1 is done.
+2025-06-14 19:49:58,851 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:49:58,851 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:49:58,851 - INFO -   Aadhaar Number: 8219 3872 5847
+2025-06-14 19:49:58,851 - INFO -   Clean Aadhaar Number: 821938725847
+2025-06-14 19:49:58,851 - INFO - Renamed folder: 022 Sagir Sheikh -> 022 Sagir Sheikh_821938725847
+2025-06-14 19:49:58,851 - INFO - [SUCCESS] Successfully processed folder: 022 Sagir Sheikh
+2025-06-14 19:49:58,851 - INFO - 
+============================================================
+2025-06-14 19:49:58,851 - INFO - Processing folder: 023 Ashok Bahadur
+2025-06-14 19:49:58,851 - INFO - Extracted name: Ashok Bahadur
+2025-06-14 19:49:58,851 - INFO - Looking for file: UID_ASHOK_BAHADUR.pdf
+2025-06-14 19:49:58,851 - INFO - Found UID file: D:\minato\Data\023 Ashok Bahadur\UID_ASHOK_BAHADUR.pdf
+2025-06-14 19:49:58,851 - INFO - Processing PDF: D:\minato\Data\023 Ashok Bahadur\UID_ASHOK_BAHADUR.pdf
+2025-06-14 19:49:58,877 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:06,066 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:06,066 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:07,581 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:07,581 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:07,581 - INFO -   Aadhaar Number: 2662 4566 3577
+2025-06-14 19:50:07,581 - INFO -   Clean Aadhaar Number: 266245663577
+2025-06-14 19:50:07,581 - INFO - Renamed folder: 023 Ashok Bahadur -> 023 Ashok Bahadur_266245663577
+2025-06-14 19:50:07,581 - INFO - [SUCCESS] Successfully processed folder: 023 Ashok Bahadur
+2025-06-14 19:50:07,581 - INFO - 
+============================================================
+2025-06-14 19:50:07,581 - INFO - Processing folder: 024 Babon Bauri
+2025-06-14 19:50:07,581 - INFO - Extracted name: Babon Bauri
+2025-06-14 19:50:07,581 - INFO - Looking for file: UID_BABON_BAURI.pdf
+2025-06-14 19:50:07,581 - INFO - Found UID file: D:\minato\Data\024 Babon Bauri\UID_BABON_BAURI.pdf
+2025-06-14 19:50:07,581 - INFO - Processing PDF: D:\minato\Data\024 Babon Bauri\UID_BABON_BAURI.pdf
+2025-06-14 19:50:07,648 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:10,294 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:10,294 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:11,783 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:11,784 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:11,785 - INFO -   Aadhaar Number: 4073 2374 8225
+2025-06-14 19:50:11,785 - INFO -   Clean Aadhaar Number: 407323748225
+2025-06-14 19:50:11,787 - INFO - Renamed folder: 024 Babon Bauri -> 024 Babon Bauri_407323748225
+2025-06-14 19:50:11,787 - INFO - [SUCCESS] Successfully processed folder: 024 Babon Bauri
+2025-06-14 19:50:11,788 - INFO - 
+============================================================
+2025-06-14 19:50:11,789 - INFO - Processing folder: 025 Kazi Kabiruddin
+2025-06-14 19:50:11,789 - INFO - Extracted name: Kazi Kabiruddin
+2025-06-14 19:50:11,789 - INFO - Looking for file: UID_KAZI_KABIRUDDIN.pdf
+2025-06-14 19:50:11,790 - INFO - Found UID file: D:\minato\Data\025 Kazi Kabiruddin\UID_KAZI_KABIRUDDIN.pdf
+2025-06-14 19:50:11,790 - INFO - Processing PDF: D:\minato\Data\025 Kazi Kabiruddin\UID_KAZI_KABIRUDDIN.pdf
+2025-06-14 19:50:11,814 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:15,816 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:15,816 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:17,293 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:17,293 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:17,293 - INFO -   Aadhaar Number: 7211 5865 1230
+2025-06-14 19:50:17,293 - INFO -   Clean Aadhaar Number: 721158651230
+2025-06-14 19:50:17,293 - INFO - Renamed folder: 025 Kazi Kabiruddin -> 025 Kazi Kabiruddin_721158651230
+2025-06-14 19:50:17,293 - INFO - [SUCCESS] Successfully processed folder: 025 Kazi Kabiruddin
+2025-06-14 19:50:17,306 - INFO - 
+============================================================
+2025-06-14 19:50:17,306 - INFO - Processing folder: 026 Chinmoy Singh
+2025-06-14 19:50:17,306 - INFO - Extracted name: Chinmoy Singh
+2025-06-14 19:50:17,306 - INFO - Looking for file: UID_CHINMOY_SINGH.pdf
+2025-06-14 19:50:17,306 - INFO - Found UID file: D:\minato\Data\026 Chinmoy Singh\UID_CHINMOY_SINGH.pdf
+2025-06-14 19:50:17,306 - INFO - Processing PDF: D:\minato\Data\026 Chinmoy Singh\UID_CHINMOY_SINGH.pdf
+2025-06-14 19:50:17,327 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:21,548 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:21,552 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:23,112 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:23,113 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:23,114 - INFO -   Aadhaar Number: 7158 2144 2481
+2025-06-14 19:50:23,114 - INFO -   Clean Aadhaar Number: 715821442481
+2025-06-14 19:50:23,115 - INFO - Renamed folder: 026 Chinmoy Singh -> 026 Chinmoy Singh_715821442481
+2025-06-14 19:50:23,116 - INFO - [SUCCESS] Successfully processed folder: 026 Chinmoy Singh
+2025-06-14 19:50:23,117 - INFO - 
+============================================================
+2025-06-14 19:50:23,117 - INFO - Processing folder: 027 Sandip Kumar Verma
+2025-06-14 19:50:23,117 - INFO - Extracted name: Sandip Kumar Verma
+2025-06-14 19:50:23,118 - INFO - Looking for file: UID_SANDIP_KUMAR_VERMA.pdf
+2025-06-14 19:50:23,118 - INFO - Found UID file: D:\minato\Data\027 Sandip Kumar Verma\UID_SANDIP_KUMAR_VERMA.pdf
+2025-06-14 19:50:23,118 - INFO - Processing PDF: D:\minato\Data\027 Sandip Kumar Verma\UID_SANDIP_KUMAR_VERMA.pdf
+2025-06-14 19:50:23,207 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:25,984 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:25,987 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:27,794 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:27,797 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:27,799 - INFO -   Aadhaar Number: 2012 3040 5557
+2025-06-14 19:50:27,800 - INFO -   Clean Aadhaar Number: 201230405557
+2025-06-14 19:50:27,802 - INFO - Renamed folder: 027 Sandip Kumar Verma -> 027 Sandip Kumar Verma_201230405557
+2025-06-14 19:50:27,803 - INFO - [SUCCESS] Successfully processed folder: 027 Sandip Kumar Verma
+2025-06-14 19:50:27,805 - INFO - 
+============================================================
+2025-06-14 19:50:27,805 - INFO - Processing folder: 028 Md Sulaiman
+2025-06-14 19:50:27,806 - INFO - Extracted name: Md Sulaiman
+2025-06-14 19:50:27,808 - INFO - Looking for file: UID_MD_SULAIMAN.pdf
+2025-06-14 19:50:27,810 - ERROR - UID file not found in folder: D:\minato\Data\028 Md Sulaiman
+2025-06-14 19:50:27,811 - INFO - 
+============================================================
+2025-06-14 19:50:27,812 - INFO - Processing folder: 029 Serajul Sha
+2025-06-14 19:50:27,812 - INFO - Extracted name: Serajul Sha
+2025-06-14 19:50:27,813 - INFO - Looking for file: UID_SERAJUL_SHA.pdf
+2025-06-14 19:50:27,813 - INFO - Found UID file: D:\minato\Data\029 Serajul Sha\UID_SERAJUL_SHA.pdf
+2025-06-14 19:50:27,814 - INFO - Processing PDF: D:\minato\Data\029 Serajul Sha\UID_SERAJUL_SHA.pdf
+2025-06-14 19:50:27,839 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:30,530 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:30,533 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:32,371 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:32,389 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:32,391 - INFO -   Aadhaar Number: 4213 0617 3157
+2025-06-14 19:50:32,391 - INFO -   Clean Aadhaar Number: 421306173157
+2025-06-14 19:50:32,394 - INFO - Renamed folder: 029 Serajul Sha -> 029 Serajul Sha_421306173157
+2025-06-14 19:50:32,395 - INFO - [SUCCESS] Successfully processed folder: 029 Serajul Sha
+2025-06-14 19:50:32,397 - INFO - 
+============================================================
+2025-06-14 19:50:32,399 - INFO - Processing folder: 030 Md Ainul Haque
+2025-06-14 19:50:32,400 - INFO - Extracted name: Md Ainul Haque
+2025-06-14 19:50:32,401 - INFO - Looking for file: UID_MD_AINUL_HAQUE.pdf
+2025-06-14 19:50:32,403 - ERROR - UID file not found in folder: D:\minato\Data\030 Md Ainul Haque
+2025-06-14 19:50:32,406 - INFO - 
+============================================================
+2025-06-14 19:50:32,407 - INFO - Processing folder: 031 Samit Dutta
+2025-06-14 19:50:32,409 - INFO - Extracted name: Samit Dutta
+2025-06-14 19:50:32,410 - INFO - Looking for file: UID_SAMIT_DUTTA.pdf
+2025-06-14 19:50:32,411 - INFO - Found UID file: D:\minato\Data\031 Samit Dutta\UID_SAMIT_DUTTA.pdf
+2025-06-14 19:50:32,411 - INFO - Processing PDF: D:\minato\Data\031 Samit Dutta\UID_SAMIT_DUTTA.pdf
+2025-06-14 19:50:32,440 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:37,136 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:37,148 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:39,004 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:39,004 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:39,004 - INFO -   Aadhaar Number: 9677 5988 4586
+2025-06-14 19:50:39,004 - INFO -   Clean Aadhaar Number: 967759884586
+2025-06-14 19:50:39,004 - INFO - Renamed folder: 031 Samit Dutta -> 031 Samit Dutta_967759884586
+2025-06-14 19:50:39,004 - INFO - [SUCCESS] Successfully processed folder: 031 Samit Dutta
+2025-06-14 19:50:39,004 - INFO - 
+============================================================
+2025-06-14 19:50:39,010 - INFO - Processing folder: 032 Gita Roy
+2025-06-14 19:50:39,010 - INFO - Extracted name: Gita Roy
+2025-06-14 19:50:39,010 - INFO - Looking for file: UID_GITA_ROY.pdf
+2025-06-14 19:50:39,010 - INFO - Found UID file: D:\minato\Data\032 Gita Roy\UID_GITA_ROY.pdf
+2025-06-14 19:50:39,010 - INFO - Processing PDF: D:\minato\Data\032 Gita Roy\UID_GITA_ROY.pdf
+2025-06-14 19:50:39,030 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:43,458 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:43,464 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:45,037 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:45,038 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:45,039 - INFO -   Aadhaar Number: 4558 7859 7846
+2025-06-14 19:50:45,039 - INFO -   Clean Aadhaar Number: 455878597846
+2025-06-14 19:50:45,041 - INFO - Renamed folder: 032 Gita Roy -> 032 Gita Roy_455878597846
+2025-06-14 19:50:45,042 - INFO - [SUCCESS] Successfully processed folder: 032 Gita Roy
+2025-06-14 19:50:45,043 - INFO - 
+============================================================
+2025-06-14 19:50:45,043 - INFO - Processing folder: 033 Md Shamim
+2025-06-14 19:50:45,044 - INFO - Extracted name: Md Shamim
+2025-06-14 19:50:45,045 - INFO - Looking for file: UID_MD_SHAMIM.pdf
+2025-06-14 19:50:45,046 - INFO - Found UID file: D:\minato\Data\033 Md Shamim\UID_MD_SHAMIM.pdf
+2025-06-14 19:50:45,046 - INFO - Processing PDF: D:\minato\Data\033 Md Shamim\UID_MD_SHAMIM.pdf
+2025-06-14 19:50:45,168 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:48,020 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:48,020 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:49,576 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:49,576 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:49,580 - INFO -   Aadhaar Number: 7487 8428 8069
+2025-06-14 19:50:49,580 - INFO -   Clean Aadhaar Number: 748784288069
+2025-06-14 19:50:49,582 - INFO - Renamed folder: 033 Md Shamim -> 033 Md Shamim_748784288069
+2025-06-14 19:50:49,582 - INFO - [SUCCESS] Successfully processed folder: 033 Md Shamim
+2025-06-14 19:50:49,584 - INFO - 
+============================================================
+2025-06-14 19:50:49,584 - INFO - Processing folder: 034 Pintu Kumar
+2025-06-14 19:50:49,584 - INFO - Extracted name: Pintu Kumar
+2025-06-14 19:50:49,586 - INFO - Looking for file: UID_PINTU_KUMAR.pdf
+2025-06-14 19:50:49,586 - INFO - Found UID file: D:\minato\Data\034 Pintu Kumar\UID_PINTU_KUMAR.pdf
+2025-06-14 19:50:49,586 - INFO - Processing PDF: D:\minato\Data\034 Pintu Kumar\UID_PINTU_KUMAR.pdf
+2025-06-14 19:50:49,610 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:50:54,134 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:50:54,145 - INFO - AFC remote call 1 is done.
+2025-06-14 19:50:56,139 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:50:56,140 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:50:56,141 - INFO -   Aadhaar Number: 7706 0792 0187
+2025-06-14 19:50:56,141 - INFO -   Clean Aadhaar Number: 770607920187
+2025-06-14 19:50:56,144 - INFO - Renamed folder: 034 Pintu Kumar -> 034 Pintu Kumar_770607920187
+2025-06-14 19:50:56,149 - INFO - [SUCCESS] Successfully processed folder: 034 Pintu Kumar
+2025-06-14 19:50:56,152 - INFO - 
+============================================================
+2025-06-14 19:50:56,152 - INFO - Processing folder: 035 Sangram Chakraborty
+2025-06-14 19:50:56,153 - INFO - Extracted name: Sangram Chakraborty
+2025-06-14 19:50:56,154 - INFO - Looking for file: UID_SANGRAM_CHAKRABORTY.pdf
+2025-06-14 19:50:56,156 - INFO - Found UID file: D:\minato\Data\035 Sangram Chakraborty\UID_SANGRAM_CHAKRABORTY.pdf
+2025-06-14 19:50:56,157 - INFO - Processing PDF: D:\minato\Data\035 Sangram Chakraborty\UID_SANGRAM_CHAKRABORTY.pdf
+2025-06-14 19:50:56,179 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:00,087 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:00,090 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:01,650 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:01,650 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:01,650 - INFO -   Aadhaar Number: 2238 1437 5442
+2025-06-14 19:51:01,650 - INFO -   Clean Aadhaar Number: 223814375442
+2025-06-14 19:51:01,650 - INFO - Renamed folder: 035 Sangram Chakraborty -> 035 Sangram Chakraborty_223814375442
+2025-06-14 19:51:01,650 - INFO - [SUCCESS] Successfully processed folder: 035 Sangram Chakraborty
+2025-06-14 19:51:01,650 - INFO - 
+============================================================
+2025-06-14 19:51:01,650 - INFO - Processing folder: 036 Sonu Kumar Mahato
+2025-06-14 19:51:01,650 - INFO - Extracted name: Sonu Kumar Mahato
+2025-06-14 19:51:01,650 - INFO - Looking for file: UID_SONU_KUMAR_MAHATO.pdf
+2025-06-14 19:51:01,650 - INFO - Found UID file: D:\minato\Data\036 Sonu Kumar Mahato\UID_SONU_KUMAR_MAHATO.pdf
+2025-06-14 19:51:01,650 - INFO - Processing PDF: D:\minato\Data\036 Sonu Kumar Mahato\UID_SONU_KUMAR_MAHATO.pdf
+2025-06-14 19:51:01,674 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:05,659 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:05,663 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:07,175 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:07,176 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:07,176 - INFO -   Aadhaar Number: 8516 4037 9637
+2025-06-14 19:51:07,178 - INFO -   Clean Aadhaar Number: 851640379637
+2025-06-14 19:51:07,179 - INFO - Renamed folder: 036 Sonu Kumar Mahato -> 036 Sonu Kumar Mahato_851640379637
+2025-06-14 19:51:07,180 - INFO - [SUCCESS] Successfully processed folder: 036 Sonu Kumar Mahato
+2025-06-14 19:51:07,181 - INFO - 
+============================================================
+2025-06-14 19:51:07,181 - INFO - Processing folder: 037 Tapan Lingam
+2025-06-14 19:51:07,182 - INFO - Extracted name: Tapan Lingam
+2025-06-14 19:51:07,182 - INFO - Looking for file: UID_TAPAN_LINGAM.pdf
+2025-06-14 19:51:07,182 - INFO - Found UID file: D:\minato\Data\037 Tapan Lingam\UID_TAPAN_LINGAM.pdf
+2025-06-14 19:51:07,183 - INFO - Processing PDF: D:\minato\Data\037 Tapan Lingam\UID_TAPAN_LINGAM.pdf
+2025-06-14 19:51:07,209 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:11,360 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:11,365 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:13,256 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:13,257 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:13,257 - INFO -   Aadhaar Number: 8210 2757 0986
+2025-06-14 19:51:13,258 - INFO -   Clean Aadhaar Number: 821027570986
+2025-06-14 19:51:13,259 - INFO - Renamed folder: 037 Tapan Lingam -> 037 Tapan Lingam_821027570986
+2025-06-14 19:51:13,259 - INFO - [SUCCESS] Successfully processed folder: 037 Tapan Lingam
+2025-06-14 19:51:13,260 - INFO - 
+============================================================
+2025-06-14 19:51:13,260 - INFO - Processing folder: 038 Rajesh Yadav
+2025-06-14 19:51:13,261 - INFO - Extracted name: Rajesh Yadav
+2025-06-14 19:51:13,261 - INFO - Looking for file: UID_RAJESH_YADAV.pdf
+2025-06-14 19:51:13,262 - INFO - Found UID file: D:\minato\Data\038 Rajesh Yadav\UID_RAJESH_YADAV.pdf
+2025-06-14 19:51:13,262 - INFO - Processing PDF: D:\minato\Data\038 Rajesh Yadav\UID_RAJESH_YADAV.pdf
+2025-06-14 19:51:13,285 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:17,207 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:17,211 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:18,629 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:18,631 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:18,631 - INFO -   Aadhaar Number: 6516 5928 9658
+2025-06-14 19:51:18,631 - INFO -   Clean Aadhaar Number: 651659289658
+2025-06-14 19:51:18,633 - INFO - Renamed folder: 038 Rajesh Yadav -> 038 Rajesh Yadav_651659289658
+2025-06-14 19:51:18,633 - INFO - [SUCCESS] Successfully processed folder: 038 Rajesh Yadav
+2025-06-14 19:51:18,635 - INFO - 
+============================================================
+2025-06-14 19:51:18,635 - INFO - Processing folder: 039 Bittu Singh
+2025-06-14 19:51:18,635 - INFO - Extracted name: Bittu Singh
+2025-06-14 19:51:18,636 - INFO - Looking for file: UID_BITTU_SINGH.pdf
+2025-06-14 19:51:18,637 - INFO - Found UID file: D:\minato\Data\039 Bittu Singh\UID_BITTU_SINGH.pdf
+2025-06-14 19:51:18,638 - INFO - Processing PDF: D:\minato\Data\039 Bittu Singh\UID_BITTU_SINGH.pdf
+2025-06-14 19:51:18,723 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:21,772 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:21,773 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:23,277 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:23,278 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:23,279 - INFO -   Aadhaar Number: 6123 7599 6219
+2025-06-14 19:51:23,279 - INFO -   Clean Aadhaar Number: 612375996219
+2025-06-14 19:51:23,281 - INFO - Renamed folder: 039 Bittu Singh -> 039 Bittu Singh_612375996219
+2025-06-14 19:51:23,282 - INFO - [SUCCESS] Successfully processed folder: 039 Bittu Singh
+2025-06-14 19:51:23,284 - INFO - 
+============================================================
+2025-06-14 19:51:23,284 - INFO - Processing folder: 040 Sanjay Rout
+2025-06-14 19:51:23,285 - INFO - Extracted name: Sanjay Rout
+2025-06-14 19:51:23,285 - INFO - Looking for file: UID_SANJAY_ROUT.pdf
+2025-06-14 19:51:23,286 - INFO - Found UID file: D:\minato\Data\040 Sanjay Rout\UID_BIMALA_MANDAL.pdf
+2025-06-14 19:51:23,286 - INFO - Processing PDF: D:\minato\Data\040 Sanjay Rout\UID_BIMALA_MANDAL.pdf
+2025-06-14 19:51:23,363 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:26,267 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:26,273 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:28,190 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:28,190 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:28,190 - INFO -   Aadhaar Number: 9586 9025 9767
+2025-06-14 19:51:28,190 - INFO -   Clean Aadhaar Number: 958690259767
+2025-06-14 19:51:28,190 - INFO - Renamed folder: 040 Sanjay Rout -> 040 Sanjay Rout_958690259767
+2025-06-14 19:51:28,190 - INFO - [SUCCESS] Successfully processed folder: 040 Sanjay Rout
+2025-06-14 19:51:28,190 - INFO - 
+============================================================
+2025-06-14 19:51:28,190 - INFO - Processing folder: 041 Kajal Mahato
+2025-06-14 19:51:28,190 - INFO - Extracted name: Kajal Mahato
+2025-06-14 19:51:28,190 - INFO - Looking for file: UID_KAJAL_MAHATO.pdf
+2025-06-14 19:51:28,190 - INFO - Found UID file: D:\minato\Data\041 Kajal Mahato\UID_KAJAL_MAHATO.pdf
+2025-06-14 19:51:28,190 - INFO - Processing PDF: D:\minato\Data\041 Kajal Mahato\UID_KAJAL_MAHATO.pdf
+2025-06-14 19:51:28,220 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:32,919 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:32,923 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:34,392 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:34,395 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:34,395 - INFO -   Aadhaar Number: 7874 6577 6808
+2025-06-14 19:51:34,395 - INFO -   Clean Aadhaar Number: 787465776808
+2025-06-14 19:51:34,398 - INFO - Renamed folder: 041 Kajal Mahato -> 041 Kajal Mahato_787465776808
+2025-06-14 19:51:34,399 - INFO - [SUCCESS] Successfully processed folder: 041 Kajal Mahato
+2025-06-14 19:51:34,402 - INFO - 
+============================================================
+2025-06-14 19:51:34,405 - INFO - Processing folder: 042 Bijay Kumar Mahato
+2025-06-14 19:51:34,407 - INFO - Extracted name: Bijay Kumar Mahato
+2025-06-14 19:51:34,408 - INFO - Looking for file: UID_BIJAY_KUMAR_MAHATO.pdf
+2025-06-14 19:51:34,409 - INFO - Found UID file: D:\minato\Data\042 Bijay Kumar Mahato\UID_BIJAY_KUMAR_MAHATO.pdf
+2025-06-14 19:51:34,409 - INFO - Processing PDF: D:\minato\Data\042 Bijay Kumar Mahato\UID_BIJAY_KUMAR_MAHATO.pdf
+2025-06-14 19:51:34,572 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:38,015 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:38,019 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:39,541 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:39,542 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:39,542 - INFO -   Aadhaar Number: 3586 7591 2480
+2025-06-14 19:51:39,542 - INFO -   Clean Aadhaar Number: 358675912480
+2025-06-14 19:51:39,543 - INFO - Renamed folder: 042 Bijay Kumar Mahato -> 042 Bijay Kumar Mahato_358675912480
+2025-06-14 19:51:39,544 - INFO - [SUCCESS] Successfully processed folder: 042 Bijay Kumar Mahato
+2025-06-14 19:51:39,544 - INFO - 
+============================================================
+2025-06-14 19:51:39,545 - INFO - Processing folder: 043 Tarakeshwar Mohanta
+2025-06-14 19:51:39,545 - INFO - Extracted name: Tarakeshwar Mohanta
+2025-06-14 19:51:39,545 - INFO - Looking for file: UID_TARAKESHWAR_MOHANTA.pdf
+2025-06-14 19:51:39,546 - INFO - Found UID file: D:\minato\Data\043 Tarakeshwar Mohanta\UID_TARAKESHWAR_MOHANTA.pdf
+2025-06-14 19:51:39,546 - INFO - Processing PDF: D:\minato\Data\043 Tarakeshwar Mohanta\UID_TARAKESHWAR_MOHANTA.pdf
+2025-06-14 19:51:39,566 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:43,746 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:43,750 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:45,535 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:45,536 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:45,536 - INFO -   Aadhaar Number: 8365 7881 8474
+2025-06-14 19:51:45,536 - INFO -   Clean Aadhaar Number: 836578818474
+2025-06-14 19:51:45,537 - INFO - Renamed folder: 043 Tarakeshwar Mohanta -> 043 Tarakeshwar Mohanta_836578818474
+2025-06-14 19:51:45,537 - INFO - [SUCCESS] Successfully processed folder: 043 Tarakeshwar Mohanta
+2025-06-14 19:51:45,538 - INFO - 
+============================================================
+2025-06-14 19:51:45,538 - INFO - Processing folder: 044 Md Nasiruddin
+2025-06-14 19:51:45,538 - INFO - Extracted name: Md Nasiruddin
+2025-06-14 19:51:45,539 - INFO - Looking for file: UID_MD_NASIRUDDIN.pdf
+2025-06-14 19:51:45,539 - INFO - Found UID file: D:\minato\Data\044 Md Nasiruddin\UID_MD_NASIRUDDIN.pdf
+2025-06-14 19:51:45,539 - INFO - Processing PDF: D:\minato\Data\044 Md Nasiruddin\UID_MD_NASIRUDDIN.pdf
+2025-06-14 19:51:45,557 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:50,512 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:50,537 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:52,145 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:52,146 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:52,146 - INFO -   Aadhaar Number: 6019 0031 8116
+2025-06-14 19:51:52,146 - INFO -   Clean Aadhaar Number: 601900318116
+2025-06-14 19:51:52,147 - INFO - Renamed folder: 044 Md Nasiruddin -> 044 Md Nasiruddin_601900318116
+2025-06-14 19:51:52,147 - INFO - [SUCCESS] Successfully processed folder: 044 Md Nasiruddin
+2025-06-14 19:51:52,148 - INFO - 
+============================================================
+2025-06-14 19:51:52,148 - INFO - Processing folder: 045 Jishu Bauri
+2025-06-14 19:51:52,148 - INFO - Extracted name: Jishu Bauri
+2025-06-14 19:51:52,148 - INFO - Looking for file: UID_JISHU_BAURI.pdf
+2025-06-14 19:51:52,149 - INFO - Found UID file: D:\minato\Data\045 Jishu Bauri\UID_JISHU_BAURI.pdf
+2025-06-14 19:51:52,149 - INFO - Processing PDF: D:\minato\Data\045 Jishu Bauri\UID_JISHU_BAURI.pdf
+2025-06-14 19:51:52,210 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:51:55,606 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:51:55,609 - INFO - AFC remote call 1 is done.
+2025-06-14 19:51:57,490 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:51:57,491 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:51:57,492 - INFO -   Aadhaar Number: 9705 6752 1779
+2025-06-14 19:51:57,492 - INFO -   Clean Aadhaar Number: 970567521779
+2025-06-14 19:51:57,494 - INFO - Renamed folder: 045 Jishu Bauri -> 045 Jishu Bauri_970567521779
+2025-06-14 19:51:57,494 - INFO - [SUCCESS] Successfully processed folder: 045 Jishu Bauri
+2025-06-14 19:51:57,496 - INFO - 
+============================================================
+2025-06-14 19:51:57,496 - INFO - Processing folder: 046 Md Zafar Imam
+2025-06-14 19:51:57,496 - INFO - Extracted name: Md Zafar Imam
+2025-06-14 19:51:57,497 - INFO - Looking for file: UID_MD_ZAFAR_IMAM.pdf
+2025-06-14 19:51:57,497 - INFO - Found UID file: D:\minato\Data\046 Md Zafar Imam\UID_MD_ZAFAR_IMAM.pdf
+2025-06-14 19:51:57,498 - INFO - Processing PDF: D:\minato\Data\046 Md Zafar Imam\UID_MD_ZAFAR_IMAM.pdf
+2025-06-14 19:51:57,513 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:02,434 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:02,438 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:03,879 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:03,881 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:03,881 - INFO -   Aadhaar Number: 2135 0534 8714
+2025-06-14 19:52:03,881 - INFO -   Clean Aadhaar Number: 213505348714
+2025-06-14 19:52:03,883 - INFO - Renamed folder: 046 Md Zafar Imam -> 046 Md Zafar Imam_213505348714
+2025-06-14 19:52:03,884 - INFO - [SUCCESS] Successfully processed folder: 046 Md Zafar Imam
+2025-06-14 19:52:03,886 - INFO - 
+============================================================
+2025-06-14 19:52:03,888 - INFO - Processing folder: 047 Laxminarayan Bauri
+2025-06-14 19:52:03,889 - INFO - Extracted name: Laxminarayan Bauri
+2025-06-14 19:52:03,890 - INFO - Looking for file: UID_LAXMINARAYAN_BAURI.pdf
+2025-06-14 19:52:03,890 - INFO - Found UID file: D:\minato\Data\047 Laxminarayan Bauri\UID_LAXMINARAYAN_BAURI.pdf
+2025-06-14 19:52:03,892 - INFO - Processing PDF: D:\minato\Data\047 Laxminarayan Bauri\UID_LAXMINARAYAN_BAURI.pdf
+2025-06-14 19:52:03,916 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:08,105 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:08,110 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:10,051 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:10,083 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:10,084 - INFO -   Aadhaar Number: 7711 3660 8535
+2025-06-14 19:52:10,098 - INFO -   Clean Aadhaar Number: 771136608535
+2025-06-14 19:52:10,100 - INFO - Renamed folder: 047 Laxminarayan Bauri -> 047 Laxminarayan Bauri_771136608535
+2025-06-14 19:52:10,100 - INFO - [SUCCESS] Successfully processed folder: 047 Laxminarayan Bauri
+2025-06-14 19:52:10,101 - INFO - 
+============================================================
+2025-06-14 19:52:10,102 - INFO - Processing folder: 048 Rukshar Khatoon
+2025-06-14 19:52:10,106 - INFO - Extracted name: Rukshar Khatoon
+2025-06-14 19:52:10,114 - INFO - Looking for file: UID_RUKSHAR_KHATOON.pdf
+2025-06-14 19:52:10,114 - INFO - Found UID file: D:\minato\Data\048 Rukshar Khatoon\UID_RUKSHAR_KHATOON.pdf
+2025-06-14 19:52:10,115 - INFO - Processing PDF: D:\minato\Data\048 Rukshar Khatoon\UID_RUKSHAR_KHATOON.pdf
+2025-06-14 19:52:10,140 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:14,831 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:14,836 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:16,340 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:16,341 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:16,341 - INFO -   Aadhaar Number: 7963 9347 0443
+2025-06-14 19:52:16,342 - INFO -   Clean Aadhaar Number: 796393470443
+2025-06-14 19:52:16,342 - INFO - Renamed folder: 048 Rukshar Khatoon -> 048 Rukshar Khatoon_796393470443
+2025-06-14 19:52:16,342 - INFO - [SUCCESS] Successfully processed folder: 048 Rukshar Khatoon
+2025-06-14 19:52:16,343 - INFO - 
+============================================================
+2025-06-14 19:52:16,343 - INFO - Processing folder: 049 Md Raja - CLOSED
+2025-06-14 19:52:16,344 - INFO - Extracted name: Md Raja - CLOSED
+2025-06-14 19:52:16,344 - INFO - Looking for file: UID_MD_RAJA_-_CLOSED.pdf
+2025-06-14 19:52:16,344 - INFO - Found UID file: D:\minato\Data\049 Md Raja - CLOSED\UID_MD_RAJA.pdf
+2025-06-14 19:52:16,345 - INFO - Processing PDF: D:\minato\Data\049 Md Raja - CLOSED\UID_MD_RAJA.pdf
+2025-06-14 19:52:16,363 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:22,554 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:22,559 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:24,240 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:24,241 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:24,241 - INFO -   Aadhaar Number: 6249 8847 5179
+2025-06-14 19:52:24,242 - INFO -   Clean Aadhaar Number: 624988475179
+2025-06-14 19:52:24,242 - INFO - Renamed folder: 049 Md Raja - CLOSED -> 049 Md Raja - CLOSED_624988475179
+2025-06-14 19:52:24,242 - INFO - [SUCCESS] Successfully processed folder: 049 Md Raja - CLOSED
+2025-06-14 19:52:24,243 - INFO - 
+============================================================
+2025-06-14 19:52:24,243 - INFO - Processing folder: 050 Sarfaraz Ahmad
+2025-06-14 19:52:24,243 - INFO - Extracted name: Sarfaraz Ahmad
+2025-06-14 19:52:24,244 - INFO - Looking for file: UID_SARFARAZ_AHMAD.pdf
+2025-06-14 19:52:24,244 - INFO - Found UID file: D:\minato\Data\050 Sarfaraz Ahmad\UID_SARFARAZ_AHMAD.pdf
+2025-06-14 19:52:24,244 - INFO - Processing PDF: D:\minato\Data\050 Sarfaraz Ahmad\UID_SARFARAZ_AHMAD.pdf
+2025-06-14 19:52:24,308 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:26,964 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:26,965 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:28,477 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:28,479 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:28,479 - INFO -   Aadhaar Number: 8684 3769 7274
+2025-06-14 19:52:28,479 - INFO -   Clean Aadhaar Number: 868437697274
+2025-06-14 19:52:28,480 - INFO - Renamed folder: 050 Sarfaraz Ahmad -> 050 Sarfaraz Ahmad_868437697274
+2025-06-14 19:52:28,481 - INFO - [SUCCESS] Successfully processed folder: 050 Sarfaraz Ahmad
+2025-06-14 19:52:28,481 - INFO - 
+============================================================
+2025-06-14 19:52:28,482 - INFO - Processing folder: 051 Md Ashgar Tabis
+2025-06-14 19:52:28,482 - INFO - Extracted name: Md Ashgar Tabis
+2025-06-14 19:52:28,482 - INFO - Looking for file: UID_MD_ASHGAR_TABIS.pdf
+2025-06-14 19:52:28,483 - INFO - Found UID file: D:\minato\Data\051 Md Ashgar Tabis\UID_MD_ASHGAR_TABIS.pdf
+2025-06-14 19:52:28,483 - INFO - Processing PDF: D:\minato\Data\051 Md Ashgar Tabis\UID_MD_ASHGAR_TABIS.pdf
+2025-06-14 19:52:28,502 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:32,461 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:32,467 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:34,154 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:34,155 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:34,155 - INFO -   Aadhaar Number: 8322 7987 2776
+2025-06-14 19:52:34,156 - INFO -   Clean Aadhaar Number: 832279872776
+2025-06-14 19:52:34,157 - INFO - Renamed folder: 051 Md Ashgar Tabis -> 051 Md Ashgar Tabis_832279872776
+2025-06-14 19:52:34,157 - INFO - [SUCCESS] Successfully processed folder: 051 Md Ashgar Tabis
+2025-06-14 19:52:34,158 - INFO - 
+============================================================
+2025-06-14 19:52:34,158 - INFO - Processing folder: 052 Krishna Ghosh
+2025-06-14 19:52:34,159 - INFO - Extracted name: Krishna Ghosh
+2025-06-14 19:52:34,159 - INFO - Looking for file: UID_KRISHNA_GHOSH.pdf
+2025-06-14 19:52:34,159 - INFO - Found UID file: D:\minato\Data\052 Krishna Ghosh\UID_KRISHNA_GHOSH.pdf
+2025-06-14 19:52:34,160 - INFO - Processing PDF: D:\minato\Data\052 Krishna Ghosh\UID_KRISHNA_GHOSH.pdf
+2025-06-14 19:52:34,226 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:37,298 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:37,300 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:38,856 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:38,857 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:38,857 - INFO -   Aadhaar Number: 8982 2399 4730
+2025-06-14 19:52:38,857 - INFO -   Clean Aadhaar Number: 898223994730
+2025-06-14 19:52:38,859 - INFO - Renamed folder: 052 Krishna Ghosh -> 052 Krishna Ghosh_898223994730
+2025-06-14 19:52:38,859 - INFO - [SUCCESS] Successfully processed folder: 052 Krishna Ghosh
+2025-06-14 19:52:38,860 - INFO - 
+============================================================
+2025-06-14 19:52:38,860 - INFO - Processing folder: 053 Md Kasim
+2025-06-14 19:52:38,860 - INFO - Extracted name: Md Kasim
+2025-06-14 19:52:38,861 - INFO - Looking for file: UID_MD_KASIM.pdf
+2025-06-14 19:52:38,861 - INFO - Found UID file: D:\minato\Data\053 Md Kasim\UID_MD_KASIM.pdf
+2025-06-14 19:52:38,861 - INFO - Processing PDF: D:\minato\Data\053 Md Kasim\UID_MD_KASIM.pdf
+2025-06-14 19:52:38,877 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:43,052 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:43,057 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:44,590 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:44,592 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:44,592 - INFO -   Aadhaar Number: 2541 2259 0145
+2025-06-14 19:52:44,592 - INFO -   Clean Aadhaar Number: 254122590145
+2025-06-14 19:52:44,593 - INFO - Renamed folder: 053 Md Kasim -> 053 Md Kasim_254122590145
+2025-06-14 19:52:44,594 - INFO - [SUCCESS] Successfully processed folder: 053 Md Kasim
+2025-06-14 19:52:44,595 - INFO - 
+============================================================
+2025-06-14 19:52:44,595 - INFO - Processing folder: 054 Afaroj Sha
+2025-06-14 19:52:44,596 - INFO - Extracted name: Afaroj Sha
+2025-06-14 19:52:44,598 - INFO - Looking for file: UID_AFAROJ_SHA.pdf
+2025-06-14 19:52:44,599 - ERROR - UID file not found in folder: D:\minato\Data\054 Afaroj Sha
+2025-06-14 19:52:44,601 - INFO - 
+============================================================
+2025-06-14 19:52:44,602 - INFO - Processing folder: 055 Pabitra Ghosh
+2025-06-14 19:52:44,603 - INFO - Extracted name: Pabitra Ghosh
+2025-06-14 19:52:44,604 - INFO - Looking for file: UID_PABITRA_GHOSH.pdf
+2025-06-14 19:52:44,605 - INFO - Found UID file: D:\minato\Data\055 Pabitra Ghosh\UID_PABITRA_GHOSH.pdf
+2025-06-14 19:52:44,606 - INFO - Processing PDF: D:\minato\Data\055 Pabitra Ghosh\UID_PABITRA_GHOSH.pdf
+2025-06-14 19:52:44,634 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:48,768 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:48,773 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:50,609 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:50,611 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:50,611 - INFO -   Aadhaar Number: 8949 4250 6459
+2025-06-14 19:52:50,612 - INFO -   Clean Aadhaar Number: 894942506459
+2025-06-14 19:52:50,612 - INFO - Renamed folder: 055 Pabitra Ghosh -> 055 Pabitra Ghosh_894942506459
+2025-06-14 19:52:50,613 - INFO - [SUCCESS] Successfully processed folder: 055 Pabitra Ghosh
+2025-06-14 19:52:50,613 - INFO - 
+============================================================
+2025-06-14 19:52:50,614 - INFO - Processing folder: 056 Taraknath Karmakar
+2025-06-14 19:52:50,614 - INFO - Extracted name: Taraknath Karmakar
+2025-06-14 19:52:50,614 - INFO - Looking for file: UID_TARAKNATH_KARMAKAR.pdf
+2025-06-14 19:52:50,615 - INFO - Found UID file: D:\minato\Data\056 Taraknath Karmakar\UID_TARAKNATH_KARMAKAR.pdf
+2025-06-14 19:52:50,615 - INFO - Processing PDF: D:\minato\Data\056 Taraknath Karmakar\UID_TARAKNATH_KARMAKAR.pdf
+2025-06-14 19:52:50,695 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:53,601 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:53,602 - INFO - AFC remote call 1 is done.
+2025-06-14 19:52:55,428 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:52:55,428 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:52:55,428 - INFO -   Aadhaar Number: 5927 6330 5271
+2025-06-14 19:52:55,428 - INFO -   Clean Aadhaar Number: 592763305271
+2025-06-14 19:52:55,428 - INFO - Renamed folder: 056 Taraknath Karmakar -> 056 Taraknath Karmakar_592763305271
+2025-06-14 19:52:55,428 - INFO - [SUCCESS] Successfully processed folder: 056 Taraknath Karmakar
+2025-06-14 19:52:55,428 - INFO - 
+============================================================
+2025-06-14 19:52:55,428 - INFO - Processing folder: 057 Md Sulaiman
+2025-06-14 19:52:55,428 - INFO - Extracted name: Md Sulaiman
+2025-06-14 19:52:55,440 - INFO - Looking for file: UID_MD_SULAIMAN.pdf
+2025-06-14 19:52:55,441 - ERROR - UID file not found in folder: D:\minato\Data\057 Md Sulaiman
+2025-06-14 19:52:55,443 - INFO - 
+============================================================
+2025-06-14 19:52:55,443 - INFO - Processing folder: 058 Mohammad Rizwan Khan
+2025-06-14 19:52:55,443 - INFO - Extracted name: Mohammad Rizwan Khan
+2025-06-14 19:52:55,445 - INFO - Looking for file: UID_MOHAMMAD_RIZWAN_KHAN.pdf
+2025-06-14 19:52:55,446 - INFO - Found UID file: D:\minato\Data\058 Mohammad Rizwan Khan\UID_MOHAMMAD_RIZWAN_KHAN.pdf
+2025-06-14 19:52:55,446 - INFO - Processing PDF: D:\minato\Data\058 Mohammad Rizwan Khan\UID_MOHAMMAD_RIZWAN_KHAN.pdf
+2025-06-14 19:52:55,467 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:52:59,437 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:52:59,442 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:01,432 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:01,433 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:01,433 - INFO -   Aadhaar Number: 9833 2228 1451
+2025-06-14 19:53:01,434 - INFO -   Clean Aadhaar Number: 983322281451
+2025-06-14 19:53:01,435 - INFO - Renamed folder: 058 Mohammad Rizwan Khan -> 058 Mohammad Rizwan Khan_983322281451
+2025-06-14 19:53:01,435 - INFO - [SUCCESS] Successfully processed folder: 058 Mohammad Rizwan Khan
+2025-06-14 19:53:01,436 - INFO - 
+============================================================
+2025-06-14 19:53:01,436 - INFO - Processing folder: 059 Kajal Mandal
+2025-06-14 19:53:01,437 - INFO - Extracted name: Kajal Mandal
+2025-06-14 19:53:01,437 - INFO - Looking for file: UID_KAJAL_MANDAL.pdf
+2025-06-14 19:53:01,437 - INFO - Found UID file: D:\minato\Data\059 Kajal Mandal\UID_KAJAL_MANDAL.pdf
+2025-06-14 19:53:01,438 - INFO - Processing PDF: D:\minato\Data\059 Kajal Mandal\UID_KAJAL_MANDAL.pdf
+2025-06-14 19:53:01,460 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:53:05,714 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:53:05,719 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:07,994 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:07,995 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:07,995 - INFO -   Aadhaar Number: 4511 6021 4626
+2025-06-14 19:53:07,996 - INFO -   Clean Aadhaar Number: 451160214626
+2025-06-14 19:53:07,997 - INFO - Renamed folder: 059 Kajal Mandal -> 059 Kajal Mandal_451160214626
+2025-06-14 19:53:07,997 - INFO - [SUCCESS] Successfully processed folder: 059 Kajal Mandal
+2025-06-14 19:53:07,998 - INFO - 
+============================================================
+2025-06-14 19:53:07,998 - INFO - Processing folder: 060 Sahid Ansari
+2025-06-14 19:53:07,999 - INFO - Extracted name: Sahid Ansari
+2025-06-14 19:53:07,999 - INFO - Looking for file: UID_SAHID_ANSARI.pdf
+2025-06-14 19:53:08,000 - INFO - Found UID file: D:\minato\Data\060 Sahid Ansari\UID_SAHID_ANSARI.pdf
+2025-06-14 19:53:08,001 - INFO - Processing PDF: D:\minato\Data\060 Sahid Ansari\UID_SAHID_ANSARI.pdf
+2025-06-14 19:53:08,019 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:53:17,804 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:53:17,809 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:19,581 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:19,582 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:19,583 - INFO -   Aadhaar Number: 8292 1344 7166
+2025-06-14 19:53:19,583 - INFO -   Clean Aadhaar Number: 829213447166
+2025-06-14 19:53:19,584 - INFO - Renamed folder: 060 Sahid Ansari -> 060 Sahid Ansari_829213447166
+2025-06-14 19:53:19,584 - INFO - [SUCCESS] Successfully processed folder: 060 Sahid Ansari
+2025-06-14 19:53:19,585 - INFO - 
+============================================================
+2025-06-14 19:53:19,586 - INFO - Processing folder: 061 Purnima Debi Beldar
+2025-06-14 19:53:19,586 - INFO - Extracted name: Purnima Debi Beldar
+2025-06-14 19:53:19,586 - INFO - Looking for file: UID_PURNIMA_DEBI_BELDAR.pdf
+2025-06-14 19:53:19,587 - INFO - Found UID file: D:\minato\Data\061 Purnima Debi Beldar\UID_PURNIMA_DEBI_BELDAR.pdf
+2025-06-14 19:53:19,587 - INFO - Processing PDF: D:\minato\Data\061 Purnima Debi Beldar\UID_PURNIMA_DEBI_BELDAR.pdf
+2025-06-14 19:53:19,661 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:53:25,229 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:53:25,232 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:27,025 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:27,026 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:27,026 - INFO -   Aadhaar Number: 7540 7092 9433
+2025-06-14 19:53:27,027 - INFO -   Clean Aadhaar Number: 754070929433
+2025-06-14 19:53:27,028 - INFO - Renamed folder: 061 Purnima Debi Beldar -> 061 Purnima Debi Beldar_754070929433
+2025-06-14 19:53:27,028 - INFO - [SUCCESS] Successfully processed folder: 061 Purnima Debi Beldar
+2025-06-14 19:53:27,029 - INFO - 
+============================================================
+2025-06-14 19:53:27,029 - INFO - Processing folder: 062 Ranjit Pal
+2025-06-14 19:53:27,029 - INFO - Extracted name: Ranjit Pal
+2025-06-14 19:53:27,030 - INFO - Looking for file: UID_RANJIT_PAL.pdf
+2025-06-14 19:53:27,031 - ERROR - UID file not found in folder: D:\minato\Data\062 Ranjit Pal
+2025-06-14 19:53:27,032 - INFO - 
+============================================================
+2025-06-14 19:53:27,033 - INFO - Processing folder: 063 Dhananjoy Mondal
+2025-06-14 19:53:27,033 - INFO - Extracted name: Dhananjoy Mondal
+2025-06-14 19:53:27,033 - INFO - Looking for file: UID_DHANANJOY_MONDAL.pdf
+2025-06-14 19:53:27,034 - INFO - Found UID file: D:\minato\Data\063 Dhananjoy Mondal\UID_DHANANJOY_MONDAL.pdf
+2025-06-14 19:53:27,034 - INFO - Processing PDF: D:\minato\Data\063 Dhananjoy Mondal\UID_DHANANJOY_MONDAL.pdf
+2025-06-14 19:53:27,063 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:53:31,168 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:53:31,174 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:32,940 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:32,941 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:32,942 - INFO -   Aadhaar Number: 6910 5769 4503
+2025-06-14 19:53:32,942 - INFO -   Clean Aadhaar Number: 691057694503
+2025-06-14 19:53:32,944 - INFO - Renamed folder: 063 Dhananjoy Mondal -> 063 Dhananjoy Mondal_691057694503
+2025-06-14 19:53:32,944 - INFO - [SUCCESS] Successfully processed folder: 063 Dhananjoy Mondal
+2025-06-14 19:53:32,945 - INFO - 
+============================================================
+2025-06-14 19:53:32,945 - INFO - Processing folder: 064 Biplab Bishwas
+2025-06-14 19:53:32,946 - INFO - Extracted name: Biplab Bishwas
+2025-06-14 19:53:32,946 - INFO - Looking for file: UID_BIPLAB_BISHWAS.pdf
+2025-06-14 19:53:32,947 - INFO - Found UID file: D:\minato\Data\064 Biplab Bishwas\UID_BIPLAB_BISHWAS.pdf
+2025-06-14 19:53:32,947 - INFO - Processing PDF: D:\minato\Data\064 Biplab Bishwas\UID_BIPLAB_BISHWAS.pdf
+2025-06-14 19:53:32,964 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:53:37,270 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:53:37,275 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:39,065 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:39,066 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:39,066 - INFO -   Aadhaar Number: 7061 1267 5237
+2025-06-14 19:53:39,066 - INFO -   Clean Aadhaar Number: 706112675237
+2025-06-14 19:53:39,067 - INFO - Renamed folder: 064 Biplab Bishwas -> 064 Biplab Bishwas_706112675237
+2025-06-14 19:53:39,067 - INFO - [SUCCESS] Successfully processed folder: 064 Biplab Bishwas
+2025-06-14 19:53:39,068 - INFO - 
+============================================================
+2025-06-14 19:53:39,068 - INFO - Processing folder: 065 Shubham Ghosh
+2025-06-14 19:53:39,068 - INFO - Extracted name: Shubham Ghosh
+2025-06-14 19:53:39,069 - INFO - Looking for file: UID_SHUBHAM_GHOSH.pdf
+2025-06-14 19:53:39,069 - INFO - Found UID file: D:\minato\Data\065 Shubham Ghosh\UID_SHUBHAM_GHOSH.pdf
+2025-06-14 19:53:39,069 - INFO - Processing PDF: D:\minato\Data\065 Shubham Ghosh\UID_SHUBHAM_GHOSH.pdf
+2025-06-14 19:53:39,086 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:53:43,349 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:53:43,351 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:45,053 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:45,054 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:45,054 - INFO -   Aadhaar Number: 9336 0141 4114
+2025-06-14 19:53:45,055 - INFO -   Clean Aadhaar Number: 933601414114
+2025-06-14 19:53:45,056 - INFO - Renamed folder: 065 Shubham Ghosh -> 065 Shubham Ghosh_933601414114
+2025-06-14 19:53:45,057 - INFO - [SUCCESS] Successfully processed folder: 065 Shubham Ghosh
+2025-06-14 19:53:45,057 - INFO - 
+============================================================
+2025-06-14 19:53:45,058 - INFO - Processing folder: 066 Md Anowar Hosen
+2025-06-14 19:53:45,058 - INFO - Extracted name: Md Anowar Hosen
+2025-06-14 19:53:45,058 - INFO - Looking for file: UID_MD_ANOWAR_HOSEN.pdf
+2025-06-14 19:53:45,059 - INFO - Found UID file: D:\minato\Data\066 Md Anowar Hosen\UID_MD_ANOWAR_HOSEN.pdf
+2025-06-14 19:53:45,059 - INFO - Processing PDF: D:\minato\Data\066 Md Anowar Hosen\UID_MD_ANOWAR_HOSEN.pdf
+2025-06-14 19:53:45,078 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:53:49,167 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:53:49,173 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:50,835 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:50,836 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:50,836 - INFO -   Aadhaar Number: 4436 0374 5037
+2025-06-14 19:53:50,836 - INFO -   Clean Aadhaar Number: 443603745037
+2025-06-14 19:53:50,838 - INFO - Renamed folder: 066 Md Anowar Hosen -> 066 Md Anowar Hosen_443603745037
+2025-06-14 19:53:50,838 - INFO - [SUCCESS] Successfully processed folder: 066 Md Anowar Hosen
+2025-06-14 19:53:50,839 - INFO - 
+============================================================
+2025-06-14 19:53:50,839 - INFO - Processing folder: 067 Bijay Bauri
+2025-06-14 19:53:50,839 - INFO - Extracted name: Bijay Bauri
+2025-06-14 19:53:50,840 - INFO - Looking for file: UID_BIJAY_BAURI.pdf
+2025-06-14 19:53:50,840 - INFO - Found UID file: D:\minato\Data\067 Bijay Bauri\UID_BIJAY_BAURI.pdf
+2025-06-14 19:53:50,841 - INFO - Processing PDF: D:\minato\Data\067 Bijay Bauri\UID_BIJAY_BAURI.pdf
+2025-06-14 19:53:50,859 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:53:54,924 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:53:54,927 - INFO - AFC remote call 1 is done.
+2025-06-14 19:53:56,627 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:53:56,628 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:53:56,629 - INFO -   Aadhaar Number: 3353 4129 1862
+2025-06-14 19:53:56,629 - INFO -   Clean Aadhaar Number: 335341291862
+2025-06-14 19:53:56,630 - INFO - Renamed folder: 067 Bijay Bauri -> 067 Bijay Bauri_335341291862
+2025-06-14 19:53:56,630 - INFO - [SUCCESS] Successfully processed folder: 067 Bijay Bauri
+2025-06-14 19:53:56,631 - INFO - 
+============================================================
+2025-06-14 19:53:56,631 - INFO - Processing folder: 068 Arpita Dey
+2025-06-14 19:53:56,632 - INFO - Extracted name: Arpita Dey
+2025-06-14 19:53:56,632 - INFO - Looking for file: UID_ARPITA_DEY.pdf
+2025-06-14 19:53:56,632 - INFO - Found UID file: D:\minato\Data\068 Arpita Dey\UID_ARPITA_DEY.pdf
+2025-06-14 19:53:56,633 - INFO - Processing PDF: D:\minato\Data\068 Arpita Dey\UID_ARPITA_DEY.pdf
+2025-06-14 19:53:56,654 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:00,705 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:00,710 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:02,483 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:02,484 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:02,484 - INFO -   Aadhaar Number: 6923 3944 6496
+2025-06-14 19:54:02,485 - INFO -   Clean Aadhaar Number: 692339446496
+2025-06-14 19:54:02,486 - INFO - Renamed folder: 068 Arpita Dey -> 068 Arpita Dey_692339446496
+2025-06-14 19:54:02,486 - INFO - [SUCCESS] Successfully processed folder: 068 Arpita Dey
+2025-06-14 19:54:02,487 - INFO - 
+============================================================
+2025-06-14 19:54:02,487 - INFO - Processing folder: 069 Sahabaj Khan
+2025-06-14 19:54:02,488 - INFO - Extracted name: Sahabaj Khan
+2025-06-14 19:54:02,488 - INFO - Looking for file: UID_SAHABAJ_KHAN.pdf
+2025-06-14 19:54:02,488 - INFO - Found UID file: D:\minato\Data\069 Sahabaj Khan\UID_SAHABAJ_KHAN.pdf
+2025-06-14 19:54:02,489 - INFO - Processing PDF: D:\minato\Data\069 Sahabaj Khan\UID_SAHABAJ_KHAN.pdf
+2025-06-14 19:54:02,557 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:05,950 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:05,953 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:07,420 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:07,421 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:07,421 - INFO -   Aadhaar Number: 4186 9779 4174
+2025-06-14 19:54:07,423 - INFO -   Clean Aadhaar Number: 418697794174
+2025-06-14 19:54:07,424 - INFO - Renamed folder: 069 Sahabaj Khan -> 069 Sahabaj Khan_418697794174
+2025-06-14 19:54:07,425 - INFO - [SUCCESS] Successfully processed folder: 069 Sahabaj Khan
+2025-06-14 19:54:07,425 - INFO - 
+============================================================
+2025-06-14 19:54:07,426 - INFO - Processing folder: 070 Abhijit Dey
+2025-06-14 19:54:07,426 - INFO - Extracted name: Abhijit Dey
+2025-06-14 19:54:07,426 - INFO - Looking for file: UID_ABHIJIT_DEY.pdf
+2025-06-14 19:54:07,427 - INFO - Found UID file: D:\minato\Data\070 Abhijit Dey\UID_ABHIJIT_DEY.pdf
+2025-06-14 19:54:07,427 - INFO - Processing PDF: D:\minato\Data\070 Abhijit Dey\UID_ABHIJIT_DEY.pdf
+2025-06-14 19:54:07,447 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:11,316 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:11,321 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:12,754 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:12,755 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:12,755 - INFO -   Aadhaar Number: 3246 8782 7305
+2025-06-14 19:54:12,756 - INFO -   Clean Aadhaar Number: 324687827305
+2025-06-14 19:54:12,757 - INFO - Renamed folder: 070 Abhijit Dey -> 070 Abhijit Dey_324687827305
+2025-06-14 19:54:12,757 - INFO - [SUCCESS] Successfully processed folder: 070 Abhijit Dey
+2025-06-14 19:54:12,758 - INFO - 
+============================================================
+2025-06-14 19:54:12,758 - INFO - Processing folder: 071 Md Miraj Alam
+2025-06-14 19:54:12,759 - INFO - Extracted name: Md Miraj Alam
+2025-06-14 19:54:12,759 - INFO - Looking for file: UID_MD_MIRAJ_ALAM.pdf
+2025-06-14 19:54:12,760 - INFO - Found UID file: D:\minato\Data\071 Md Miraj Alam\UID_MD_MIRAJ_ALAM.pdf
+2025-06-14 19:54:12,760 - INFO - Processing PDF: D:\minato\Data\071 Md Miraj Alam\UID_MD_MIRAJ_ALAM.pdf
+2025-06-14 19:54:12,783 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:16,788 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:16,793 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:18,308 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:18,308 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:18,309 - INFO -   Aadhaar Number: 7575 9994 4070
+2025-06-14 19:54:18,309 - INFO -   Clean Aadhaar Number: 757599944070
+2025-06-14 19:54:18,310 - INFO - Renamed folder: 071 Md Miraj Alam -> 071 Md Miraj Alam_757599944070
+2025-06-14 19:54:18,310 - INFO - [SUCCESS] Successfully processed folder: 071 Md Miraj Alam
+2025-06-14 19:54:18,311 - INFO - 
+============================================================
+2025-06-14 19:54:18,311 - INFO - Processing folder: 072 Saphik Shah
+2025-06-14 19:54:18,311 - INFO - Extracted name: Saphik Shah
+2025-06-14 19:54:18,313 - INFO - Looking for file: UID_SAPHIK_SHAH.pdf
+2025-06-14 19:54:18,313 - INFO - Found UID file: D:\minato\Data\072 Saphik Shah\UID_SAPHIK_SHAH.pdf
+2025-06-14 19:54:18,313 - INFO - Processing PDF: D:\minato\Data\072 Saphik Shah\UID_SAPHIK_SHAH.pdf
+2025-06-14 19:54:18,389 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:22,467 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:22,470 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:23,932 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:23,933 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:23,933 - INFO -   Aadhaar Number: 5080 8596 4422
+2025-06-14 19:54:23,933 - INFO -   Clean Aadhaar Number: 508085964422
+2025-06-14 19:54:23,935 - INFO - Renamed folder: 072 Saphik Shah -> 072 Saphik Shah_508085964422
+2025-06-14 19:54:23,935 - INFO - [SUCCESS] Successfully processed folder: 072 Saphik Shah
+2025-06-14 19:54:23,936 - INFO - 
+============================================================
+2025-06-14 19:54:23,936 - INFO - Processing folder: 073 Nizam Khan
+2025-06-14 19:54:23,936 - INFO - Extracted name: Nizam Khan
+2025-06-14 19:54:23,937 - INFO - Looking for file: UID_NIZAM_KHAN.pdf
+2025-06-14 19:54:23,937 - INFO - Found UID file: D:\minato\Data\073 Nizam Khan\UID_NIZAM_KHAN.pdf
+2025-06-14 19:54:23,937 - INFO - Processing PDF: D:\minato\Data\073 Nizam Khan\UID_NIZAM_KHAN.pdf
+2025-06-14 19:54:23,957 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:28,024 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:28,030 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:29,534 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:29,535 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:29,535 - INFO -   Aadhaar Number: 3003 1249 5390
+2025-06-14 19:54:29,535 - INFO -   Clean Aadhaar Number: 300312495390
+2025-06-14 19:54:29,536 - INFO - Renamed folder: 073 Nizam Khan -> 073 Nizam Khan_300312495390
+2025-06-14 19:54:29,537 - INFO - [SUCCESS] Successfully processed folder: 073 Nizam Khan
+2025-06-14 19:54:29,538 - INFO - 
+============================================================
+2025-06-14 19:54:29,538 - INFO - Processing folder: 074 Bijay Dubey
+2025-06-14 19:54:29,538 - INFO - Extracted name: Bijay Dubey
+2025-06-14 19:54:29,540 - INFO - Looking for file: UID_BIJAY_DUBEY.pdf
+2025-06-14 19:54:29,540 - INFO - Found UID file: D:\minato\Data\074 Bijay Dubey\UID_BIJAY_DUBEY.pdf
+2025-06-14 19:54:29,540 - INFO - Processing PDF: D:\minato\Data\074 Bijay Dubey\UID_BIJAY_DUBEY.pdf
+2025-06-14 19:54:29,578 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:33,785 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:33,791 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:35,403 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:35,405 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:35,411 - INFO -   Aadhaar Number: 6143 6844 9544
+2025-06-14 19:54:35,411 - INFO -   Clean Aadhaar Number: 614368449544
+2025-06-14 19:54:35,413 - INFO - Renamed folder: 074 Bijay Dubey -> 074 Bijay Dubey_614368449544
+2025-06-14 19:54:35,414 - INFO - [SUCCESS] Successfully processed folder: 074 Bijay Dubey
+2025-06-14 19:54:35,417 - INFO - 
+============================================================
+2025-06-14 19:54:35,418 - INFO - Processing folder: 075 Chiranjit Keora
+2025-06-14 19:54:35,418 - INFO - Extracted name: Chiranjit Keora
+2025-06-14 19:54:35,421 - INFO - Looking for file: UID_CHIRANJIT_KEORA.pdf
+2025-06-14 19:54:35,432 - INFO - Found UID file: D:\minato\Data\075 Chiranjit Keora\UID_CHIRANJIT_KEORA.pdf
+2025-06-14 19:54:35,434 - INFO - Processing PDF: D:\minato\Data\075 Chiranjit Keora\UID_CHIRANJIT_KEORA.pdf
+2025-06-14 19:54:35,464 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:39,846 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:39,851 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:41,329 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:41,330 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:41,331 - INFO -   Aadhaar Number: 9723 0040 6331
+2025-06-14 19:54:41,331 - INFO -   Clean Aadhaar Number: 972300406331
+2025-06-14 19:54:41,332 - INFO - Renamed folder: 075 Chiranjit Keora -> 075 Chiranjit Keora_972300406331
+2025-06-14 19:54:41,332 - INFO - [SUCCESS] Successfully processed folder: 075 Chiranjit Keora
+2025-06-14 19:54:41,333 - INFO - 
+============================================================
+2025-06-14 19:54:41,333 - INFO - Processing folder: 076 Angshuman Dhibar
+2025-06-14 19:54:41,333 - INFO - Extracted name: Angshuman Dhibar
+2025-06-14 19:54:41,334 - INFO - Looking for file: UID_ANGSHUMAN_DHIBAR.pdf
+2025-06-14 19:54:41,335 - INFO - Found UID file: D:\minato\Data\076 Angshuman Dhibar\UID_ANGSHUMAN_DHIBAR.pdf
+2025-06-14 19:54:41,335 - INFO - Processing PDF: D:\minato\Data\076 Angshuman Dhibar\UID_ANGSHUMAN_DHIBAR.pdf
+2025-06-14 19:54:41,434 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:45,350 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:45,354 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:46,877 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:46,878 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:46,878 - INFO -   Aadhaar Number: 6756 2830 4735
+2025-06-14 19:54:46,879 - INFO -   Clean Aadhaar Number: 675628304735
+2025-06-14 19:54:46,880 - INFO - Renamed folder: 076 Angshuman Dhibar -> 076 Angshuman Dhibar_675628304735
+2025-06-14 19:54:46,881 - INFO - [SUCCESS] Successfully processed folder: 076 Angshuman Dhibar
+2025-06-14 19:54:46,881 - INFO - 
+============================================================
+2025-06-14 19:54:46,882 - INFO - Processing folder: 077 Rabin Garai
+2025-06-14 19:54:46,883 - INFO - Extracted name: Rabin Garai
+2025-06-14 19:54:46,883 - INFO - Looking for file: UID_RABIN_GARAI.pdf
+2025-06-14 19:54:46,883 - INFO - Found UID file: D:\minato\Data\077 Rabin Garai\UID_RABIN_GARAI.pdf
+2025-06-14 19:54:46,883 - INFO - Processing PDF: D:\minato\Data\077 Rabin Garai\UID_RABIN_GARAI.pdf
+2025-06-14 19:54:46,906 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:51,058 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:51,063 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:52,596 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:52,597 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:52,598 - INFO -   Aadhaar Number: 7290 6163 8326
+2025-06-14 19:54:52,598 - INFO -   Clean Aadhaar Number: 729061638326
+2025-06-14 19:54:52,598 - INFO - Renamed folder: 077 Rabin Garai -> 077 Rabin Garai_729061638326
+2025-06-14 19:54:52,598 - INFO - [SUCCESS] Successfully processed folder: 077 Rabin Garai
+2025-06-14 19:54:52,599 - INFO - 
+============================================================
+2025-06-14 19:54:52,599 - INFO - Processing folder: 078 Rasid Alam Ansari
+2025-06-14 19:54:52,600 - INFO - Extracted name: Rasid Alam Ansari
+2025-06-14 19:54:52,600 - INFO - Looking for file: UID_RASID_ALAM_ANSARI.pdf
+2025-06-14 19:54:52,600 - INFO - Found UID file: D:\minato\Data\078 Rasid Alam Ansari\UID_RASID_ALAM_ANSARI.pdf
+2025-06-14 19:54:52,601 - INFO - Processing PDF: D:\minato\Data\078 Rasid Alam Ansari\UID_RASID_ALAM_ANSARI.pdf
+2025-06-14 19:54:52,616 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:54:57,477 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:54:57,484 - INFO - AFC remote call 1 is done.
+2025-06-14 19:54:59,005 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:54:59,006 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:54:59,007 - INFO -   Aadhaar Number: 6251 1231 4265
+2025-06-14 19:54:59,007 - INFO -   Clean Aadhaar Number: 625112314265
+2025-06-14 19:54:59,008 - INFO - Renamed folder: 078 Rasid Alam Ansari -> 078 Rasid Alam Ansari_625112314265
+2025-06-14 19:54:59,009 - INFO - [SUCCESS] Successfully processed folder: 078 Rasid Alam Ansari
+2025-06-14 19:54:59,009 - INFO - 
+============================================================
+2025-06-14 19:54:59,009 - INFO - Processing folder: 079 Md Akbar Khan
+2025-06-14 19:54:59,010 - INFO - Extracted name: Md Akbar Khan
+2025-06-14 19:54:59,010 - INFO - Looking for file: UID_MD_AKBAR_KHAN.pdf
+2025-06-14 19:54:59,010 - INFO - Found UID file: D:\minato\Data\079 Md Akbar Khan\UID_MD_AKBAR_KHAN.pdf
+2025-06-14 19:54:59,010 - INFO - Processing PDF: D:\minato\Data\079 Md Akbar Khan\UID_MD_AKBAR_KHAN.pdf
+2025-06-14 19:54:59,105 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:55:02,776 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:55:02,778 - INFO - AFC remote call 1 is done.
+2025-06-14 19:55:04,678 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:55:04,680 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:55:04,680 - INFO -   Aadhaar Number: 3742 1013 4557
+2025-06-14 19:55:04,682 - INFO -   Clean Aadhaar Number: 374210134557
+2025-06-14 19:55:04,682 - INFO - Renamed folder: 079 Md Akbar Khan -> 079 Md Akbar Khan_374210134557
+2025-06-14 19:55:04,682 - INFO - [SUCCESS] Successfully processed folder: 079 Md Akbar Khan
+2025-06-14 19:55:04,684 - INFO - 
+============================================================
+2025-06-14 19:55:04,684 - INFO - Processing folder: 080 Laxman Rabidas
+2025-06-14 19:55:04,684 - INFO - Extracted name: Laxman Rabidas
+2025-06-14 19:55:04,688 - INFO - Looking for file: UID_LAXMAN_RABIDAS.pdf
+2025-06-14 19:55:04,689 - INFO - Found UID file: D:\minato\Data\080 Laxman Rabidas\UID_LAXMAN_RABIDAS.pdf
+2025-06-14 19:55:04,689 - INFO - Processing PDF: D:\minato\Data\080 Laxman Rabidas\UID_LAXMAN_RABIDAS.pdf
+2025-06-14 19:55:04,712 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:55:08,781 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:55:08,787 - INFO - AFC remote call 1 is done.
+2025-06-14 19:55:11,097 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:55:11,098 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:55:11,098 - INFO -   Aadhaar Number: 2932 7499 2175
+2025-06-14 19:55:11,099 - INFO -   Clean Aadhaar Number: 293274992175
+2025-06-14 19:55:11,100 - INFO - Renamed folder: 080 Laxman Rabidas -> 080 Laxman Rabidas_293274992175
+2025-06-14 19:55:11,100 - INFO - [SUCCESS] Successfully processed folder: 080 Laxman Rabidas
+2025-06-14 19:55:11,101 - INFO - 
+============================================================
+2025-06-14 19:55:11,101 - INFO - Processing folder: 081 Indranil Roy
+2025-06-14 19:55:11,101 - INFO - Extracted name: Indranil Roy
+2025-06-14 19:55:11,102 - INFO - Looking for file: UID_INDRANIL_ROY.pdf
+2025-06-14 19:55:11,102 - INFO - Found UID file: D:\minato\Data\081 Indranil Roy\UID_INDRANIL_ROY.pdf
+2025-06-14 19:55:11,102 - INFO - Processing PDF: D:\minato\Data\081 Indranil Roy\UID_INDRANIL_ROY.pdf
+2025-06-14 19:55:11,121 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:55:15,407 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:55:15,413 - INFO - AFC remote call 1 is done.
+2025-06-14 19:55:17,240 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:55:17,242 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:55:17,242 - INFO -   Aadhaar Number: 5849 1852 2214
+2025-06-14 19:55:17,242 - INFO -   Clean Aadhaar Number: 584918522214
+2025-06-14 19:55:17,243 - INFO - Renamed folder: 081 Indranil Roy -> 081 Indranil Roy_584918522214
+2025-06-14 19:55:17,243 - INFO - [SUCCESS] Successfully processed folder: 081 Indranil Roy
+2025-06-14 19:55:17,245 - INFO - 
+============================================================
+2025-06-14 19:55:17,246 - INFO - Processing folder: 082 Shridam Ghosh
+2025-06-14 19:55:17,246 - INFO - Extracted name: Shridam Ghosh
+2025-06-14 19:55:17,246 - INFO - Looking for file: UID_SHRIDAM_GHOSH.pdf
+2025-06-14 19:55:17,247 - INFO - Found UID file: D:\minato\Data\082 Shridam Ghosh\UID_SHRIDAM_GHOSH.pdf
+2025-06-14 19:55:17,247 - INFO - Processing PDF: D:\minato\Data\082 Shridam Ghosh\UID_SHRIDAM_GHOSH.pdf
+2025-06-14 19:55:17,269 - INFO - AFC is enabled with max remote calls: 10.
+2025-06-14 19:55:21,301 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent "HTTP/1.1 200 OK"
+2025-06-14 19:55:21,305 - INFO - AFC remote call 1 is done.
+2025-06-14 19:55:22,954 - INFO - HTTP Request: POST https://api.agno.com/v1/telemetry/agent/run/create "HTTP/1.1 200 OK"
+2025-06-14 19:55:22,955 - INFO - [SUCCESS] Successfully extracted information:
+2025-06-14 19:55:22,955 - INFO -   Aadhaar Number: 7561 5687 5184
+2025-06-14 19:55:22,955 - INFO -   Clean Aadhaar Number: 756156875184
+2025-06-14 19:55:22,956 - INFO - Renamed folder: 082 Shridam Ghosh -> 082 Shridam Ghosh_756156875184
+2025-06-14 19:55:22,956 - INFO - [SUCCESS] Successfully processed folder: 082 Shridam Ghosh
+2025-06-14 19:55:22,958 - INFO - 
+============================================================
+2025-06-14 19:55:22,958 - INFO - Processing completed!
+2025-06-14 19:55:22,958 - INFO - Summary: 68/82 successful
+2025-06-14 19:55:22,958 - INFO - Check summary log: D:\minato\Data\aadhaar_summary_20250614_194842.log

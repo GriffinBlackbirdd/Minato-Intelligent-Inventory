@@ -1,0 +1,596 @@
+Aadhaar Extraction Summary - 2025-06-14 19:48:42
+================================================================================
+
+SUCCESS: 001 Nandu Singh
+   Name: Nandu Singh
+   Aadhaar: 6874 8087 4343
+   Clean Aadhaar: 687480874343
+   Renamed to: 001 Nandu Singh_687480874343
+   Time: 2025-06-14 19:48:50
+
+SUCCESS: 002 Hasina Bibi - CLOSED
+   Name: Hasina Bibi - CLOSED
+   Aadhaar: 8480 4416 1342
+   Clean Aadhaar: 848044161342
+   Renamed to: 002 Hasina Bibi - CLOSED_848044161342
+   Time: 2025-06-14 19:48:55
+
+FAILED: 003 Md Afzal
+   Name: Md Afzal
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:48:55
+
+SUCCESS: 004 Kunti Devi - CLOSED
+   Name: Kunti Devi - CLOSED
+   Aadhaar: 9439 6880 7303
+   Clean Aadhaar: 943968807303
+   Renamed to: 004 Kunti Devi - CLOSED_943968807303
+   Time: 2025-06-14 19:49:01
+
+FAILED: 005 Rahaman Khan
+   Name: Rahaman Khan
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:49:01
+
+FAILED: 006 Md Zahid
+   Name: Md Zahid
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:49:01
+
+FAILED: 007 Md Sajid Ansari
+   Name: Md Sajid Ansari
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:49:01
+
+FAILED: 008 Pinki Pandit - CLOSED
+   Name: Pinki Pandit - CLOSED
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:49:01
+
+FAILED: 009 Akbari Khatun - CLOSED
+   Name: Akbari Khatun - CLOSED
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:49:01
+
+SUCCESS: 010 Md Chand
+   Name: Md Chand
+   Aadhaar: 8466 7115 9344
+   Clean Aadhaar: 846671159344
+   Renamed to: 010 Md Chand_846671159344
+   Time: 2025-06-14 19:49:07
+
+SUCCESS: 011 Shakun Mali
+   Name: Shakun Mali
+   Aadhaar: 8549 7434 3822
+   Clean Aadhaar: 854974343822
+   Renamed to: 011 Shakun Mali_854974343822
+   Time: 2025-06-14 19:49:14
+
+FAILED: 012 Kajal Das - CLOSED
+   Name: Kajal Das - CLOSED
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:49:14
+
+FAILED: 013 Utpal Das
+   Name: Utpal Das
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:49:14
+
+SUCCESS: 014 Md Kalim
+   Name: Md Kalim
+   Aadhaar: 7587 8150 0040
+   Clean Aadhaar: 758781500040
+   Renamed to: 014 Md Kalim_758781500040
+   Time: 2025-06-14 19:49:20
+
+SUCCESS: 015 Pramod Mondal - CLOSED
+   Name: Pramod Mondal - CLOSED
+   Aadhaar: 7953 5280 1246
+   Clean Aadhaar: 795352801246
+   Renamed to: 015 Pramod Mondal - CLOSED_795352801246
+   Time: 2025-06-14 19:49:25
+
+FAILED: 016 Bikash Bauri
+   Name: Bikash Bauri
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:49:25
+
+SUCCESS: 017 Guddu Mali
+   Name: Guddu Mali
+   Aadhaar: 7191 8175 1700
+   Clean Aadhaar: 719181751700
+   Renamed to: 017 Guddu Mali_719181751700
+   Time: 2025-06-14 19:49:30
+
+SUCCESS: 018 Md Nayeem
+   Name: Md Nayeem
+   Aadhaar: 8335 1247 6398
+   Clean Aadhaar: 833512476398
+   Renamed to: 018 Md Nayeem_833512476398
+   Time: 2025-06-14 19:49:35
+
+SUCCESS: 019 Harisadhan Tapadar
+   Name: Harisadhan Tapadar
+   Aadhaar: 5919 2938 7110
+   Clean Aadhaar: 591929387110
+   Renamed to: 019 Harisadhan Tapadar_591929387110
+   Time: 2025-06-14 19:49:44
+
+SUCCESS: 020 Samim Khan
+   Name: Samim Khan
+   Aadhaar: 5175 1337 6575
+   Clean Aadhaar: 517513376575
+   Renamed to: 020 Samim Khan_517513376575
+   Time: 2025-06-14 19:49:50
+
+SUCCESS: 021 Sahaman Khan
+   Name: Sahaman Khan
+   Aadhaar: 2696 7800 9050
+   Clean Aadhaar: 269678009050
+   Renamed to: 021 Sahaman Khan_269678009050
+   Time: 2025-06-14 19:49:54
+
+SUCCESS: 022 Sagir Sheikh
+   Name: Sagir Sheikh
+   Aadhaar: 8219 3872 5847
+   Clean Aadhaar: 821938725847
+   Renamed to: 022 Sagir Sheikh_821938725847
+   Time: 2025-06-14 19:49:58
+
+SUCCESS: 023 Ashok Bahadur
+   Name: Ashok Bahadur
+   Aadhaar: 2662 4566 3577
+   Clean Aadhaar: 266245663577
+   Renamed to: 023 Ashok Bahadur_266245663577
+   Time: 2025-06-14 19:50:07
+
+SUCCESS: 024 Babon Bauri
+   Name: Babon Bauri
+   Aadhaar: 4073 2374 8225
+   Clean Aadhaar: 407323748225
+   Renamed to: 024 Babon Bauri_407323748225
+   Time: 2025-06-14 19:50:11
+
+SUCCESS: 025 Kazi Kabiruddin
+   Name: Kazi Kabiruddin
+   Aadhaar: 7211 5865 1230
+   Clean Aadhaar: 721158651230
+   Renamed to: 025 Kazi Kabiruddin_721158651230
+   Time: 2025-06-14 19:50:17
+
+SUCCESS: 026 Chinmoy Singh
+   Name: Chinmoy Singh
+   Aadhaar: 7158 2144 2481
+   Clean Aadhaar: 715821442481
+   Renamed to: 026 Chinmoy Singh_715821442481
+   Time: 2025-06-14 19:50:23
+
+SUCCESS: 027 Sandip Kumar Verma
+   Name: Sandip Kumar Verma
+   Aadhaar: 2012 3040 5557
+   Clean Aadhaar: 201230405557
+   Renamed to: 027 Sandip Kumar Verma_201230405557
+   Time: 2025-06-14 19:50:27
+
+FAILED: 028 Md Sulaiman
+   Name: Md Sulaiman
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:50:27
+
+SUCCESS: 029 Serajul Sha
+   Name: Serajul Sha
+   Aadhaar: 4213 0617 3157
+   Clean Aadhaar: 421306173157
+   Renamed to: 029 Serajul Sha_421306173157
+   Time: 2025-06-14 19:50:32
+
+FAILED: 030 Md Ainul Haque
+   Name: Md Ainul Haque
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:50:32
+
+SUCCESS: 031 Samit Dutta
+   Name: Samit Dutta
+   Aadhaar: 9677 5988 4586
+   Clean Aadhaar: 967759884586
+   Renamed to: 031 Samit Dutta_967759884586
+   Time: 2025-06-14 19:50:39
+
+SUCCESS: 032 Gita Roy
+   Name: Gita Roy
+   Aadhaar: 4558 7859 7846
+   Clean Aadhaar: 455878597846
+   Renamed to: 032 Gita Roy_455878597846
+   Time: 2025-06-14 19:50:45
+
+SUCCESS: 033 Md Shamim
+   Name: Md Shamim
+   Aadhaar: 7487 8428 8069
+   Clean Aadhaar: 748784288069
+   Renamed to: 033 Md Shamim_748784288069
+   Time: 2025-06-14 19:50:49
+
+SUCCESS: 034 Pintu Kumar
+   Name: Pintu Kumar
+   Aadhaar: 7706 0792 0187
+   Clean Aadhaar: 770607920187
+   Renamed to: 034 Pintu Kumar_770607920187
+   Time: 2025-06-14 19:50:56
+
+SUCCESS: 035 Sangram Chakraborty
+   Name: Sangram Chakraborty
+   Aadhaar: 2238 1437 5442
+   Clean Aadhaar: 223814375442
+   Renamed to: 035 Sangram Chakraborty_223814375442
+   Time: 2025-06-14 19:51:01
+
+SUCCESS: 036 Sonu Kumar Mahato
+   Name: Sonu Kumar Mahato
+   Aadhaar: 8516 4037 9637
+   Clean Aadhaar: 851640379637
+   Renamed to: 036 Sonu Kumar Mahato_851640379637
+   Time: 2025-06-14 19:51:07
+
+SUCCESS: 037 Tapan Lingam
+   Name: Tapan Lingam
+   Aadhaar: 8210 2757 0986
+   Clean Aadhaar: 821027570986
+   Renamed to: 037 Tapan Lingam_821027570986
+   Time: 2025-06-14 19:51:13
+
+SUCCESS: 038 Rajesh Yadav
+   Name: Rajesh Yadav
+   Aadhaar: 6516 5928 9658
+   Clean Aadhaar: 651659289658
+   Renamed to: 038 Rajesh Yadav_651659289658
+   Time: 2025-06-14 19:51:18
+
+SUCCESS: 039 Bittu Singh
+   Name: Bittu Singh
+   Aadhaar: 6123 7599 6219
+   Clean Aadhaar: 612375996219
+   Renamed to: 039 Bittu Singh_612375996219
+   Time: 2025-06-14 19:51:23
+
+SUCCESS: 040 Sanjay Rout
+   Name: Sanjay Rout
+   Aadhaar: 9586 9025 9767
+   Clean Aadhaar: 958690259767
+   Renamed to: 040 Sanjay Rout_958690259767
+   Time: 2025-06-14 19:51:28
+
+SUCCESS: 041 Kajal Mahato
+   Name: Kajal Mahato
+   Aadhaar: 7874 6577 6808
+   Clean Aadhaar: 787465776808
+   Renamed to: 041 Kajal Mahato_787465776808
+   Time: 2025-06-14 19:51:34
+
+SUCCESS: 042 Bijay Kumar Mahato
+   Name: Bijay Kumar Mahato
+   Aadhaar: 3586 7591 2480
+   Clean Aadhaar: 358675912480
+   Renamed to: 042 Bijay Kumar Mahato_358675912480
+   Time: 2025-06-14 19:51:39
+
+SUCCESS: 043 Tarakeshwar Mohanta
+   Name: Tarakeshwar Mohanta
+   Aadhaar: 8365 7881 8474
+   Clean Aadhaar: 836578818474
+   Renamed to: 043 Tarakeshwar Mohanta_836578818474
+   Time: 2025-06-14 19:51:45
+
+SUCCESS: 044 Md Nasiruddin
+   Name: Md Nasiruddin
+   Aadhaar: 6019 0031 8116
+   Clean Aadhaar: 601900318116
+   Renamed to: 044 Md Nasiruddin_601900318116
+   Time: 2025-06-14 19:51:52
+
+SUCCESS: 045 Jishu Bauri
+   Name: Jishu Bauri
+   Aadhaar: 9705 6752 1779
+   Clean Aadhaar: 970567521779
+   Renamed to: 045 Jishu Bauri_970567521779
+   Time: 2025-06-14 19:51:57
+
+SUCCESS: 046 Md Zafar Imam
+   Name: Md Zafar Imam
+   Aadhaar: 2135 0534 8714
+   Clean Aadhaar: 213505348714
+   Renamed to: 046 Md Zafar Imam_213505348714
+   Time: 2025-06-14 19:52:03
+
+SUCCESS: 047 Laxminarayan Bauri
+   Name: Laxminarayan Bauri
+   Aadhaar: 7711 3660 8535
+   Clean Aadhaar: 771136608535
+   Renamed to: 047 Laxminarayan Bauri_771136608535
+   Time: 2025-06-14 19:52:10
+
+SUCCESS: 048 Rukshar Khatoon
+   Name: Rukshar Khatoon
+   Aadhaar: 7963 9347 0443
+   Clean Aadhaar: 796393470443
+   Renamed to: 048 Rukshar Khatoon_796393470443
+   Time: 2025-06-14 19:52:16
+
+SUCCESS: 049 Md Raja - CLOSED
+   Name: Md Raja - CLOSED
+   Aadhaar: 6249 8847 5179
+   Clean Aadhaar: 624988475179
+   Renamed to: 049 Md Raja - CLOSED_624988475179
+   Time: 2025-06-14 19:52:24
+
+SUCCESS: 050 Sarfaraz Ahmad
+   Name: Sarfaraz Ahmad
+   Aadhaar: 8684 3769 7274
+   Clean Aadhaar: 868437697274
+   Renamed to: 050 Sarfaraz Ahmad_868437697274
+   Time: 2025-06-14 19:52:28
+
+SUCCESS: 051 Md Ashgar Tabis
+   Name: Md Ashgar Tabis
+   Aadhaar: 8322 7987 2776
+   Clean Aadhaar: 832279872776
+   Renamed to: 051 Md Ashgar Tabis_832279872776
+   Time: 2025-06-14 19:52:34
+
+SUCCESS: 052 Krishna Ghosh
+   Name: Krishna Ghosh
+   Aadhaar: 8982 2399 4730
+   Clean Aadhaar: 898223994730
+   Renamed to: 052 Krishna Ghosh_898223994730
+   Time: 2025-06-14 19:52:38
+
+SUCCESS: 053 Md Kasim
+   Name: Md Kasim
+   Aadhaar: 2541 2259 0145
+   Clean Aadhaar: 254122590145
+   Renamed to: 053 Md Kasim_254122590145
+   Time: 2025-06-14 19:52:44
+
+FAILED: 054 Afaroj Sha
+   Name: Afaroj Sha
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:52:44
+
+SUCCESS: 055 Pabitra Ghosh
+   Name: Pabitra Ghosh
+   Aadhaar: 8949 4250 6459
+   Clean Aadhaar: 894942506459
+   Renamed to: 055 Pabitra Ghosh_894942506459
+   Time: 2025-06-14 19:52:50
+
+SUCCESS: 056 Taraknath Karmakar
+   Name: Taraknath Karmakar
+   Aadhaar: 5927 6330 5271
+   Clean Aadhaar: 592763305271
+   Renamed to: 056 Taraknath Karmakar_592763305271
+   Time: 2025-06-14 19:52:55
+
+FAILED: 057 Md Sulaiman
+   Name: Md Sulaiman
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:52:55
+
+SUCCESS: 058 Mohammad Rizwan Khan
+   Name: Mohammad Rizwan Khan
+   Aadhaar: 9833 2228 1451
+   Clean Aadhaar: 983322281451
+   Renamed to: 058 Mohammad Rizwan Khan_983322281451
+   Time: 2025-06-14 19:53:01
+
+SUCCESS: 059 Kajal Mandal
+   Name: Kajal Mandal
+   Aadhaar: 4511 6021 4626
+   Clean Aadhaar: 451160214626
+   Renamed to: 059 Kajal Mandal_451160214626
+   Time: 2025-06-14 19:53:07
+
+SUCCESS: 060 Sahid Ansari
+   Name: Sahid Ansari
+   Aadhaar: 8292 1344 7166
+   Clean Aadhaar: 829213447166
+   Renamed to: 060 Sahid Ansari_829213447166
+   Time: 2025-06-14 19:53:19
+
+SUCCESS: 061 Purnima Debi Beldar
+   Name: Purnima Debi Beldar
+   Aadhaar: 7540 7092 9433
+   Clean Aadhaar: 754070929433
+   Renamed to: 061 Purnima Debi Beldar_754070929433
+   Time: 2025-06-14 19:53:27
+
+FAILED: 062 Ranjit Pal
+   Name: Ranjit Pal
+   Error Type: File Not Found
+   Error: UID file not found
+   Time: 2025-06-14 19:53:27
+
+SUCCESS: 063 Dhananjoy Mondal
+   Name: Dhananjoy Mondal
+   Aadhaar: 6910 5769 4503
+   Clean Aadhaar: 691057694503
+   Renamed to: 063 Dhananjoy Mondal_691057694503
+   Time: 2025-06-14 19:53:32
+
+SUCCESS: 064 Biplab Bishwas
+   Name: Biplab Bishwas
+   Aadhaar: 7061 1267 5237
+   Clean Aadhaar: 706112675237
+   Renamed to: 064 Biplab Bishwas_706112675237
+   Time: 2025-06-14 19:53:39
+
+SUCCESS: 065 Shubham Ghosh
+   Name: Shubham Ghosh
+   Aadhaar: 9336 0141 4114
+   Clean Aadhaar: 933601414114
+   Renamed to: 065 Shubham Ghosh_933601414114
+   Time: 2025-06-14 19:53:45
+
+SUCCESS: 066 Md Anowar Hosen
+   Name: Md Anowar Hosen
+   Aadhaar: 4436 0374 5037
+   Clean Aadhaar: 443603745037
+   Renamed to: 066 Md Anowar Hosen_443603745037
+   Time: 2025-06-14 19:53:50
+
+SUCCESS: 067 Bijay Bauri
+   Name: Bijay Bauri
+   Aadhaar: 3353 4129 1862
+   Clean Aadhaar: 335341291862
+   Renamed to: 067 Bijay Bauri_335341291862
+   Time: 2025-06-14 19:53:56
+
+SUCCESS: 068 Arpita Dey
+   Name: Arpita Dey
+   Aadhaar: 6923 3944 6496
+   Clean Aadhaar: 692339446496
+   Renamed to: 068 Arpita Dey_692339446496
+   Time: 2025-06-14 19:54:02
+
+SUCCESS: 069 Sahabaj Khan
+   Name: Sahabaj Khan
+   Aadhaar: 4186 9779 4174
+   Clean Aadhaar: 418697794174
+   Renamed to: 069 Sahabaj Khan_418697794174
+   Time: 2025-06-14 19:54:07
+
+SUCCESS: 070 Abhijit Dey
+   Name: Abhijit Dey
+   Aadhaar: 3246 8782 7305
+   Clean Aadhaar: 324687827305
+   Renamed to: 070 Abhijit Dey_324687827305
+   Time: 2025-06-14 19:54:12
+
+SUCCESS: 071 Md Miraj Alam
+   Name: Md Miraj Alam
+   Aadhaar: 7575 9994 4070
+   Clean Aadhaar: 757599944070
+   Renamed to: 071 Md Miraj Alam_757599944070
+   Time: 2025-06-14 19:54:18
+
+SUCCESS: 072 Saphik Shah
+   Name: Saphik Shah
+   Aadhaar: 5080 8596 4422
+   Clean Aadhaar: 508085964422
+   Renamed to: 072 Saphik Shah_508085964422
+   Time: 2025-06-14 19:54:23
+
+SUCCESS: 073 Nizam Khan
+   Name: Nizam Khan
+   Aadhaar: 3003 1249 5390
+   Clean Aadhaar: 300312495390
+   Renamed to: 073 Nizam Khan_300312495390
+   Time: 2025-06-14 19:54:29
+
+SUCCESS: 074 Bijay Dubey
+   Name: Bijay Dubey
+   Aadhaar: 6143 6844 9544
+   Clean Aadhaar: 614368449544
+   Renamed to: 074 Bijay Dubey_614368449544
+   Time: 2025-06-14 19:54:35
+
+SUCCESS: 075 Chiranjit Keora
+   Name: Chiranjit Keora
+   Aadhaar: 9723 0040 6331
+   Clean Aadhaar: 972300406331
+   Renamed to: 075 Chiranjit Keora_972300406331
+   Time: 2025-06-14 19:54:41
+
+SUCCESS: 076 Angshuman Dhibar
+   Name: Angshuman Dhibar
+   Aadhaar: 6756 2830 4735
+   Clean Aadhaar: 675628304735
+   Renamed to: 076 Angshuman Dhibar_675628304735
+   Time: 2025-06-14 19:54:46
+
+SUCCESS: 077 Rabin Garai
+   Name: Rabin Garai
+   Aadhaar: 7290 6163 8326
+   Clean Aadhaar: 729061638326
+   Renamed to: 077 Rabin Garai_729061638326
+   Time: 2025-06-14 19:54:52
+
+SUCCESS: 078 Rasid Alam Ansari
+   Name: Rasid Alam Ansari
+   Aadhaar: 6251 1231 4265
+   Clean Aadhaar: 625112314265
+   Renamed to: 078 Rasid Alam Ansari_625112314265
+   Time: 2025-06-14 19:54:59
+
+SUCCESS: 079 Md Akbar Khan
+   Name: Md Akbar Khan
+   Aadhaar: 3742 1013 4557
+   Clean Aadhaar: 374210134557
+   Renamed to: 079 Md Akbar Khan_374210134557
+   Time: 2025-06-14 19:55:04
+
+SUCCESS: 080 Laxman Rabidas
+   Name: Laxman Rabidas
+   Aadhaar: 2932 7499 2175
+   Clean Aadhaar: 293274992175
+   Renamed to: 080 Laxman Rabidas_293274992175
+   Time: 2025-06-14 19:55:11
+
+SUCCESS: 081 Indranil Roy
+   Name: Indranil Roy
+   Aadhaar: 5849 1852 2214
+   Clean Aadhaar: 584918522214
+   Renamed to: 081 Indranil Roy_584918522214
+   Time: 2025-06-14 19:55:17
+
+SUCCESS: 082 Shridam Ghosh
+   Name: Shridam Ghosh
+   Aadhaar: 7561 5687 5184
+   Clean Aadhaar: 756156875184
+   Renamed to: 082 Shridam Ghosh_756156875184
+   Time: 2025-06-14 19:55:22
+
+
+================================================================================
+FINAL PROCESSING SUMMARY
+================================================================================
+
+Total folders found: 82
+Folders skipped (already processed): 0
+Folders attempted: 82
+Successful extractions: 68
+Failed extractions: 14
+Successful renames: 68
+Failed renames: 0
+
+Success Rate: 82.9%
+
+FAILED FOLDERS:
+----------------------------------------
+- 003 Md Afzal - File Not Found
+- 005 Rahaman Khan - File Not Found
+- 006 Md Zahid - File Not Found
+- 007 Md Sajid Ansari - File Not Found
+- 008 Pinki Pandit - CLOSED - File Not Found
+- 009 Akbari Khatun - CLOSED - File Not Found
+- 012 Kajal Das - CLOSED - File Not Found
+- 013 Utpal Das - File Not Found
+- 016 Bikash Bauri - File Not Found
+- 028 Md Sulaiman - File Not Found
+- 030 Md Ainul Haque - File Not Found
+- 054 Afaroj Sha - File Not Found
+- 057 Md Sulaiman - File Not Found
+- 062 Ranjit Pal - File Not Found
+
+Processing completed at: 2025-06-14 19:55:22
