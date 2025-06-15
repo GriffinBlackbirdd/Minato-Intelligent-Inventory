@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minato Enterprises - Document Processor</title>
+    <title>Minato Enterprises - Document Processor & Billing System</title>
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
@@ -16,7 +16,7 @@
                     <i class="fas fa-file-invoice brand-icon"></i>
                     <span class="brand-name">Minato Enterprises</span>
                 </div>
-                <div class="nav-subtitle">Intelligent Document Processing & Invoice Generation</div>
+                <div class="nav-subtitle">Intelligent Document Processing & Real-time Billing System</div>
             </div>
         </nav>
 
@@ -28,10 +28,10 @@
                     <div class="hero-content">
                         <h1 class="hero-title">
                             <i class="fas fa-search"></i>
-                            Document Processor & Invoice Generator
+                            Document Processor & Real-time Billing System
                         </h1>
                         <p class="hero-description">
-                            Smart customer search, automated document extraction, and instant invoice generation
+                            Smart customer search, automated document extraction, and real-time billing generation with tax calculations
                         </p>
                     </div>
                 </section>
@@ -186,9 +186,9 @@
                                 </div>
 
                                 <div class="action-buttons" id="defaultActions">
-                                    <button class="btn btn-primary" id="proceedFinalBtn">
+                                    <button class="btn btn-primary" id="proceedToBillBtn">
                                         <i class="fas fa-file-invoice"></i>
-                                        Generate Invoice
+                                        Proceed to Bill
                                     </button>
                                     <button class="btn btn-outline" id="backToSearchBtn">
                                         <i class="fas fa-arrow-left"></i>
@@ -199,7 +199,208 @@
                         </div>
                     </div>
 
-                    <!-- Step 3: Final Results -->
+                    <!-- Step 3: Real-time Billing System -->
+                    <div class="step-card" id="billingCard" style="display: none;">
+                        <div class="step-header">
+                            <div class="step-indicator">
+                                <span class="step-number">3</span>
+                            </div>
+                            <div class="step-title">
+                                <h2>Real-time Billing System</h2>
+                                <p>Configure billing details with real-time tax calculations</p>
+                            </div>
+                        </div>
+
+                        <div class="billing-content">
+                            <!-- Customer Summary -->
+                            <div class="customer-summary">
+                                <h4><i class="fas fa-user-circle"></i> Customer Information</h4>
+                                <div class="summary-grid">
+                                    <div class="summary-item">
+                                        <span class="summary-label">Name:</span>
+                                        <span class="summary-value" id="billCustomerName">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">Aadhaar:</span>
+                                        <span class="summary-value" id="billCustomerAadhaar">-</span>
+                                    </div>
+                                    <div class="summary-item">
+                                        <span class="summary-label">Mobile:</span>
+                                        <span class="summary-value" id="billCustomerMobile">-</span>
+                                    </div>
+                                    <div class="summary-item full-width">
+                                        <span class="summary-label">Address:</span>
+                                        <span class="summary-value" id="billCustomerAddress">-</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Finance Firm Section -->
+                            <div class="selection-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-building"></i> Finance Firm (Optional)</h4>
+                                    <p>Enter finance firm name if applicable</p>
+                                </div>
+                                <div class="finance-input-group">
+                                    <input type="text" id="financeFirmInput" placeholder="Enter finance firm name (optional)" class="finance-input">
+                                </div>
+                            </div>
+
+                            <!-- Price Input Section -->
+                            <div class="selection-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-rupee-sign"></i> Price & Tax Configuration</h4>
+                                    <p>Enter the base price and configure tax settings</p>
+                                </div>
+
+                                <div class="price-tax-grid">
+                                    <div class="price-input-group">
+                                        <label for="priceInput">Base Price (₹)</label>
+                                        <input type="number" id="priceInput" placeholder="127000" class="price-input" min="0" step="0.01">
+                                    </div>
+
+                                    <div class="tax-config-group">
+                                        <div class="igst-checkbox-wrapper">
+                                            <label class="checkbox-label">
+                                                <input type="checkbox" id="igstCheckbox" class="igst-checkbox">
+                                                <span class="checkbox-custom"></span>
+                                                <span class="checkbox-text">Apply IGST (5%) instead of CGST+SGST</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Tax Calculation Display -->
+                                <div class="tax-calculation-display" id="taxCalculationDisplay" style="display: none;">
+                                    <div class="tax-breakdown">
+                                        <div class="tax-row">
+                                            <span class="tax-label">Base Amount:</span>
+                                            <span class="tax-value" id="baseAmountDisplay">₹0.00</span>
+                                        </div>
+                                        <div class="tax-row" id="cgstRow">
+                                            <span class="tax-label">CGST (2.5%):</span>
+                                            <span class="tax-value" id="cgstDisplay">₹0.00</span>
+                                        </div>
+                                        <div class="tax-row" id="sgstRow">
+                                            <span class="tax-label">SGST (2.5%):</span>
+                                            <span class="tax-value" id="sgstDisplay">₹0.00</span>
+                                        </div>
+                                        <div class="tax-row" id="igstRow" style="display: none;">
+                                            <span class="tax-label">IGST (5%):</span>
+                                            <span class="tax-value" id="igstDisplay">₹0.00</span>
+                                        </div>
+                                        <div class="tax-row">
+                                            <span class="tax-label">Round Off:</span>
+                                            <span class="tax-value" id="roundOffDisplay">₹0.00</span>
+                                        </div>
+                                        <div class="tax-row total-row">
+                                            <span class="tax-label">Total Amount:</span>
+                                            <span class="tax-value total-amount" id="totalAmountDisplay">₹0.00</span>
+                                        </div>
+                                        <div class="amount-words" id="amountWordsDisplay">
+                                            Amount in words: <span id="amountWordsText">Zero</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Real-time Chassis Selection -->
+                            <div class="selection-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-car"></i> Chassis Selection</h4>
+                                    <p>Type chassis number or model name to filter results</p>
+                                </div>
+                                <div class="filter-group">
+                                    <div class="filter-input-wrapper">
+                                        <input type="text" id="chassisFilter" placeholder="Type chassis number or model..." class="filter-input">
+                                        <div class="filter-loading" id="chassisLoading" style="display: none;">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </div>
+                                    </div>
+                                    <div class="filter-results" id="chassisResults" style="display: none;">
+                                        <div class="results-list" id="chassisResultsList"></div>
+                                    </div>
+                                </div>
+                                <div class="selected-item" id="selectedChassis" style="display: none;">
+                                    <div class="selected-header">
+                                        <span>Selected Chassis:</span>
+                                        <button class="btn-remove" onclick="clearSelectedChassis()">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                    <div class="selected-details" id="selectedChassisDetails"></div>
+                                </div>
+                            </div>
+
+                            <!-- Real-time Battery Selection -->
+                            <div class="selection-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-battery-full"></i> Battery Selection</h4>
+                                    <p>Type battery serial number or brand to filter results</p>
+                                </div>
+                                <div class="filter-group">
+                                    <div class="filter-input-wrapper">
+                                        <input type="text" id="batteryFilter" placeholder="Type battery serial or brand..." class="filter-input">
+                                        <div class="filter-loading" id="batteryLoading" style="display: none;">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </div>
+                                    </div>
+                                    <div class="filter-results" id="batteryResults" style="display: none;">
+                                        <div class="results-list" id="batteryResultsList"></div>
+                                    </div>
+                                </div>
+                                <div class="selected-items" id="selectedBatteries" style="display: none;">
+                                    <div class="selected-header">
+                                        <span>Selected Batteries:</span>
+                                        <button class="btn-clear" onclick="clearAllBatteries()">
+                                            <i class="fas fa-trash"></i>
+                                            Clear All
+                                        </button>
+                                    </div>
+                                    <div class="selected-list" id="selectedBatteriesList"></div>
+                                </div>
+                            </div>
+
+                            <!-- HSN Code Selection -->
+                            <div class="selection-section">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-code"></i> HSN Code Selection</h4>
+                                    <p>Select the appropriate HSN code for billing</p>
+                                </div>
+                                <div class="hsn-selection">
+                                    <select id="hsnCodeSelect" class="hsn-select">
+                                        <option value="">Select HSN Code</option>
+                                        <option value="8703">8703 - Motor cars and other motor vehicles</option>
+                                        <option value="8504">8504 - Electrical transformers, static converters</option>
+                                        <option value="8507">8507 - Electric accumulators</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Description Preview -->
+                            <div class="description-preview" id="descriptionPreview" style="display: none;">
+                                <div class="section-header">
+                                    <h4><i class="fas fa-eye"></i> Bill Description Preview</h4>
+                                    <p>This is how the description will appear on the bill</p>
+                                </div>
+                                <div class="preview-content" id="previewContent"></div>
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="action-buttons">
+                                <button class="btn btn-success" id="generateBillBtn" disabled>
+                                    <i class="fas fa-file-invoice"></i>
+                                    Generate Bill
+                                </button>
+                                <button class="btn btn-outline" id="backToReviewBtn">
+                                    <i class="fas fa-arrow-left"></i>
+                                    Back to Review
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Final Results -->
                     <div class="step-card" id="resultsCard" style="display: none;">
                         <div class="step-header">
                             <div class="step-indicator success">
@@ -207,7 +408,7 @@
                             </div>
                             <div class="step-title">
                                 <h2>Processing Complete</h2>
-                                <p>Document extraction and invoice generation results</p>
+                                <p>Document extraction and bill generation results</p>
                             </div>
                         </div>
 
@@ -258,7 +459,7 @@
                     <span>&copy; 2025 Minato Enterprises. All rights reserved.</span>
                 </div>
                 <div class="footer-tech">
-                    <span>Powered by Intelligent Document Processing & Invoice Generation Technology</span>
+                    <span>Powered by Real-time Document Processing & Tax Calculation Technology</span>
                 </div>
             </div>
         </footer>

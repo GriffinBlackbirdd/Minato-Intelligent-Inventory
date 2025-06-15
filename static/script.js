@@ -3,6 +3,7 @@ const customerSearch = document.getElementById('customerSearch');
 const searchLoading = document.getElementById('searchLoading');
 const searchCard = document.getElementById('searchCard');
 const extractionCard = document.getElementById('extractionCard');
+const billingCard = document.getElementById('billingCard');
 const resultsCard = document.getElementById('resultsCard');
 const errorCard = document.getElementById('errorCard');
 
@@ -34,7 +35,7 @@ const saveChangesBtn = document.getElementById('saveChangesBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
 
 // Navigation buttons
-const proceedFinalBtn = document.getElementById('proceedFinalBtn');
+const proceedToBillBtn = document.getElementById('proceedToBillBtn');
 const backToSearchBtn = document.getElementById('backToSearchBtn');
 const resetBtn = document.getElementById('resetBtn');
 const errorResetBtn = document.getElementById('errorResetBtn');
@@ -43,13 +44,45 @@ const loadingText = document.getElementById('loadingText');
 const errorMessage = document.getElementById('errorMessage');
 const resultsContent = document.getElementById('resultsContent');
 
+// Billing elements
+const billCustomerName = document.getElementById('billCustomerName');
+const billCustomerAadhaar = document.getElementById('billCustomerAadhaar');
+const billCustomerMobile = document.getElementById('billCustomerMobile');
+const billCustomerAddress = document.getElementById('billCustomerAddress');
+
+const chassisFilter = document.getElementById('chassisFilter');
+const chassisLoading = document.getElementById('chassisLoading');
+const chassisResults = document.getElementById('chassisResults');
+const chassisResultsList = document.getElementById('chassisResultsList');
+const selectedChassis = document.getElementById('selectedChassis');
+const selectedChassisDetails = document.getElementById('selectedChassisDetails');
+
+const batteryFilter = document.getElementById('batteryFilter');
+const batteryLoading = document.getElementById('batteryLoading');
+const batteryResults = document.getElementById('batteryResults');
+const batteryResultsList = document.getElementById('batteryResultsList');
+const selectedBatteries = document.getElementById('selectedBatteries');
+const selectedBatteriesList = document.getElementById('selectedBatteriesList');
+
+const hsnCodeSelect = document.getElementById('hsnCodeSelect');
+const descriptionPreview = document.getElementById('descriptionPreview');
+const previewContent = document.getElementById('previewContent');
+const generateBillBtn = document.getElementById('generateBillBtn');
+const backToReviewBtn = document.getElementById('backToReviewBtn');
+
 // State
 let selectedCustomerData = null;
 let extractedData = null;
 let isEditMode = false;
 let searchTimeout = null;
+let chassisTimeout = null;
+let batteryTimeout = null;
 let currentSuggestions = [];
 let selectedSuggestionIndex = -1;
+
+// Billing state
+let selectedChassisData = null;
+let selectedBatteriesData = [];
 
 // Create a custom suggestions dropdown that's appended to body
 function createSuggestionsDropdown() {
@@ -116,7 +149,6 @@ function hideSuggestions() {
 
 function showSuggestions() {
     if (currentSuggestions.length > 0) {
-        // Position the dropdown relative to the input field
         const inputRect = customerSearch.getBoundingClientRect();
         customSuggestionsDropdown.style.top = `${inputRect.bottom}px`;
         customSuggestionsDropdown.style.left = `${inputRect.left}px`;
@@ -129,21 +161,17 @@ function showSuggestions() {
 customerSearch.addEventListener('input', async (e) => {
     const query = e.target.value.trim();
 
-    // Clear previous timeout
     if (searchTimeout) {
         clearTimeout(searchTimeout);
     }
 
-    // Hide suggestions if query is too short
     if (query.length < 2) {
         hideSuggestions();
         return;
     }
 
-    // Show loading indicator
     searchLoading.style.display = 'block';
 
-    // Debounce search requests
     searchTimeout = setTimeout(async () => {
         try {
             const suggestions = await searchCustomers(query);
@@ -153,7 +181,7 @@ customerSearch.addEventListener('input', async (e) => {
         } finally {
             searchLoading.style.display = 'none';
         }
-    }, 300); // 300ms delay
+    }, 300);
 });
 
 // Keyboard navigation for suggestions
@@ -235,11 +263,9 @@ function toggleEditMode() {
     isEditMode = !isEditMode;
 
     if (isEditMode) {
-        // Enter edit mode
         editToggleBtn.innerHTML = '<i class="fas fa-eye"></i> View';
         editToggleBtn.classList.add('active');
 
-        // Hide display fields, show edit fields
         displayName.style.display = 'none';
         displayAadhaar.style.display = 'none';
         displayAddress.style.display = 'none';
@@ -252,18 +278,12 @@ function toggleEditMode() {
         editMobile.style.display = 'block';
         editFolder.style.display = 'block';
 
-        // Show edit actions, hide default actions
         editActions.style.display = 'flex';
         defaultActions.style.display = 'none';
 
-        // Add edit mode styling
         document.querySelector('.customer-info-section').classList.add('edit-mode');
-
-        // Focus on first editable field
         editName.focus();
-
     } else {
-        // Exit edit mode without saving
         exitEditMode();
     }
 }
@@ -274,7 +294,6 @@ function exitEditMode() {
     editToggleBtn.innerHTML = '<i class="fas fa-edit"></i> Edit';
     editToggleBtn.classList.remove('active');
 
-    // Show display fields, hide edit fields
     displayName.style.display = 'flex';
     displayAadhaar.style.display = 'flex';
     displayAddress.style.display = 'flex';
@@ -287,35 +306,26 @@ function exitEditMode() {
     editMobile.style.display = 'none';
     editFolder.style.display = 'none';
 
-    // Show default actions, hide edit actions
     editActions.style.display = 'none';
     defaultActions.style.display = 'flex';
 
-    // Remove edit mode styling
     document.querySelector('.customer-info-section').classList.remove('edit-mode');
 }
 
 function saveChanges() {
-    // Update extracted data with edited values
     extractedData.name = editName.value.trim();
     extractedData.aadhaar = editAadhaar.value.trim();
     extractedData.address = editAddress.value.trim();
     extractedData.mobile = editMobile.value.trim();
 
-    // Update display fields
     customerTitle.textContent = extractedData.name;
     displayName.textContent = extractedData.name;
     displayAadhaar.textContent = extractedData.aadhaar;
     displayAddress.textContent = extractedData.address;
     displayMobile.textContent = extractedData.mobile;
 
-    // Exit edit mode
     exitEditMode();
-
-    // Show success feedback
     showSuccessToast('Changes saved successfully!');
-
-    console.log('Updated customer information:', extractedData);
 }
 
 function showSuccessToast(message) {
@@ -356,7 +366,6 @@ function showSuccessToast(message) {
 editToggleBtn.addEventListener('click', toggleEditMode);
 saveChangesBtn.addEventListener('click', saveChanges);
 cancelEditBtn.addEventListener('click', () => {
-    // Reset edit fields to original values
     editName.value = extractedData.name;
     editAadhaar.value = extractedData.aadhaar;
     editAddress.value = extractedData.address;
@@ -364,357 +373,419 @@ cancelEditBtn.addEventListener('click', () => {
     exitEditMode();
 });
 
-// Final proceed button - now leads to invoice generation
-proceedFinalBtn.addEventListener('click', () => {
-    // Show invoice generation options
-    showInvoiceGenerationStep();
+// Proceed to billing button
+proceedToBillBtn.addEventListener('click', () => {
+    showBillingStep();
 });
 
-function showInvoiceGenerationStep() {
-    // Update the current step to show invoice generation
+function showBillingStep() {
     hideAllCards();
+    billingCard.style.display = 'block';
+    billingCard.classList.add('active');
 
-    // Create invoice generation card if it doesn't exist
-    let invoiceCard = document.getElementById('invoiceCard');
-    if (!invoiceCard) {
-        invoiceCard = createInvoiceGenerationCard();
-        document.querySelector('.steps-container').appendChild(invoiceCard);
-    }
+    // Populate customer information in billing card
+    billCustomerName.textContent = extractedData.name;
+    billCustomerAadhaar.textContent = extractedData.aadhaar;
+    billCustomerMobile.textContent = extractedData.mobile;
+    billCustomerAddress.textContent = extractedData.address;
 
-    // Populate invoice form with extracted data
-    populateInvoiceForm(extractedData);
+    // Setup billing event listeners
+    setupBillingEventListeners();
 
-    invoiceCard.style.display = 'block';
-    invoiceCard.classList.add('active');
-    invoiceCard.scrollIntoView({ behavior: 'smooth' });
+    billingCard.scrollIntoView({ behavior: 'smooth' });
 }
 
-function createInvoiceGenerationCard() {
-    const invoiceCard = document.createElement('div');
-    invoiceCard.className = 'step-card';
-    invoiceCard.id = 'invoiceCard';
+function setupBillingEventListeners() {
+    // Chassis filter
+    chassisFilter.addEventListener('input', async (e) => {
+        const query = e.target.value.trim();
 
-    invoiceCard.innerHTML = `
-        <div class="step-header">
-            <div class="step-indicator">
-                <span class="step-number">3</span>
-            </div>
-            <div class="step-title">
-                <h2>Invoice Generation</h2>
-                <p>Generate invoice with customer information</p>
-            </div>
-        </div>
-
-        <div class="invoice-generation-content">
-            <div class="invoice-form-section">
-                <div class="form-header">
-                    <h3>Invoice Details</h3>
-                    <p>Review customer information and add invoice items</p>
-                </div>
-
-                <div class="customer-summary">
-                    <h4>Customer Information</h4>
-                    <div class="summary-grid">
-                        <div class="summary-item">
-                            <span class="summary-label">Name:</span>
-                            <span class="summary-value" id="invoiceCustomerName">-</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="summary-label">Aadhaar:</span>
-                            <span class="summary-value" id="invoiceCustomerAadhaar">-</span>
-                        </div>
-                        <div class="summary-item">
-                            <span class="summary-label">Mobile:</span>
-                            <span class="summary-value" id="invoiceCustomerMobile">-</span>
-                        </div>
-                        <div class="summary-item full-width">
-                            <span class="summary-label">Address:</span>
-                            <span class="summary-value" id="invoiceCustomerAddress">-</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="invoice-items-section">
-                    <div class="items-header">
-                        <h4>Invoice Items (Optional)</h4>
-                        <button class="btn-add-item" id="addItemBtn">
-                            <i class="fas fa-plus"></i>
-                            Add Item
-                        </button>
-                    </div>
-
-                    <div class="items-container" id="invoiceItemsContainer">
-                        <div class="no-items-message" id="noItemsMessage">
-                            <i class="fas fa-info-circle"></i>
-                            <span>No items added. Invoice will be generated with customer information only.</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="template-status" id="templateStatus">
-                    <div class="status-checking">
-                        <i class="fas fa-spinner fa-spin"></i>
-                        <span>Checking invoice template...</span>
-                    </div>
-                </div>
-
-                <div class="action-buttons" id="invoiceActions">
-                    <button class="btn btn-primary" id="generateInvoiceBtn">
-                        <i class="fas fa-file-invoice"></i>
-                        Generate Invoice
-                    </button>
-                    <button class="btn btn-outline" id="backToReviewBtn">
-                        <i class="fas fa-arrow-left"></i>
-                        Back to Review
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-
-    return invoiceCard;
-}
-
-function populateInvoiceForm(data) {
-    document.getElementById('invoiceCustomerName').textContent = data.name;
-    document.getElementById('invoiceCustomerAadhaar').textContent = data.aadhaar;
-    document.getElementById('invoiceCustomerMobile').textContent = data.mobile;
-    document.getElementById('invoiceCustomerAddress').textContent = data.address;
-
-    // Check template status
-    checkTemplateStatus();
-
-    // Set up event listeners for invoice generation
-    setupInvoiceEventListeners();
-}
-
-async function checkTemplateStatus() {
-    try {
-        const response = await fetch('/template-status');
-        const status = await response.json();
-
-        const templateStatusDiv = document.getElementById('templateStatus');
-
-        if (status.template_available) {
-            templateStatusDiv.innerHTML = `
-                <div class="status-success">
-                    <i class="fas fa-check-circle"></i>
-                    <span>Word template ready (${status.template_type})</span>
-                </div>
-            `;
-        } else {
-            templateStatusDiv.innerHTML = `
-                <div class="status-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <span>No invoice template found. Please add 'template.docx' to the 'templates' folder.</span>
-                </div>
-            `;
-
-            // Disable generate button
-            document.getElementById('generateInvoiceBtn').disabled = true;
+        if (chassisTimeout) {
+            clearTimeout(chassisTimeout);
         }
-    } catch (error) {
-        console.error('Error checking template status:', error);
-        document.getElementById('templateStatus').innerHTML = `
-            <div class="status-error">
-                <i class="fas fa-times-circle"></i>
-                <span>Error checking template status</span>
-            </div>
-        `;
-    }
-}
 
-function setupInvoiceEventListeners() {
-    // Add item button
-    document.getElementById('addItemBtn').addEventListener('click', addInvoiceItem);
+        chassisLoading.style.display = 'block';
 
-    // Generate invoice button
-    document.getElementById('generateInvoiceBtn').addEventListener('click', generateInvoice);
+        chassisTimeout = setTimeout(async () => {
+            try {
+                const results = await filterChassis(query);
+                renderChassisResults(results);
+            } catch (error) {
+                console.error('Chassis filter failed:', error);
+            } finally {
+                chassisLoading.style.display = 'none';
+            }
+        }, 300);
+    });
+
+    // Battery filter
+    batteryFilter.addEventListener('input', async (e) => {
+        const query = e.target.value.trim();
+
+        if (batteryTimeout) {
+            clearTimeout(batteryTimeout);
+        }
+
+        batteryLoading.style.display = 'block';
+
+        batteryTimeout = setTimeout(async () => {
+            try {
+                const results = await filterBatteries(query);
+                renderBatteryResults(results);
+            } catch (error) {
+                console.error('Battery filter failed:', error);
+            } finally {
+                batteryLoading.style.display = 'none';
+            }
+        }, 300);
+    });
+
+    // HSN code change
+    hsnCodeSelect.addEventListener('change', updateDescriptionPreview);
+
+    // Generate bill button
+    generateBillBtn.addEventListener('click', generateBill);
 
     // Back to review button
-    document.getElementById('backToReviewBtn').addEventListener('click', () => {
+    backToReviewBtn.addEventListener('click', () => {
         hideAllCards();
         extractionCard.style.display = 'block';
         extractionCard.classList.add('active');
         extractionCard.scrollIntoView({ behavior: 'smooth' });
     });
+
+    // Update bill button state
+    updateGenerateBillButton();
 }
 
-let itemCounter = 0;
-
-function addInvoiceItem() {
-    itemCounter++;
-    const itemsContainer = document.getElementById('invoiceItemsContainer');
-    const noItemsMessage = document.getElementById('noItemsMessage');
-
-    // Hide no items message
-    if (noItemsMessage) {
-        noItemsMessage.style.display = 'none';
-    }
-
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'invoice-item';
-    itemDiv.dataset.itemId = itemCounter;
-
-    itemDiv.innerHTML = `
-        <div class="item-fields">
-            <div class="field-group">
-                <label>Item Name</label>
-                <input type="text" class="item-name" placeholder="Enter item name">
-            </div>
-            <div class="field-group">
-                <label>Quantity</label>
-                <input type="number" class="item-quantity" placeholder="1" value="1" min="1">
-            </div>
-            <div class="field-group">
-                <label>Price (₹)</label>
-                <input type="number" class="item-price" placeholder="0.00" step="0.01" min="0">
-            </div>
-            <div class="field-group">
-                <label>Total (₹)</label>
-                <input type="number" class="item-total" placeholder="0.00" step="0.01" readonly>
-            </div>
-            <div class="field-group">
-                <button class="btn-remove-item" onclick="removeInvoiceItem(${itemCounter})">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        </div>
-    `;
-
-    itemsContainer.appendChild(itemDiv);
-
-    // Set up quantity and price change listeners for automatic total calculation
-    const quantityInput = itemDiv.querySelector('.item-quantity');
-    const priceInput = itemDiv.querySelector('.item-price');
-    const totalInput = itemDiv.querySelector('.item-total');
-
-    function updateTotal() {
-        const quantity = parseFloat(quantityInput.value) || 0;
-        const price = parseFloat(priceInput.value) || 0;
-        const total = quantity * price;
-        totalInput.value = total.toFixed(2);
-    }
-
-    quantityInput.addEventListener('input', updateTotal);
-    priceInput.addEventListener('input', updateTotal);
-
-    // Focus on item name field
-    itemDiv.querySelector('.item-name').focus();
-}
-
-function removeInvoiceItem(itemId) {
-    const itemDiv = document.querySelector(`[data-item-id="${itemId}"]`);
-    if (itemDiv) {
-        itemDiv.remove();
-    }
-
-    // Show no items message if no items left
-    const itemsContainer = document.getElementById('invoiceItemsContainer');
-    const items = itemsContainer.querySelectorAll('.invoice-item');
-
-    if (items.length === 0) {
-        const noItemsMessage = document.getElementById('noItemsMessage');
-        if (noItemsMessage) {
-            noItemsMessage.style.display = 'block';
-        }
-    }
-}
-
-function collectInvoiceItems() {
-    const items = [];
-    const itemDivs = document.querySelectorAll('.invoice-item');
-
-    itemDivs.forEach(itemDiv => {
-        const name = itemDiv.querySelector('.item-name').value.trim();
-        const quantity = parseFloat(itemDiv.querySelector('.item-quantity').value) || 0;
-        const price = parseFloat(itemDiv.querySelector('.item-price').value) || 0;
-        const total = parseFloat(itemDiv.querySelector('.item-total').value) || 0;
-
-        if (name) {
-            items.push({
-                name: name,
-                quantity: quantity,
-                price: price,
-                total: total
-            });
-        }
-    });
-
-    return items;
-}
-
-async function generateInvoice() {
-    const generateBtn = document.getElementById('generateInvoiceBtn');
-    const originalContent = generateBtn.innerHTML;
-
+// Chassis functions
+async function filterChassis(query) {
     try {
-        // Show loading state
-        generateBtn.disabled = true;
-        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
-
-        // Collect invoice data
-        const items = collectInvoiceItems();
-
-        const invoiceData = {
-            customer_name: extractedData.name,
-            aadhaar_number: extractedData.aadhaar,
-            address: extractedData.address,
-            mobile_number: extractedData.mobile,
-            items: items,
-            additional_data: {
-                // Add any additional data you want in the invoice
-                GENERATED_DATE: new Date().toLocaleDateString(),
-                GENERATED_TIME: new Date().toLocaleTimeString()
-            }
-        };
-
-        // Make API call to generate invoice
-        const response = await fetch('/generate-invoice', {
+        const response = await fetch('/filter-chassis', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(invoiceData)
+            body: JSON.stringify({
+                filter_text: query
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Chassis filter failed');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Chassis filter error:', error);
+        return [];
+    }
+}
+
+function renderChassisResults(results) {
+    if (results.length === 0) {
+        chassisResults.style.display = 'none';
+        return;
+    }
+
+    chassisResultsList.innerHTML = '';
+
+    results.forEach(chassis => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'result-item';
+        resultItem.innerHTML = `
+            <div class="result-details">
+                <div class="result-title">${chassis.make_model}</div>
+                <div class="result-subtitle">Chassis: ${chassis.chassis_number} (${chassis.last_four})</div>
+            </div>
+            <div class="result-action">
+                <i class="fas fa-plus"></i>
+            </div>
+        `;
+
+        resultItem.addEventListener('click', () => selectChassis(chassis));
+        chassisResultsList.appendChild(resultItem);
+    });
+
+    chassisResults.style.display = 'block';
+}
+
+function selectChassis(chassis) {
+    selectedChassisData = chassis;
+    chassisResults.style.display = 'none';
+    chassisFilter.value = chassis.display_text;
+
+    selectedChassisDetails.innerHTML = `
+        <div style="margin-bottom: 0.5rem;"><strong>Model:</strong> ${chassis.make_model}</div>
+        <div style="margin-bottom: 0.5rem;"><strong>Chassis Number:</strong> ${chassis.chassis_number}</div>
+        <div style="margin-bottom: 0.5rem;"><strong>Motor Number:</strong> ${chassis.motor_number}</div>
+        <div style="margin-bottom: 0.5rem;"><strong>Controller:</strong> ${chassis.controller_number}</div>
+        <div><strong>Color:</strong> ${chassis.color}</div>
+    `;
+
+    selectedChassis.style.display = 'block';
+
+    // Mark section as completed
+    const chassisSection = chassisFilter.closest('.selection-section');
+    chassisSection.classList.add('has-selection');
+    const sectionHeader = chassisSection.querySelector('.section-header');
+    sectionHeader.classList.add('completed');
+
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+}
+
+function clearSelectedChassis() {
+    selectedChassisData = null;
+    chassisFilter.value = '';
+    selectedChassis.style.display = 'none';
+
+    const chassisSection = chassisFilter.closest('.selection-section');
+    chassisSection.classList.remove('has-selection');
+    const sectionHeader = chassisSection.querySelector('.section-header');
+    sectionHeader.classList.remove('completed');
+
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+}
+
+// Battery functions
+async function filterBatteries(query) {
+    try {
+        const response = await fetch('/filter-batteries', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                filter_text: query
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error('Battery filter failed');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Battery filter error:', error);
+        return [];
+    }
+}
+
+function renderBatteryResults(results) {
+    if (results.length === 0) {
+        batteryResults.style.display = 'none';
+        return;
+    }
+
+    batteryResultsList.innerHTML = '';
+
+    results.forEach(battery => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'result-item';
+        resultItem.innerHTML = `
+            <div class="result-details">
+                <div class="result-title">${battery.make} ${battery.model}</div>
+                <div class="result-subtitle">Serial: ${battery.bat_serial_number} (${battery.last_four})</div>
+            </div>
+            <div class="result-action">
+                <i class="fas fa-plus"></i>
+            </div>
+        `;
+
+        resultItem.addEventListener('click', () => selectBattery(battery));
+        batteryResultsList.appendChild(resultItem);
+    });
+
+    batteryResults.style.display = 'block';
+}
+
+function selectBattery(battery) {
+    // Check if battery is already selected
+    if (selectedBatteriesData.find(b => b.bat_serial_number === battery.bat_serial_number)) {
+        showSuccessToast('Battery already selected!');
+        return;
+    }
+
+    selectedBatteriesData.push(battery);
+    batteryResults.style.display = 'none';
+    batteryFilter.value = '';
+
+    renderSelectedBatteries();
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+}
+
+function renderSelectedBatteries() {
+    if (selectedBatteriesData.length === 0) {
+        selectedBatteries.style.display = 'none';
+
+        const batterySection = batteryFilter.closest('.selection-section');
+        batterySection.classList.remove('has-selection');
+        const sectionHeader = batterySection.querySelector('.section-header');
+        sectionHeader.classList.remove('completed');
+        return;
+    }
+
+    selectedBatteriesList.innerHTML = '';
+
+    selectedBatteriesData.forEach((battery, index) => {
+        const batteryDiv = document.createElement('div');
+        batteryDiv.className = 'selected-battery';
+        batteryDiv.innerHTML = `
+            <div class="battery-info">
+                <div class="battery-serial">${battery.bat_serial_number}</div>
+                <div class="battery-details">${battery.make} ${battery.model} - ${battery.ampere}Ah</div>
+            </div>
+            <button class="btn-remove" onclick="removeBattery(${index})">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+
+        selectedBatteriesList.appendChild(batteryDiv);
+    });
+
+    selectedBatteries.style.display = 'block';
+
+    // Mark section as completed
+    const batterySection = batteryFilter.closest('.selection-section');
+    batterySection.classList.add('has-selection');
+    const sectionHeader = batterySection.querySelector('.section-header');
+    sectionHeader.classList.add('completed');
+}
+
+function removeBattery(index) {
+    selectedBatteriesData.splice(index, 1);
+    renderSelectedBatteries();
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+}
+
+function clearAllBatteries() {
+    selectedBatteriesData = [];
+    renderSelectedBatteries();
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+}
+
+// Description preview
+function updateDescriptionPreview() {
+    const chassisInfo = selectedChassisData;
+    const batteries = selectedBatteriesData;
+    const hsnCode = hsnCodeSelect.value;
+
+    if (!chassisInfo && batteries.length === 0) {
+        descriptionPreview.style.display = 'none';
+        return;
+    }
+
+    let description = '';
+
+    // Add chassis information
+    if (chassisInfo) {
+        description += `E-RICKSHAW ${chassisInfo.make_model.toUpperCase()} `;
+        description += `CHASSIS NO-${chassisInfo.chassis_number} `;
+        description += `MOTOR NO-${chassisInfo.motor_number}`;
+    }
+
+    // Add battery information
+    if (batteries.length > 0) {
+        if (description) description += ' ';
+        description += `WITH SF SONIC 12 MONTHS BATTERY `;
+
+        batteries.forEach((battery, index) => {
+            const serialNumber = battery.bat_serial_number;
+            const lastFour = serialNumber.slice(-4);
+            description += `${index + 1})${serialNumber} ${lastFour} `;
+        });
+    }
+
+    if (description) {
+        previewContent.textContent = description.trim();
+        descriptionPreview.style.display = 'block';
+    } else {
+        descriptionPreview.style.display = 'none';
+    }
+}
+
+function updateGenerateBillButton() {
+    const hasHsnCode = hsnCodeSelect.value.trim() !== '';
+    const hasItems = selectedChassisData || selectedBatteriesData.length > 0;
+
+    generateBillBtn.disabled = !hasHsnCode || !hasItems;
+
+    if (generateBillBtn.disabled) {
+        generateBillBtn.style.opacity = '0.6';
+        generateBillBtn.style.cursor = 'not-allowed';
+    } else {
+        generateBillBtn.style.opacity = '1';
+        generateBillBtn.style.cursor = 'pointer';
+    }
+}
+
+// Bill generation
+async function generateBill() {
+    const generateBtn = generateBillBtn;
+    const originalContent = generateBtn.innerHTML;
+
+    try {
+        generateBtn.disabled = true;
+        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Bill...';
+
+        const billingData = {
+            customer_name: extractedData.name,
+            aadhaar_number: extractedData.aadhaar,
+            address: extractedData.address,
+            mobile_number: extractedData.mobile,
+            chassis_number: selectedChassisData ? selectedChassisData.chassis_number : null,
+            selected_batteries: selectedBatteriesData.map(b => b.bat_serial_number),
+            hsn_code: hsnCodeSelect.value,
+            additional_notes: null
+        };
+
+        const response = await fetch('/generate-bill', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(billingData)
         });
 
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.detail || 'Failed to generate invoice');
+            throw new Error(error.detail || 'Failed to generate bill');
         }
 
         const result = await response.json();
 
         if (result.success) {
-            // Show success and results
-            showInvoiceSuccess(result);
+            showBillSuccess(result);
         } else {
-            throw new Error(result.error || 'Invoice generation failed');
+            throw new Error(result.error || 'Bill generation failed');
         }
 
     } catch (error) {
-        console.error('Invoice generation error:', error);
-        showError(`Failed to generate invoice: ${error.message}`);
+        console.error('Bill generation error:', error);
+        showError(`Failed to generate bill: ${error.message}`);
     } finally {
-        // Restore button state
         generateBtn.disabled = false;
         generateBtn.innerHTML = originalContent;
     }
 }
 
-function showInvoiceSuccess(result) {
-    // Show final results
+function showBillSuccess(result) {
     hideAllCards();
-    renderInvoiceResults(result);
+    renderBillResults(result);
     resultsCard.style.display = 'block';
     resultsCard.classList.add('active');
     resultsCard.scrollIntoView({ behavior: 'smooth' });
 }
 
-function renderInvoiceResults(result) {
+function renderBillResults(result) {
     resultsContent.innerHTML = `
         <div class="results-success">
-            <h3>✅ Invoice Generated Successfully</h3>
+            <h3>✅ Bill Generated Successfully</h3>
 
             <div class="result-section">
                 <h4>Customer Information</h4>
@@ -734,32 +805,42 @@ function renderInvoiceResults(result) {
                     <span class="result-label">Address:</span>
                     <div class="result-value">${extractedData.address}</div>
                 </div>
-                <div class="result-item">
-                    <span class="result-label">Source Folder:</span>
-                    <div class="result-value">${extractedData.folder}</div>
-                </div>
             </div>
 
             <div class="result-section">
-                <h4>Invoice Details</h4>
+                <h4>Bill Details</h4>
                 <div class="result-item">
-                    <span class="result-label">Invoice Number:</span>
-                    <div class="result-value">${result.invoice_number}</div>
+                    <span class="result-label">Bill Number:</span>
+                    <div class="result-value">${result.bill_number}</div>
                 </div>
                 <div class="result-item">
-                    <span class="result-label">File Type:</span>
-                    <div class="result-value">Word Document (.docx)</div>
+                    <span class="result-label">HSN Code:</span>
+                    <div class="result-value">${hsnCodeSelect.value}</div>
+                </div>
+                ${selectedChassisData ? `
+                <div class="result-item">
+                    <span class="result-label">Chassis Number:</span>
+                    <div class="result-value">${selectedChassisData.chassis_number}</div>
+                </div>` : ''}
+                ${selectedBatteriesData.length > 0 ? `
+                <div class="result-item">
+                    <span class="result-label">Selected Batteries:</span>
+                    <div class="result-value">${selectedBatteriesData.map(b => b.bat_serial_number).join(', ')}</div>
+                </div>` : ''}
+                <div class="result-item">
+                    <span class="result-label">Description:</span>
+                    <div class="result-value">${result.description || 'N/A'}</div>
                 </div>
                 <div class="result-item">
                     <span class="result-label">File Path:</span>
-                    <div class="result-value">${result.invoice_path}</div>
+                    <div class="result-value">${result.bill_path}</div>
                 </div>
             </div>
 
-            <div class="invoice-download-section">
+            <div class="bill-download-section">
                 <a href="${result.download_url}" class="btn btn-primary download-btn" download>
                     <i class="fas fa-download"></i>
-                    Download Invoice (.docx)
+                    Download Bill (.docx)
                 </a>
             </div>
         </div>
@@ -775,10 +856,21 @@ function resetToSearch() {
     hideAllCards();
     searchCard.style.display = 'block';
     searchCard.classList.add('active');
+
+    // Reset all state
     selectedCustomerData = null;
     extractedData = null;
     isEditMode = false;
+    selectedChassisData = null;
+    selectedBatteriesData = [];
+
+    // Reset form values
     customerSearch.value = '';
+    chassisFilter.value = '';
+    batteryFilter.value = '';
+    hsnCodeSelect.value = '';
+
+    // Clear results
     resultsContent.innerHTML = '';
     hideSuggestions();
 
@@ -793,433 +885,21 @@ function resetToSearch() {
         document.querySelector('.customer-info-section').classList.remove('edit-mode');
     }
 
-    // Remove invoice card if it exists
-    const invoiceCard = document.getElementById('invoiceCard');
-    if (invoiceCard) {
-        invoiceCard.remove();
-    }
+    // Reset billing card states
+    if (selectedChassis) selectedChassis.style.display = 'none';
+    if (selectedBatteries) selectedBatteries.style.display = 'none';
+    if (chassisResults) chassisResults.style.display = 'none';
+    if (batteryResults) batteryResults.style.display = 'none';
+    if (descriptionPreview) descriptionPreview.style.display = 'none';
 
-    // Reset item counter
-    itemCounter = 0;
+    // Reset section states
+    document.querySelectorAll('.selection-section').forEach(section => {
+        section.classList.remove('has-selection');
+        section.querySelector('.section-header').classList.remove('completed');
+    });
 
     customerSearch.focus();
 }
-
-// Add CSS animations for toast notifications
-const toastStyle = document.createElement('style');
-toastStyle.textContent = `
-    @keyframes slideIn {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-
-    @keyframes slideOut {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-
-    .edit-mode .info-card {
-        border-color: var(--primary-color) !important;
-        background: linear-gradient(135deg, #fefce8, #fef3c7) !important;
-        transform: scale(1.02);
-    }
-
-    .info-edit {
-        transition: all 0.3s ease;
-    }
-
-    .info-edit:focus {
-        transform: scale(1.02);
-    }
-
-    /* Invoice generation styles */
-    .invoice-generation-content {
-        padding: 2rem;
-    }
-
-    .form-header {
-        text-align: center;
-        margin-bottom: 2rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid var(--border-color);
-    }
-
-    .form-header h3 {
-        color: var(--text-primary);
-        font-size: 1.5rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-    }
-
-    .form-header p {
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-    }
-
-    .customer-summary {
-        background: linear-gradient(135deg, #fefce8, #fef3c7);
-        border: 2px solid var(--primary-color);
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .customer-summary h4 {
-        color: var(--primary-dark);
-        font-weight: 700;
-        margin-bottom: 1rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    .summary-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1rem;
-    }
-
-    .summary-item {
-        display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
-    }
-
-    .summary-item.full-width {
-        grid-column: 1 / -1;
-    }
-
-    .summary-label {
-        font-weight: 600;
-        color: var(--text-secondary);
-        font-size: 0.875rem;
-        text-transform: uppercase;
-        letter-spacing: 0.025em;
-    }
-
-    .summary-value {
-        color: var(--text-primary);
-        font-weight: 500;
-        background: rgba(255, 255, 255, 0.7);
-        padding: 0.5rem;
-        border-radius: var(--radius-md);
-        border-left: 3px solid var(--primary-color);
-    }
-
-    .invoice-items-section {
-        margin-bottom: 2rem;
-    }
-
-    .items-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .items-header h4 {
-        color: var(--text-primary);
-        font-weight: 700;
-        margin: 0;
-    }
-
-    .btn-add-item {
-        background: var(--primary-color);
-        color: white;
-        border: none;
-        padding: 0.5rem 1rem;
-        border-radius: var(--radius-md);
-        font-weight: 600;
-        cursor: pointer;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-size: 0.875rem;
-    }
-
-    .btn-add-item:hover {
-        background: var(--primary-hover);
-        transform: translateY(-1px);
-    }
-
-    .no-items-message {
-        text-align: center;
-        padding: 2rem;
-        color: var(--text-muted);
-        font-style: italic;
-        background: var(--bg-secondary);
-        border-radius: var(--radius-lg);
-        border: 2px dashed var(--border-color);
-    }
-
-    .no-items-message i {
-        margin-right: 0.5rem;
-        color: var(--primary-color);
-    }
-
-    .invoice-item {
-        background: white;
-        border: 2px solid var(--border-color);
-        border-radius: var(--radius-lg);
-        padding: 1.5rem;
-        margin-bottom: 1rem;
-        transition: var(--transition);
-    }
-
-    .invoice-item:hover {
-        border-color: var(--primary-color);
-        box-shadow: var(--shadow-md);
-    }
-
-    .item-fields {
-        display: grid;
-        grid-template-columns: 2fr 1fr 1fr 1fr auto;
-        gap: 1rem;
-        align-items: end;
-    }
-
-    .field-group {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-    }
-
-    .field-group label {
-        font-weight: 600;
-        color: var(--text-primary);
-        font-size: 0.875rem;
-    }
-
-    .field-group input {
-        padding: 0.75rem;
-        border: 2px solid var(--border-color);
-        border-radius: var(--radius-md);
-        font-size: 1rem;
-        background: white;
-        color: var(--text-primary);
-        transition: var(--transition);
-        outline: none;
-    }
-
-    .field-group input:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgb(212 175 55 / 0.1);
-    }
-
-    .field-group input[readonly] {
-        background: var(--bg-secondary);
-        cursor: not-allowed;
-    }
-
-    .btn-remove-item {
-        background: var(--error-color);
-        color: white;
-        border: none;
-        padding: 0.75rem;
-        border-radius: var(--radius-md);
-        cursor: pointer;
-        transition: var(--transition);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-    }
-
-    .btn-remove-item:hover {
-        background: #b91c1c;
-        transform: translateY(-1px);
-    }
-
-    .template-status {
-        margin-bottom: 1.5rem;
-    }
-
-    .status-checking, .status-success, .status-warning, .status-error {
-        padding: 1rem;
-        border-radius: var(--radius-lg);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-        font-weight: 600;
-    }
-
-    .status-checking {
-        background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
-        color: var(--text-secondary);
-    }
-
-    .status-success {
-        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-        color: #065f46;
-        border: 2px solid #10b981;
-    }
-
-    .status-warning {
-        background: linear-gradient(135deg, #fef3c7, #fde68a);
-        color: #92400e;
-        border: 2px solid var(--warning-color);
-    }
-
-    .status-error {
-        background: linear-gradient(135deg, #fee2e2, #fecaca);
-        color: #991b1b;
-        border: 2px solid var(--error-color);
-    }
-
-    .invoice-download-section {
-        text-align: center;
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 2px solid var(--border-color);
-    }
-
-    .download-btn {
-        font-size: 1.1rem;
-        padding: 1rem 2rem;
-        min-width: 200px;
-    }
-
-    @media (max-width: 768px) {
-        .item-fields {
-            grid-template-columns: 1fr;
-            gap: 1rem;
-        }
-
-        .summary-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .items-header {
-            flex-direction: column;
-            gap: 1rem;
-            align-items: stretch;
-        }
-    }
-`;
-document.head.appendChild(toastStyle);
-
-// Initialize the app
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Minato Enterprises - Document Processor initialized');
-
-    // Focus on the search input
-    customerSearch.focus();
-
-    // Add helpful tips
-    const helpText = document.createElement('div');
-    helpText.style.cssText = `
-        position: fixed;
-        bottom: 2rem;
-        right: 2rem;
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        padding: 1.5rem;
-        border-radius: 1rem;
-        font-size: 0.875rem;
-        color: #4a4a4a;
-        max-width: 320px;
-        box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-        border: 2px solid #d4af37;
-        z-index: 1000;
-        transform: translateY(100px);
-        opacity: 0;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    `;
-
-    const closeButton = document.createElement('button');
-    closeButton.innerHTML = '<i class="fas fa-times"></i>';
-    closeButton.style.cssText = `
-        position: absolute;
-        top: 0.75rem;
-        right: 0.75rem;
-        background: none;
-        border: none;
-        color: #6b7280;
-        cursor: pointer;
-        padding: 0.25rem;
-        border-radius: 0.25rem;
-        transition: all 0.2s ease;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.5rem;
-        height: 1.5rem;
-        font-size: 0.75rem;
-    `;
-
-    closeButton.addEventListener('mouseenter', () => {
-        closeButton.style.background = '#f8f9fa';
-        closeButton.style.color = '#d4af37';
-    });
-
-    closeButton.addEventListener('mouseleave', () => {
-        closeButton.style.background = 'none';
-        closeButton.style.color = '#6b7280';
-    });
-
-    const closeTips = () => {
-        if (helpText.parentNode) {
-            helpText.style.transform = 'translateY(100px)';
-            helpText.style.opacity = '0';
-            setTimeout(() => {
-                if (helpText.parentNode) {
-                    helpText.remove();
-                }
-            }, 300);
-        }
-    };
-
-    closeButton.addEventListener('click', closeTips);
-
-    helpText.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #d4af37; font-weight: 600;">
-            <i class="fas fa-file-invoice"></i>
-            <span>Smart Document Processor</span>
-        </div>
-        <div style="margin-bottom: 0.75rem;">
-            <strong style="color: #1a1a1a;">Workflow:</strong><br>
-            • Search customers<br>
-            • Extract document info<br>
-            • Generate Word invoices
-        </div>
-        <div>
-            <strong style="color: #1a1a1a;">Features:</strong><br>
-            • Real-time search & extraction<br>
-            • Mobile number extraction<br>
-            • Editable information review<br>
-            • Word document generation
-        </div>
-    `;
-
-    helpText.appendChild(closeButton);
-
-    setTimeout(() => {
-        document.body.appendChild(helpText);
-
-        setTimeout(() => {
-            helpText.style.transform = 'translateY(0)';
-            helpText.style.opacity = '1';
-        }, 100);
-
-        setTimeout(() => {
-            closeTips();
-        }, 15000);
-    }, 3000);
-});
 
 // Global keyboard shortcuts
 document.addEventListener('keydown', (e) => {
@@ -1294,7 +974,6 @@ style.textContent = `
         to { transform: rotate(360deg); }
     }
 
-    /* Enhanced mobile display styles */
     .mobile-number-highlight {
         background: linear-gradient(135deg, #e6f3ff, #cce7ff);
         border-left: 4px solid #0066cc;
@@ -1310,8 +989,244 @@ style.textContent = `
         color: #0066cc;
         letter-spacing: 0.5px;
     }
+
+    .filter-input-wrapper {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+
+    .filter-input {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 1rem;
+        border: 2px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        font-size: 1rem;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        transition: var(--transition);
+        outline: none;
+    }
+
+    .filter-input:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgb(212 175 55 / 0.1);
+    }
+
+    .filter-loading {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--primary-color);
+        font-size: 1rem;
+    }
+
+    .filter-results {
+        background: var(--bg-secondary);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-color);
+        max-height: 200px;
+        overflow-y: auto;
+        margin-top: 0.5rem;
+    }
+
+    .results-list {
+        padding: 0.5rem;
+    }
+
+    .result-item {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .result-item:hover {
+        border-color: var(--primary-color);
+        background: linear-gradient(135deg, #fefce8, #fef3c7);
+        transform: translateY(-1px);
+    }
+
+    .result-item:hover .result-action {
+        transform: scale(1.2);
+        color: var(--primary-hover);
+    }
+
+    .result-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .result-details {
+        flex: 1;
+    }
+
+    .result-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+    }
+
+    .result-subtitle {
+        font-size: 0.875rem;
+        color: var(--text-secondary);
+        font-family: 'Monaco', 'Menlo', monospace;
+    }
+
+    .result-action {
+        color: var(--primary-color);
+        font-size: 1.25rem;
+        transition: var(--transition);
+    }
+
+    .selection-section.has-selection {
+        border-color: #28a745;
+        background: linear-gradient(135deg, #f8fff9, #f0fff4);
+    }
+
+    .section-header.completed h4 {
+        color: #28a745;
+    }
+
+    .section-header.completed h4 i {
+        color: #28a745;
+    }
 `;
 document.head.appendChild(style);
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Minato Enterprises - Document Processor & Billing System initialized');
+
+    // Focus on the search input
+    customerSearch.focus();
+
+    // Add helpful tips
+    setTimeout(() => {
+        const helpText = document.createElement('div');
+        helpText.style.cssText = `
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            color: #4a4a4a;
+            max-width: 320px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            border: 2px solid #d4af37;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        `;
+
+        const closeButton = document.createElement('button');
+        closeButton.innerHTML = '<i class="fas fa-times"></i>';
+        closeButton.style.cssText = `
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            font-size: 0.75rem;
+        `;
+
+        closeButton.addEventListener('mouseenter', () => {
+            closeButton.style.background = '#f8f9fa';
+            closeButton.style.color = '#d4af37';
+        });
+
+        closeButton.addEventListener('mouseleave', () => {
+            closeButton.style.background = 'none';
+            closeButton.style.color = '#6b7280';
+        });
+
+        const closeTips = () => {
+            if (helpText.parentNode) {
+                helpText.style.transform = 'translateY(100px)';
+                helpText.style.opacity = '0';
+                setTimeout(() => {
+                    if (helpText.parentNode) {
+                        helpText.remove();
+                    }
+                }, 300);
+            }
+        };
+
+        closeButton.addEventListener('click', closeTips);
+
+        helpText.innerHTML = `
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #d4af37; font-weight: 600;">
+                <i class="fas fa-file-invoice"></i>
+                <span>Smart Document Processor & Billing</span>
+            </div>
+            <div style="margin-bottom: 0.75rem;">
+                <strong style="color: #1a1a1a;">Workflow:</strong><br>
+                • Search customers<br>
+                • Extract document info<br>
+                • Select chassis & batteries<br>
+                • Generate Word bills
+            </div>
+            <div>
+                <strong style="color: #1a1a1a;">Features:</strong><br>
+                • Real-time search & filtering<br>
+                • Mobile number extraction<br>
+                • Editable information review<br>
+                • HSN code selection<br>
+                • Word document generation
+            </div>
+        `;
+
+        helpText.appendChild(closeButton);
+
+        document.body.appendChild(helpText);
+
+        setTimeout(() => {
+            helpText.style.transform = 'translateY(0)';
+            helpText.style.opacity = '1';
+        }, 100);
+
+        setTimeout(() => {
+            closeTips();
+        }, 15000);
+    }, 3000);
+
+    // Check data status on startup
+    checkDataStatus();
+});
+
+async function checkDataStatus() {
+    try {
+        const response = await fetch('/data-status');
+        const status = await response.json();
+
+        console.log('Data Status:', status);
+
+        if (!status.chassis_loaded || !status.battery_loaded) {
+            console.warn('Warning: Some data files may not be loaded properly');
+        }
+    } catch (error) {
+        console.error('Failed to check data status:', error);
+    }
+}
 
 // API calls
 async function searchCustomers(query) {
@@ -1400,7 +1315,6 @@ function renderSuggestions(suggestions) {
             <i class="fas fa-arrow-right" style="color: #d4af37;"></i>
         `;
 
-        // Add hover effects
         suggestionElement.addEventListener('mouseenter', () => {
             suggestionElement.style.background = 'linear-gradient(135deg, #fefce8, #fef3c7)';
         });
@@ -1423,18 +1337,14 @@ function selectCustomer(customer) {
     customerSearch.value = customer.display_text;
     hideSuggestions();
 
-    // Show extraction card and start fetching
     hideAllCards();
     extractionCard.style.display = 'block';
     extractionCard.classList.add('active');
 
-    // Show fetching state
     fetchingContainer.style.display = 'block';
     extractionResults.style.display = 'none';
 
-    // Start fetching process
     startFetchingProcess(customer);
-
     extractionCard.scrollIntoView({ behavior: 'smooth' });
 }
 
@@ -1451,9 +1361,8 @@ async function startFetchingProcess(customer) {
     ];
 
     let currentStep = 0;
-    const stepDuration = 700; // 700ms per step
+    const stepDuration = 700;
 
-    // Animate progress bar
     const progressInterval = setInterval(() => {
         if (currentStep < steps.length) {
             progressText.textContent = steps[currentStep];
@@ -1461,7 +1370,6 @@ async function startFetchingProcess(customer) {
             currentStep++;
         } else {
             clearInterval(progressInterval);
-            // Proceed to actual data extraction
             performDataExtraction(customer);
         }
     }, stepDuration);
@@ -1469,7 +1377,6 @@ async function startFetchingProcess(customer) {
 
 async function performDataExtraction(customer) {
     try {
-        // Actual API call to extract data
         const result = await processCustomer(customer.full_path);
 
         if (result.success) {
@@ -1481,7 +1388,6 @@ async function performDataExtraction(customer) {
                 folder: customer.folder_name
             };
 
-            // Show results with edit capability
             showExtractionResults();
         } else {
             showError(`Failed to extract information: ${result.error}`);
@@ -1493,11 +1399,9 @@ async function performDataExtraction(customer) {
 }
 
 function showExtractionResults() {
-    // Hide fetching, show results
     fetchingContainer.style.display = 'none';
     extractionResults.style.display = 'block';
 
-    // Populate the display fields
     customerTitle.textContent = extractedData.name;
     customerSubtitle.textContent = `Folder: ${extractedData.folder}`;
 
@@ -1507,17 +1411,14 @@ function showExtractionResults() {
     displayMobile.textContent = extractedData.mobile;
     displayFolder.textContent = extractedData.folder;
 
-    // Add special styling for mobile number
     displayMobile.classList.add('mobile-number-display');
 
-    // Populate edit fields (hidden initially)
     editName.value = extractedData.name;
     editAadhaar.value = extractedData.aadhaar;
     editAddress.value = extractedData.address;
     editMobile.value = extractedData.mobile;
     editFolder.value = extractedData.folder;
 
-    // Print to terminal
     console.log('\n' + '='.repeat(60));
     console.log('DOCUMENT EXTRACTION SUCCESSFUL');
     console.log('='.repeat(60));
@@ -1528,3 +1429,8 @@ function showExtractionResults() {
     console.log(`Folder: ${extractedData.folder}`);
     console.log('='.repeat(60) + '\n');
 }
+
+// Make functions globally available for onclick handlers
+window.clearSelectedChassis = clearSelectedChassis;
+window.removeBattery = removeBattery;
+window.clearAllBatteries = clearAllBatteries;
