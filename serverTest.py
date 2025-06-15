@@ -7,15 +7,15 @@ from typing import List, Optional
 import re
 import logging
 from datetime import datetime
+import json
+from docxtpl import DocxTemplate
 from agno.agent import Agent
 from agno.models.google import Gemini
 from agno.media import File
 
-# Import our new invoice generator
-from invoiceGen import generate_invoice_with_data
-
 # Configuration
 DATA_FOLDER_PATH = "D:\\minato\\Data"  # Hardcoded path to Data folder
+TEMPLATES_FOLDER = "templates"  # Folder for invoice templates
 INVOICES_FOLDER = "generated_invoices"  # Folder for generated invoices
 GOOGLE_API_KEY = "AIzaSyCWznUz8cnPCkzJ6Bu9ikQGWF6kc-ZUu9k"  # Your API key
 
@@ -25,13 +25,15 @@ app = FastAPI(title="Minato Enterprises - Document Processor", version="1.0.0")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 # Create necessary directories
+Path(TEMPLATES_FOLDER).mkdir(exist_ok=True)
 Path(INVOICES_FOLDER).mkdir(exist_ok=True)
 
 # Pydantic models
 class AadhaarExtraction(BaseModel):
-    aadharNumber: str = Field(..., description="Extract only the 12-digit aadhar number from the given pdf")
-    address: str = Field(..., description="Extract only the residential address in simple format. Do not include VTC, PO, Sub District, District details. Just extract the house/building name, road/street name, area name, city and state. Do not include the aadhar number in address.")
+    aadharNumber: str = Field(..., description="Extract the aadhar number from the given pdf")
+    address: str = Field(..., description="Extract the full address from the given pdf")
     mobileNumber: str = Field(..., description="Extract the mobile/phone number from the given pdf. Look for 10-digit numbers starting with 6, 7, 8, or 9")
+
 class SearchRequest(BaseModel):
     customer_name: str
 
@@ -50,7 +52,6 @@ class ExtractionResult(BaseModel):
     aadhar_number: Optional[str] = None
     address: Optional[str] = None
     mobile_number: Optional[str] = None
-
     error: Optional[str] = None
 
 class InvoiceGenerationRequest(BaseModel):
@@ -58,8 +59,8 @@ class InvoiceGenerationRequest(BaseModel):
     aadhaar_number: str
     address: str
     mobile_number: str
-
-    # No need for folder_path here - we'll use the already extracted data
+    items: List[dict] = []  # List of items with name, quantity, price
+    additional_data: dict = {}  # Any additional data for placeholders
 
 class InvoiceGenerationResult(BaseModel):
     success: bool
@@ -68,10 +69,10 @@ class InvoiceGenerationResult(BaseModel):
     download_url: Optional[str] = None
     error: Optional[str] = None
 
-# Initialize the agent for extraction (step 2)
+# Initialize the agent
 agent = Agent(
     model=Gemini(id="gemini-1.5-flash", api_key=GOOGLE_API_KEY),
-    description="You extract clean, simple Aadhaar number, phone number and residential address from PDF documents. For address, extract only basic residential details like house/building name, road/street, area, city, and state. Do not include administrative details like VTC, PO, Sub District, District, PIN codes, or the Aadhaar number itself.",
+    description="You extract Aadhaar number, address, and mobile number information from the PDF file.",
     response_model=AadhaarExtraction,
 )
 
@@ -79,9 +80,307 @@ agent = Agent(
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# Invoice counter for unique invoice numbers
+invoice_counter_file = Path("invoice_counter.json")
+
+def get_next_invoice_number() -> str:
+    """Generate the next invoice number"""
+    try:
+        if invoice_counter_file.exists():
+            with open(invoice_counter_file, 'r') as f:
+                data = json.load(f)
+                counter = data.get('counter', 0)
+        else:
+            counter = 0
+
+        counter += 1
+
+        # Save updated counter
+        with open(invoice_counter_file, 'w') as f:
+            json.dump({'counter': counter}, f)
+
+        # Format: INV-2025-0001
+        return f"INV-{datetime.now().year}-{counter:04d}"
+
+    except Exception as e:
+        logger.error(f"Error generating invoice number: {e}")
+        # Fallback to timestamp-based number
+        return f"INV-{datetime.now().strftime('%Y%m%d%H%M%S')}"
+
+def get_template_file() -> Optional[Path]:
+    """Find the invoice template file with enhanced debugging"""
+
+    # Get absolute path to templates folder
+    current_dir = Path.cwd()
+    template_folder = current_dir / TEMPLATES_FOLDER
+    template_path = template_folder / "template.docx"
+
+    logger.info(f"Current working directory: {current_dir}")
+    logger.info(f"Looking for templates folder at: {template_folder}")
+    logger.info(f"Looking for template file at: {template_path}")
+
+    # Check if templates folder exists
+    if not template_folder.exists():
+        logger.error(f"Templates folder does not exist: {template_folder}")
+        logger.info("Creating templates folder...")
+        template_folder.mkdir(parents=True, exist_ok=True)
+        return None
+
+    # List all files in templates folder for debugging
+    try:
+        files_in_templates = list(template_folder.iterdir())
+        logger.info(f"Files in templates folder: {[f.name for f in files_in_templates]}")
+    except Exception as e:
+        logger.error(f"Error listing files in templates folder: {e}")
+
+    # Check for exact template.docx file
+    if template_path.exists():
+        logger.info(f"Found template file: {template_path}")
+        return template_path
+    else:
+        logger.warning(f"template.docx not found at: {template_path}")
+
+    # Fallback: look for any .docx file in templates folder
+    try:
+        docx_files = list(template_folder.glob("*.docx"))
+        logger.info(f"Found .docx files: {[f.name for f in docx_files]}")
+
+        if docx_files:
+            logger.info(f"Using fallback template: {docx_files[0]}")
+            return docx_files[0]
+    except Exception as e:
+        logger.error(f"Error searching for .docx files: {e}")
+
+    # Check for case-sensitive issues
+    try:
+        all_files = list(template_folder.glob("*"))
+        for file in all_files:
+            if file.name.lower() == "template.docx":
+                logger.info(f"Found template with different case: {file.name}")
+                return file
+    except Exception as e:
+        logger.error(f"Error checking for case-sensitive files: {e}")
+
+    logger.error("No template file found")
+    return None
+@app.get("/debug-template")
+async def debug_template_status():
+    """Debug endpoint to check template file status"""
+    current_dir = Path.cwd()
+    template_folder = current_dir / TEMPLATES_FOLDER
+    template_path = template_folder / "template.docx"
+
+    debug_info = {
+        "current_directory": str(current_dir),
+        "templates_folder_path": str(template_folder),
+        "templates_folder_exists": template_folder.exists(),
+        "template_file_path": str(template_path),
+        "template_file_exists": template_path.exists(),
+        "template_file_size": template_path.stat().st_size if template_path.exists() else None,
+        "files_in_templates": [],
+        "all_docx_files": []
+    }
+
+    # List files in templates folder
+    try:
+        if template_folder.exists():
+            files = list(template_folder.iterdir())
+            debug_info["files_in_templates"] = [
+                {
+                    "name": f.name,
+                    "is_file": f.is_file(),
+                    "size": f.stat().st_size if f.is_file() else None
+                } for f in files
+            ]
+
+            # Find all .docx files
+            docx_files = list(template_folder.glob("*.docx"))
+            debug_info["all_docx_files"] = [f.name for f in docx_files]
+    except Exception as e:
+        debug_info["error"] = str(e)
+
+    return debug_info
+
+def split_address(address: str) -> tuple:
+    """
+    Split address into two parts for template
+
+    Args:
+        address (str): Complete address
+
+    Returns:
+        tuple: (address1, address2)
+    """
+    if not address:
+        return "", ""
+
+    # Try to split at comma, keeping first part as address1
+    parts = address.split(',', 1)
+    if len(parts) == 2:
+        return parts[0].strip(), parts[1].strip()
+
+    # If no comma, try to split at a reasonable length
+    if len(address) > 50:
+        # Find a good break point (space) around the middle
+        mid_point = len(address) // 2
+        for i in range(mid_point - 10, mid_point + 10):
+            if i < len(address) and address[i] == ' ':
+                return address[:i].strip(), address[i+1:].strip()
+
+    # If address is short or no good break point found
+    return address.strip(), ""
+
+def convert_amount_to_words(amount: float) -> str:
+    """
+    Convert numeric amount to words (basic implementation)
+
+    Args:
+        amount (float): Amount to convert
+
+    Returns:
+        str: Amount in words
+    """
+    # This is a basic implementation - you can enhance it for Indian currency format
+    if amount == 0:
+        return "Zero"
+
+    # Simple conversion for demonstration
+    # You might want to use a library like 'num2words' for better conversion
+    try:
+        from num2words import num2words
+        return num2words(amount, lang='en_IN').title()
+    except ImportError:
+        # Fallback if num2words is not installed
+        return f"Rupees {amount:.2f}"
+
+def generate_invoice(customer_data: dict, items: List[dict] = None, additional_data: dict = None) -> InvoiceGenerationResult:
+    """
+    Generate invoice using DocxTemplate and customer data including mobile number
+
+    Args:
+        customer_data: Dictionary containing customer information
+        items: List of items for the invoice
+        additional_data: Additional data for custom placeholders
+
+    Returns:
+        InvoiceGenerationResult: Result of invoice generation
+    """
+    try:
+        # Find template file
+        template_file = get_template_file()
+        if not template_file:
+            return InvoiceGenerationResult(
+                success=False,
+                error="Invoice template not found. Please add 'template.docx' to the 'templates' folder."
+            )
+
+        logger.info(f"Using template: {template_file}")
+
+        # Generate invoice number and current date
+        invoice_number = get_next_invoice_number()
+        current_date = datetime.now().strftime("%d/%m/%Y")
+        current_time = datetime.now().strftime("%H:%M:%S")
+        current_datetime = f"{current_date} {current_time}"
+
+        # Split address into two parts
+        address1, address2 = split_address(customer_data.get('address', ''))
+
+        # Calculate totals from items
+        total_amount = 0
+        formatted_items = []
+
+        if items:
+            for item in items:
+                item_total = float(item.get('total', 0))
+                total_amount += item_total
+                formatted_items.append({
+                    'description': item.get('name', ''),
+                    'hsnCode': item.get('hsn_code', ''),
+                    'quantity': item.get('quantity', 1),
+                    'unitPrice': f"₹{float(item.get('price', 0)):.2f}",
+                    'total': f"₹{item_total:.2f}"
+                })
+
+        # Convert amount to words
+        amount_words = convert_amount_to_words(total_amount)
+
+        # Prepare context data for DocxTemplate
+        context = {
+            # Basic invoice info
+            'date': current_date,
+            'time': current_time,
+            'datetime': current_datetime,
+            'invoice_number': invoice_number,
+
+            # Customer information
+            'customerName': customer_data.get('name', ''),
+            'customerParent': customer_data.get('parent_name', ''),  # You can add this field if needed
+            'address1': address1,
+            'address2': address2,
+            'aadhar': customer_data.get('aadhaar_number', ''),
+            'mobile': customer_data.get('mobile_number', ''),
+
+            # Company information
+            'company_name': 'Minato Enterprises',
+            'company_address': 'G/67, DR. M. N. GHOSH ROAD RANIGANJ, WEST BENGAL-713347',
+            'company_phone1': '9679697117',
+            'company_phone2': '9333100233',
+            'company_email': 'theminatoenterprise@gmail.com',
+            'company_gstin': '19BQFPA3329A1ZF',
+
+            # Invoice items (for single item invoices)
+            'description': formatted_items[0]['description'] if formatted_items else '',
+            'hsnCode': formatted_items[0]['hsnCode'] if formatted_items else '',
+            'quantity': formatted_items[0]['quantity'] if formatted_items else '',
+            'unitPrice': formatted_items[0]['unitPrice'] if formatted_items else '',
+            'total': formatted_items[0]['total'] if formatted_items else '',
+
+            # Totals
+            'subTotal': f"₹{total_amount:.2f}",
+            'totalAmount': f"₹{total_amount:.2f}",
+            'amountWords': amount_words,
+
+            # Additional fields
+            'items': formatted_items,  # For templates that support multiple items
+        }
+
+        # Add any additional data
+        if additional_data:
+            context.update(additional_data)
+
+        # Load and render template
+        doc = DocxTemplate(template_file)
+        doc.render(context)
+
+        # Generate output filename
+        safe_customer_name = re.sub(r'[^\w\s-]', '', customer_data.get('name', 'Customer')).strip()
+        safe_customer_name = re.sub(r'[-\s]+', '_', safe_customer_name)
+        output_filename = f"Invoice_{safe_customer_name}_{datetime.now().strftime('%Y%m%d')}_{invoice_number.replace('-', '_')}.docx"
+        output_path = Path(INVOICES_FOLDER) / output_filename
+
+        # Save the generated invoice
+        doc.save(output_path)
+
+        logger.info(f"Invoice generated successfully: {output_path}")
+
+        return InvoiceGenerationResult(
+            success=True,
+            invoice_path=str(output_path),
+            invoice_number=invoice_number,
+            download_url=f"/download-invoice/{output_filename}",
+            error=None
+        )
+
+    except Exception as e:
+        logger.error(f"Error generating invoice: {str(e)}")
+        return InvoiceGenerationResult(
+            success=False,
+            error=f"Failed to generate invoice: {str(e)}"
+        )
+
 def get_customer_suggestions(query: str) -> List[CustomerSuggestion]:
     """
-    STEP 1: Get real-time customer suggestions based on partial name input
+    Get real-time customer suggestions based on partial name input
 
     Args:
         query (str): Partial customer name query
@@ -173,7 +472,7 @@ def find_uid_file(folder_path: Path, expected_filename: str) -> Optional[Path]:
 
 def extract_aadhaar_info(pdf_path: Path) -> ExtractionResult:
     """
-    STEP 2: Extract Aadhaar information using the agentic model
+    Extract Aadhaar information including mobile number using the agentic model
 
     Args:
         pdf_path (Path): Path to the PDF file
@@ -185,7 +484,9 @@ def extract_aadhaar_info(pdf_path: Path) -> ExtractionResult:
         logger.info(f"Processing PDF: {pdf_path}")
 
         response = agent.run(
-            "Please extract the 12-digit Aadhaar number and clean residential address. For the address, only include house/building name, road/street name, area, city and state. Do not include VTC, PO, Sub District, District, PIN code details or the Aadhaar number in the address field.",
+            "Please extract the Aadhaar number, complete address, and mobile/phone number from this document. "
+            "Look carefully for any 10-digit mobile numbers that typically start with 6, 7, 8, or 9. "
+            "The mobile number might be listed as 'Mobile', 'Phone', or just appear as a 10-digit number.",
             files=[File(filepath=pdf_path)]
         )
 
@@ -194,6 +495,7 @@ def extract_aadhaar_info(pdf_path: Path) -> ExtractionResult:
                 success=True,
                 aadhar_number=response.content.aadharNumber,
                 address=response.content.address,
+                mobile_number=response.content.mobileNumber,
                 error=None
             )
         else:
@@ -201,6 +503,7 @@ def extract_aadhaar_info(pdf_path: Path) -> ExtractionResult:
                 success=False,
                 aadhar_number=None,
                 address=None,
+                mobile_number=None,
                 error='No content in response'
             )
 
@@ -210,6 +513,7 @@ def extract_aadhaar_info(pdf_path: Path) -> ExtractionResult:
             success=False,
             aadhar_number=None,
             address=None,
+            mobile_number=None,
             error=str(e)
         )
 
@@ -223,8 +527,7 @@ async def read_root():
 @app.post("/search", response_model=List[CustomerSuggestion])
 async def search_customers(request: SearchRequest):
     """
-    STEP 1: Get real-time customer suggestions based on partial name
-    Example: User types "Nan" → Shows all customers starting with "Nan" with their Aadhaar numbers
+    Get real-time customer suggestions based on partial name
     """
     if not request.customer_name.strip():
         return []
@@ -241,8 +544,7 @@ async def search_customers(request: SearchRequest):
 @app.post("/process", response_model=ExtractionResult)
 async def process_customer(request: ProcessRequest):
     """
-    STEP 2: Process the selected customer folder to extract Aadhaar information from their UID file
-    This happens when user selects a customer from the suggestions
+    Process the selected customer folder to extract Aadhaar information including mobile number
     """
     folder_path = Path(request.folder_path)
 
@@ -274,7 +576,7 @@ async def process_customer(request: ProcessRequest):
 
     logger.info(f"Found UID file: {uid_file_path}")
 
-    # Extract information from the UID file
+    # Extract information
     result = extract_aadhaar_info(uid_file_path)
 
     # Print results to terminal
@@ -287,6 +589,7 @@ async def process_customer(request: ProcessRequest):
         print(f"UID File: {uid_file_path.name}")
         print(f"Aadhaar Number: {result.aadhar_number}")
         print(f"Address: {result.address}")
+        print(f"Mobile Number: {result.mobile_number}")
         print(f"{'='*60}\n")
     else:
         print(f"\n{'='*60}")
@@ -302,63 +605,53 @@ async def process_customer(request: ProcessRequest):
 @app.post("/generate-invoice", response_model=InvoiceGenerationResult)
 async def generate_customer_invoice(request: InvoiceGenerationRequest):
     """
-    STEP 4: Generate invoice using the already extracted and reviewed customer information
-    This uses the data that was extracted in step 2 and possibly edited in step 3
+    Generate invoice for customer with extracted information including mobile number
     """
     try:
-        logger.info(f"Generating invoice for customer: {request.customer_name}")
-
-        # Prepare customer data from the request (already extracted and possibly edited)
         customer_data = {
             'name': request.customer_name,
             'aadhaar_number': request.aadhaar_number,
-            'address': request.address
+            'address': request.address,
+            'mobile_number': request.mobile_number
         }
 
-        # Use the invoice generator with the already extracted data
-        result = generate_invoice_with_data(customer_data)
+        result = generate_invoice(
+            customer_data=customer_data,
+            items=request.items,
+            additional_data=request.additional_data
+        )
 
-        if result['success']:
-            # Convert the result to match our response model
-            invoice_result = InvoiceGenerationResult(
-                success=True,
-                invoice_path=result['invoice_path'],
-                invoice_number=result['invoice_number'],
-                download_url=result['download_url'],
-                error=None
-            )
-
-            # Print invoice generation result to terminal
+        # Print invoice generation result to terminal
+        if result.success:
             print(f"\n{'='*60}")
-            print(f"WORD INVOICE GENERATED SUCCESSFULLY")
+            print(f"INVOICE GENERATED SUCCESSFULLY")
             print(f"{'='*60}")
             print(f"Customer: {request.customer_name}")
             print(f"Aadhaar: {request.aadhaar_number}")
+            print(f"Mobile: {request.mobile_number}")
             print(f"Address: {request.address}")
-            print(f"Invoice Number: {result['invoice_number']}")
-            print(f"File Path: {result['invoice_path']}")
-            print(f"Download URL: {result['download_url']}")
+            print(f"Invoice Number: {result.invoice_number}")
+            print(f"File Path: {result.invoice_path}")
+            print(f"Download URL: {result.download_url}")
             print(f"{'='*60}\n")
-
-            return invoice_result
         else:
             print(f"\n{'='*60}")
-            print(f"WORD INVOICE GENERATION FAILED")
+            print(f"INVOICE GENERATION FAILED")
             print(f"{'='*60}")
             print(f"Customer: {request.customer_name}")
-            print(f"Error: {result['error']}")
+            print(f"Error: {result.error}")
             print(f"{'='*60}\n")
 
-            raise HTTPException(status_code=500, detail=result['error'])
+        return result
 
     except Exception as e:
         logger.error(f"Error in generate_customer_invoice: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Failed to generate invoice: {str(e)}")
 
-@app.get("/download-invoice-docx/{filename}")
-async def download_invoice_docx(filename: str):
+@app.get("/download-invoice/{filename}")
+async def download_invoice(filename: str):
     """
-    Download generated Word invoice file
+    Download generated invoice file
     """
     file_path = Path(INVOICES_FOLDER) / filename
 
@@ -373,37 +666,61 @@ async def download_invoice_docx(filename: str):
 
 @app.get("/template-status")
 async def check_template_status():
-    """
-    Check if invoice template is available (now checks for Word template)
-    """
-    template_path = Path("templates/template.docx")
+    """Check if invoice template is available with enhanced debugging"""
+    try:
+        template_file = get_template_file()
 
-    return {
-        "template_available": template_path.exists(),
-        "template_path": str(template_path) if template_path.exists() else None,
-        "template_type": "Word Document (.docx)",
-        "templates_folder": "templates"
-    }
+        result = {
+            "template_available": template_file is not None,
+            "template_path": str(template_file) if template_file else None,
+            "templates_folder": TEMPLATES_FOLDER,
+            "template_type": "docx",
+            "current_directory": str(Path.cwd()),
+            "absolute_templates_path": str(Path.cwd() / TEMPLATES_FOLDER)
+        }
+
+        if template_file:
+            try:
+                # Verify the file is readable
+                with open(template_file, 'rb') as f:
+                    file_size = len(f.read())
+                result["template_size_bytes"] = file_size
+                result["template_readable"] = True
+            except Exception as e:
+                result["template_readable"] = False
+                result["read_error"] = str(e)
+
+        return result
+
+    except Exception as e:
+        logger.error(f"Error in check_template_status: {str(e)}")
+        return {
+            "template_available": False,
+            "error": str(e),
+            "templates_folder": TEMPLATES_FOLDER,
+            "template_type": "docx"
+        }
 
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    template_path = Path("templates/template.docx")
-
-    try:
-        # Test if invoice generator can be initialized
-        from invoiceGen import get_invoice_generator
-        get_invoice_generator()
-        invoice_gen_status = "OK"
-    except Exception as e:
-        invoice_gen_status = f"ERROR: {str(e)}"
+    template_file = get_template_file()
 
     return {
         "status": "healthy",
         "data_folder": DATA_FOLDER_PATH,
+        "templates_folder": TEMPLATES_FOLDER,
         "invoices_folder": INVOICES_FOLDER,
-        "word_template_available": template_path.exists(),
-        "invoice_generator_status": invoice_gen_status
+        "template_available": template_file is not None,
+        "template_type": "docx",
+        "features": {
+            "aadhaar_extraction": True,
+            "address_extraction": True,
+            "mobile_extraction": True,
+            "invoice_generation": True,
+            "real_time_search": True,
+            "docx_templates": True
+        }
     }
 
 if __name__ == "__main__":
@@ -414,8 +731,15 @@ if __name__ == "__main__":
 
     print(f"Starting Minato Enterprises Document Processor...")
     print(f"Data folder: {DATA_FOLDER_PATH}")
+    print(f"Templates folder: {TEMPLATES_FOLDER}")
     print(f"Invoices folder: {INVOICES_FOLDER}")
-    print(f"Word template: template.docx")
+    print(f"Template type: Word Document (.docx)")
+    print(f"Features enabled:")
+    print(f"  - Aadhaar number extraction")
+    print(f"  - Address extraction")
+    print(f"  - Mobile number extraction")
+    print(f"  - Invoice generation with DocxTemplate")
+    print(f"  - Real-time customer search")
     print(f"Server will be available at: http://localhost:8000")
 
     uvicorn.run(app, host="0.0.0.0", port=8000)

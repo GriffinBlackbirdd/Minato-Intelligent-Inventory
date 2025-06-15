@@ -18,6 +18,7 @@ const customerSubtitle = document.getElementById('customerSubtitle');
 const displayName = document.getElementById('displayName');
 const displayAadhaar = document.getElementById('displayAadhaar');
 const displayAddress = document.getElementById('displayAddress');
+const displayMobile = document.getElementById('displayMobile');
 const displayFolder = document.getElementById('displayFolder');
 
 // Edit elements
@@ -25,6 +26,7 @@ const editToggleBtn = document.getElementById('editToggleBtn');
 const editName = document.getElementById('editName');
 const editAadhaar = document.getElementById('editAadhaar');
 const editAddress = document.getElementById('editAddress');
+const editMobile = document.getElementById('editMobile');
 const editFolder = document.getElementById('editFolder');
 const editActions = document.getElementById('editActions');
 const defaultActions = document.getElementById('defaultActions');
@@ -87,6 +89,40 @@ const customSuggestionsList = customDropdown.suggestionsList;
 function showLoading(text = 'Processing...') {
     loadingText.textContent = text;
     loadingOverlay.style.display = 'flex';
+}
+
+function hideLoading() {
+    loadingOverlay.style.display = 'none';
+}
+
+function showError(message) {
+    hideAllCards();
+    errorMessage.textContent = message;
+    errorCard.style.display = 'block';
+    errorCard.classList.add('active');
+}
+
+function hideAllCards() {
+    document.querySelectorAll('.step-card').forEach(card => {
+        card.style.display = 'none';
+        card.classList.remove('active');
+    });
+}
+
+function hideSuggestions() {
+    customSuggestionsDropdown.style.display = 'none';
+    selectedSuggestionIndex = -1;
+}
+
+function showSuggestions() {
+    if (currentSuggestions.length > 0) {
+        // Position the dropdown relative to the input field
+        const inputRect = customerSearch.getBoundingClientRect();
+        customSuggestionsDropdown.style.top = `${inputRect.bottom}px`;
+        customSuggestionsDropdown.style.left = `${inputRect.left}px`;
+        customSuggestionsDropdown.style.width = `${inputRect.width}px`;
+        customSuggestionsDropdown.style.display = 'block';
+    }
 }
 
 // Real-time search functionality
@@ -207,11 +243,13 @@ function toggleEditMode() {
         displayName.style.display = 'none';
         displayAadhaar.style.display = 'none';
         displayAddress.style.display = 'none';
+        displayMobile.style.display = 'none';
         displayFolder.style.display = 'none';
 
         editName.style.display = 'block';
         editAadhaar.style.display = 'block';
         editAddress.style.display = 'block';
+        editMobile.style.display = 'block';
         editFolder.style.display = 'block';
 
         // Show edit actions, hide default actions
@@ -240,11 +278,13 @@ function exitEditMode() {
     displayName.style.display = 'flex';
     displayAadhaar.style.display = 'flex';
     displayAddress.style.display = 'flex';
+    displayMobile.style.display = 'flex';
     displayFolder.style.display = 'flex';
 
     editName.style.display = 'none';
     editAadhaar.style.display = 'none';
     editAddress.style.display = 'none';
+    editMobile.style.display = 'none';
     editFolder.style.display = 'none';
 
     // Show default actions, hide edit actions
@@ -260,12 +300,14 @@ function saveChanges() {
     extractedData.name = editName.value.trim();
     extractedData.aadhaar = editAadhaar.value.trim();
     extractedData.address = editAddress.value.trim();
+    extractedData.mobile = editMobile.value.trim();
 
     // Update display fields
     customerTitle.textContent = extractedData.name;
     displayName.textContent = extractedData.name;
     displayAadhaar.textContent = extractedData.aadhaar;
     displayAddress.textContent = extractedData.address;
+    displayMobile.textContent = extractedData.mobile;
 
     // Exit edit mode
     exitEditMode();
@@ -318,6 +360,7 @@ cancelEditBtn.addEventListener('click', () => {
     editName.value = extractedData.name;
     editAadhaar.value = extractedData.aadhaar;
     editAddress.value = extractedData.address;
+    editMobile.value = extractedData.mobile;
     exitEditMode();
 });
 
@@ -380,6 +423,10 @@ function createInvoiceGenerationCard() {
                             <span class="summary-label">Aadhaar:</span>
                             <span class="summary-value" id="invoiceCustomerAadhaar">-</span>
                         </div>
+                        <div class="summary-item">
+                            <span class="summary-label">Mobile:</span>
+                            <span class="summary-value" id="invoiceCustomerMobile">-</span>
+                        </div>
                         <div class="summary-item full-width">
                             <span class="summary-label">Address:</span>
                             <span class="summary-value" id="invoiceCustomerAddress">-</span>
@@ -431,6 +478,7 @@ function createInvoiceGenerationCard() {
 function populateInvoiceForm(data) {
     document.getElementById('invoiceCustomerName').textContent = data.name;
     document.getElementById('invoiceCustomerAadhaar').textContent = data.aadhaar;
+    document.getElementById('invoiceCustomerMobile').textContent = data.mobile;
     document.getElementById('invoiceCustomerAddress').textContent = data.address;
 
     // Check template status
@@ -451,14 +499,14 @@ async function checkTemplateStatus() {
             templateStatusDiv.innerHTML = `
                 <div class="status-success">
                     <i class="fas fa-check-circle"></i>
-                    <span>Invoice template ready</span>
+                    <span>Word template ready (${status.template_type})</span>
                 </div>
             `;
         } else {
             templateStatusDiv.innerHTML = `
                 <div class="status-warning">
                     <i class="fas fa-exclamation-triangle"></i>
-                    <span>No invoice template found. Please add an Excel template to the 'templates' folder.</span>
+                    <span>No invoice template found. Please add 'template.docx' to the 'templates' folder.</span>
                 </div>
             `;
 
@@ -519,11 +567,11 @@ function addInvoiceItem() {
                 <input type="number" class="item-quantity" placeholder="1" value="1" min="1">
             </div>
             <div class="field-group">
-                <label>Price</label>
+                <label>Price (₹)</label>
                 <input type="number" class="item-price" placeholder="0.00" step="0.01" min="0">
             </div>
             <div class="field-group">
-                <label>Total</label>
+                <label>Total (₹)</label>
                 <input type="number" class="item-total" placeholder="0.00" step="0.01" readonly>
             </div>
             <div class="field-group">
@@ -612,6 +660,7 @@ async function generateInvoice() {
             customer_name: extractedData.name,
             aadhaar_number: extractedData.aadhaar,
             address: extractedData.address,
+            mobile_number: extractedData.mobile,
             items: items,
             additional_data: {
                 // Add any additional data you want in the invoice
@@ -678,6 +727,10 @@ function renderInvoiceResults(result) {
                     <div class="result-value">${extractedData.aadhaar}</div>
                 </div>
                 <div class="result-item">
+                    <span class="result-label">Mobile Number:</span>
+                    <div class="result-value">${extractedData.mobile}</div>
+                </div>
+                <div class="result-item">
                     <span class="result-label">Address:</span>
                     <div class="result-value">${extractedData.address}</div>
                 </div>
@@ -694,6 +747,10 @@ function renderInvoiceResults(result) {
                     <div class="result-value">${result.invoice_number}</div>
                 </div>
                 <div class="result-item">
+                    <span class="result-label">File Type:</span>
+                    <div class="result-value">Word Document (.docx)</div>
+                </div>
+                <div class="result-item">
                     <span class="result-label">File Path:</span>
                     <div class="result-value">${result.invoice_path}</div>
                 </div>
@@ -702,7 +759,7 @@ function renderInvoiceResults(result) {
             <div class="invoice-download-section">
                 <a href="${result.download_url}" class="btn btn-primary download-btn" download>
                     <i class="fas fa-download"></i>
-                    Download Invoice
+                    Download Invoice (.docx)
                 </a>
             </div>
         </div>
@@ -1137,13 +1194,14 @@ document.addEventListener('DOMContentLoaded', () => {
             <strong style="color: #1a1a1a;">Workflow:</strong><br>
             • Search customers<br>
             • Extract document info<br>
-            • Generate invoices automatically
+            • Generate Word invoices
         </div>
         <div>
             <strong style="color: #1a1a1a;">Features:</strong><br>
             • Real-time search & extraction<br>
+            • Mobile number extraction<br>
             • Editable information review<br>
-            • Excel invoice generation
+            • Word document generation
         </div>
     `;
 
@@ -1235,42 +1293,25 @@ style.textContent = `
         from { transform: rotate(0deg); }
         to { transform: rotate(360deg); }
     }
+
+    /* Enhanced mobile display styles */
+    .mobile-number-highlight {
+        background: linear-gradient(135deg, #e6f3ff, #cce7ff);
+        border-left: 4px solid #0066cc;
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        font-family: 'Monaco', 'Menlo', monospace;
+        font-weight: 600;
+    }
+
+    .mobile-number-display {
+        font-family: 'Monaco', 'Menlo', monospace;
+        font-weight: 600;
+        color: #0066cc;
+        letter-spacing: 0.5px;
+    }
 `;
 document.head.appendChild(style);
-
-function hideLoading() {
-    loadingOverlay.style.display = 'none';
-}
-
-function showError(message) {
-    hideAllCards();
-    errorMessage.textContent = message;
-    errorCard.style.display = 'block';
-    errorCard.classList.add('active');
-}
-
-function hideAllCards() {
-    document.querySelectorAll('.step-card').forEach(card => {
-        card.style.display = 'none';
-        card.classList.remove('active');
-    });
-}
-
-function hideSuggestions() {
-    customSuggestionsDropdown.style.display = 'none';
-    selectedSuggestionIndex = -1;
-}
-
-function showSuggestions() {
-    if (currentSuggestions.length > 0) {
-        // Position the dropdown relative to the input field
-        const inputRect = customerSearch.getBoundingClientRect();
-        customSuggestionsDropdown.style.top = `${inputRect.bottom}px`;
-        customSuggestionsDropdown.style.left = `${inputRect.left}px`;
-        customSuggestionsDropdown.style.width = `${inputRect.width}px`;
-        customSuggestionsDropdown.style.display = 'block';
-    }
-}
 
 // API calls
 async function searchCustomers(query) {
@@ -1403,13 +1444,14 @@ async function startFetchingProcess(customer) {
         'Locating customer documents...',
         'Reading document contents...',
         'Extracting Aadhaar information...',
+        'Extracting mobile number...',
         'Processing address details...',
         'Validating extracted data...',
         'Finalizing information...'
     ];
 
     let currentStep = 0;
-    const stepDuration = 800; // 800ms per step
+    const stepDuration = 700; // 700ms per step
 
     // Animate progress bar
     const progressInterval = setInterval(() => {
@@ -1435,6 +1477,7 @@ async function performDataExtraction(customer) {
                 name: customer.person_name,
                 aadhaar: result.aadhar_number,
                 address: result.address,
+                mobile: result.mobile_number,
                 folder: customer.folder_name
             };
 
@@ -1461,12 +1504,17 @@ function showExtractionResults() {
     displayName.textContent = extractedData.name;
     displayAadhaar.textContent = extractedData.aadhaar;
     displayAddress.textContent = extractedData.address;
+    displayMobile.textContent = extractedData.mobile;
     displayFolder.textContent = extractedData.folder;
+
+    // Add special styling for mobile number
+    displayMobile.classList.add('mobile-number-display');
 
     // Populate edit fields (hidden initially)
     editName.value = extractedData.name;
     editAadhaar.value = extractedData.aadhaar;
     editAddress.value = extractedData.address;
+    editMobile.value = extractedData.mobile;
     editFolder.value = extractedData.folder;
 
     // Print to terminal
@@ -1475,6 +1523,7 @@ function showExtractionResults() {
     console.log('='.repeat(60));
     console.log(`Customer: ${extractedData.name}`);
     console.log(`Aadhaar: ${extractedData.aadhaar}`);
+    console.log(`Mobile: ${extractedData.mobile}`);
     console.log(`Address: ${extractedData.address}`);
     console.log(`Folder: ${extractedData.folder}`);
     console.log('='.repeat(60) + '\n');
