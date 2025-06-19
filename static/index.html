@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minato Enterprises - Document Processor & Billing System</title>
+    <title>Minato Enterprises - Document Processing System</title>
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="app-container">
         <!-- Navigation Header -->
-        <nav class="nav-header">
-            <div class="nav-content">
+        <nav class="navbar">
+            <div class="nav-container">
                 <div class="brand">
-                    <i class="fas fa-file-invoice brand-icon"></i>
-                    <span class="brand-name">Minato Enterprises</span>
+                    <div class="brand-icon">
+                        <i class="fas fa-file-invoice"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h1>Minato Enterprises</h1>
+                        <span>Document Processing System</span>
+                    </div>
                 </div>
-                <div class="nav-subtitle">Intelligent Document Processing & Real-time Billing System</div>
             </div>
         </nav>
 
@@ -24,53 +28,176 @@
         <main class="main-content">
             <div class="container">
                 <!-- Hero Section -->
-                <section class="hero-section">
-                    <div class="hero-content">
-                        <h1 class="hero-title">
-                            <i class="fas fa-search"></i>
-                            Document Processor & Real-time Billing System
-                        </h1>
-                        <p class="hero-description">
-                            Smart customer search, automated document extraction, and real-time billing generation with tax calculations
-                        </p>
-                    </div>
-                </section>
+                <div class="hero-section">
+                    <h2 class="hero-title">Intelligent Document Processing & Billing</h2>
+                    <p class="hero-subtitle">Search customers, extract information, and generate professional bills</p>
+                </div>
 
-                <!-- Processing Steps -->
+                <!-- Step Cards -->
                 <div class="steps-container">
-                    <!-- Step 1: Customer Search -->
+                    <!-- Step 1: Customer Search with Method Selection -->
                     <div class="step-card active" id="searchCard">
-                        <div class="step-header">
-                            <div class="step-indicator">
-                                <span class="step-number">1</span>
-                            </div>
-                            <div class="step-title">
-                                <h2>Customer Search</h2>
-                                <p>Type customer name for instant suggestions</p>
-                            </div>
+                        <div class="card-header">
+                            <h3>Customer Search</h3>
+                            <p>Choose your method and find customer records</p>
                         </div>
+                        <div class="card-body">
+                            <!-- Method Selection Tabs -->
+                            <div class="method-selection">
+                                <div class="method-tabs">
+                                    <button class="method-tab active" data-method="folder" id="folderMethodTab">
+                                        <i class="fas fa-folder-open"></i>
+                                        <span>Folder Method</span>
+                                        <small>Search existing folders</small>
+                                    </button>
+                                    <button class="method-tab" data-method="upload" id="uploadMethodTab">
+                                        <i class="fas fa-camera"></i>
+                                        <span>Upload Images</span>
+                                        <small>Upload Aadhaar photos</small>
+                                    </button>
+                                </div>
+                            </div>
 
-                        <div class="search-container">
-                            <div class="search-input-wrapper">
-                                <div class="input-wrapper">
-                                    <i class="fas fa-user input-icon"></i>
-                                    <input
-                                        type="text"
-                                        id="customerSearch"
-                                        name="customerSearch"
-                                        placeholder="Start typing customer name (e.g., Nandu)"
-                                        class="form-input"
-                                        autocomplete="off"
-                                    >
-                                    <div class="search-loading" id="searchLoading" style="display: none;">
-                                        <i class="fas fa-spinner fa-spin"></i>
+                            <!-- Folder Method Content -->
+                            <div class="method-content active" id="folderMethodContent">
+                                <div class="search-section">
+                                    <div class="search-input-group">
+                                        <i class="fas fa-search search-icon"></i>
+                                        <input
+                                            type="text"
+                                            id="customerSearch"
+                                            placeholder="Start typing customer name..."
+                                            class="search-input"
+                                            autocomplete="off"
+                                        >
+                                        <div class="search-loading" id="searchLoading">
+                                            <i class="fas fa-spinner fa-spin"></i>
+                                        </div>
                                     </div>
                                 </div>
+                                <div class="search-info">
+                                    <p><i class="fas fa-info-circle"></i> Search existing customer folders containing PDF and/or images</p>
+                                </div>
+                            </div>
 
-                                <!-- Suggestions Dropdown -->
-                                <div class="suggestions-dropdown" id="suggestionsDropdown" style="display: none;">
-                                    <div class="suggestions-list" id="suggestionsList">
-                                        <!-- Suggestions will be populated here -->
+                            <!-- Upload Method Content -->
+                            <div class="method-content" id="uploadMethodContent">
+                                <div class="upload-section">
+                                    <div class="input-group">
+                                        <label for="uploadCustomerName">Customer Name *</label>
+                                        <input
+                                            type="text"
+                                            id="uploadCustomerName"
+                                            placeholder="Enter customer name"
+                                            class="search-input"
+                                            required
+                                        >
+                                    </div>
+
+                                    <div class="upload-container">
+                                        <div class="upload-row">
+                                            <div class="upload-item">
+                                                <label class="upload-label">
+                                                    <span><i class="fas fa-id-card"></i> Front Side</span>
+
+                                                    <!-- Upload Method Tabs -->
+                                                    <div class="upload-method-tabs">
+                                                        <button type="button" class="upload-method-tab active" data-method="camera" data-side="front">
+                                                            <i class="fas fa-camera"></i> Camera
+                                                        </button>
+                                                        <button type="button" class="upload-method-tab" data-method="upload" data-side="front">
+                                                            <i class="fas fa-upload"></i> Upload
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Camera Container -->
+                                                    <div class="camera-container" id="frontCameraContainer">
+                                                        <div class="camera-placeholder" id="frontCameraPlaceholder">
+                                                            <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                                                            <p>Click to start camera</p>
+                                                        </div>
+                                                        <video id="frontCameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
+                                                        <div class="camera-controls" id="frontCameraControls" style="display: none;">
+                                                            <button type="button" class="camera-btn capture" id="frontCaptureBtn">
+                                                                <i class="fas fa-camera"></i>
+                                                            </button>
+                                                            <button type="button" class="camera-btn" id="frontStopBtn">
+                                                                <i class="fas fa-stop"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Upload Area (Hidden by default) -->
+                                                    <div class="upload-area" id="frontUploadArea" style="display: none;">
+                                                        <input type="file" id="frontImageInput" accept="image/*" style="display: none;">
+                                                        <div class="upload-placeholder">
+                                                            <i class="fas fa-upload"></i>
+                                                            <span>Click or drag front image</span>
+                                                        </div>
+                                                        <div class="upload-preview" id="frontPreview" style="display: none;">
+                                                            <img id="frontPreviewImg" src="" alt="Front preview">
+                                                            <button type="button" class="remove-btn" id="removeFrontBtn">×</button>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+
+                                            <div class="upload-item">
+                                                <label class="upload-label">
+                                                    <span><i class="fas fa-id-card"></i> Back Side</span>
+
+                                                    <!-- Upload Method Tabs -->
+                                                    <div class="upload-method-tabs">
+                                                        <button type="button" class="upload-method-tab active" data-method="camera" data-side="back">
+                                                            <i class="fas fa-camera"></i> Camera
+                                                        </button>
+                                                        <button type="button" class="upload-method-tab" data-method="upload" data-side="back">
+                                                            <i class="fas fa-upload"></i> Upload
+                                                        </button>
+                                                    </div>
+
+                                                    <!-- Camera Container -->
+                                                    <div class="camera-container" id="backCameraContainer">
+                                                        <div class="camera-placeholder" id="backCameraPlaceholder">
+                                                            <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                                                            <p>Click to start camera</p>
+                                                        </div>
+                                                        <video id="backCameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
+                                                        <div class="camera-controls" id="backCameraControls" style="display: none;">
+                                                            <button type="button" class="camera-btn capture" id="backCaptureBtn">
+                                                                <i class="fas fa-camera"></i>
+                                                            </button>
+                                                            <button type="button" class="camera-btn" id="backStopBtn">
+                                                                <i class="fas fa-stop"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+
+                                                    <!-- Upload Area (Hidden by default) -->
+                                                    <div class="upload-area" id="backUploadArea" style="display: none;">
+                                                        <input type="file" id="backImageInput" accept="image/*" style="display: none;">
+                                                        <div class="upload-placeholder">
+                                                            <i class="fas fa-upload"></i>
+                                                            <span>Click or drag back image</span>
+                                                        </div>
+                                                        <div class="upload-preview" id="backPreview" style="display: none;">
+                                                            <img id="backPreviewImg" src="" alt="Back preview">
+                                                            <button type="button" class="remove-btn" id="removeBackBtn">×</button>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <div class="upload-info">
+                                            <p><i class="fas fa-lightbulb"></i> Upload both sides for best results. Ensure images are clear and well-lit.</p>
+                                        </div>
+
+                                        <div class="upload-actions">
+                                            <button class="btn-primary" id="processImagesBtn" disabled>
+                                                <i class="fas fa-magic"></i> Extract Information
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -78,373 +205,362 @@
                     </div>
 
                     <!-- Step 2: Information Extraction -->
-                    <div class="step-card" id="extractionCard" style="display: none;">
-                        <div class="step-header">
-                            <div class="step-indicator">
-                                <span class="step-number">2</span>
-                            </div>
-                            <div class="step-title">
-                                <h2>Information Extraction</h2>
-                                <p>Extracting and processing customer documents</p>
-                            </div>
+                    <div class="step-card" id="extractionCard">
+                        <div class="card-header">
+                            <h3>Information Extraction</h3>
+                            <p>Processing customer documents</p>
                         </div>
-
-                        <!-- Fetching State -->
-                        <div class="fetching-container" id="fetchingContainer">
-                            <div class="fetching-animation">
-                                <div class="fetching-spinner">
-                                    <div class="spinner-ring"></div>
-                                    <div class="spinner-ring"></div>
-                                    <div class="spinner-ring"></div>
+                        <div class="card-body">
+                            <!-- Loading State -->
+                            <div class="loading-section" id="fetchingContainer">
+                                <div class="loading-spinner">
+                                    <div class="spinner"></div>
                                 </div>
-                                <h3>Fetching Information</h3>
-                                <p>Please wait while we extract customer details from documents...</p>
-                                <div class="fetching-progress">
+                                <h4>Processing Documents</h4>
+                                <p>Extracting customer information...</p>
+                                <div class="progress-bar-container">
                                     <div class="progress-bar">
                                         <div class="progress-fill" id="progressFill"></div>
                                     </div>
                                     <span class="progress-text" id="progressText">Initializing...</span>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Results and Edit State -->
-                        <div class="extraction-results" id="extractionResults" style="display: none;">
-                            <div class="customer-info-section">
-                                <div class="customer-header">
-                                    <div class="customer-avatar">
-                                        <i class="fas fa-user"></i>
-                                    </div>
-                                    <div class="customer-details">
-                                        <h3 class="customer-title" id="customerTitle">Customer Information</h3>
-                                        <p class="customer-subtitle" id="customerSubtitle">Extracted and editable details</p>
-                                    </div>
-                                    <div class="edit-toggle">
-                                        <button class="btn-edit" id="editToggleBtn">
+                            <!-- Results State -->
+                            <div class="extraction-results" id="extractionResults">
+                                <div class="customer-profile">
+                                    <div class="profile-header">
+                                        <div class="avatar">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                        <div class="profile-info">
+                                            <h4 id="customerTitle">Customer Information</h4>
+                                            <p id="customerSubtitle">Extracted details</p>
+                                        </div>
+                                        <button class="btn-secondary btn-edit" id="editToggleBtn">
                                             <i class="fas fa-edit"></i>
                                             Edit
                                         </button>
                                     </div>
-                                </div>
 
-                                <div class="info-grid">
-                                    <div class="info-card">
-                                        <label for="editName" class="info-label">
-                                            <i class="fas fa-user"></i>
-                                            Customer Name
-                                        </label>
-                                        <div class="info-display" id="displayName">-</div>
-                                        <input type="text" id="editName" class="info-edit" style="display: none;">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <label><i class="fas fa-user"></i> Name</label>
+                                            <div class="info-display" id="displayName">-</div>
+                                            <input type="text" id="editName" class="info-edit">
+                                        </div>
+
+                                        <div class="info-item">
+                                            <label><i class="fas fa-id-card"></i> Aadhaar Number</label>
+                                            <div class="info-display" id="displayAadhaar">-</div>
+                                            <input type="text" id="editAadhaar" class="info-edit">
+                                        </div>
+
+                                        <div class="info-item">
+                                            <label><i class="fas fa-phone"></i> Mobile Number</label>
+                                            <div class="info-display mobile-display" id="displayMobile">-</div>
+                                            <input type="text" id="editMobile" class="info-edit">
+                                        </div>
+
+                                        <div class="info-item full-width">
+                                            <label><i class="fas fa-map-marker-alt"></i> Address</label>
+                                            <div class="info-display" id="displayAddress">-</div>
+                                            <textarea id="editAddress" class="info-edit" rows="3"></textarea>
+                                        </div>
+
+                                        <div class="info-item">
+                                            <label><i class="fas fa-folder"></i> Source</label>
+                                            <div class="info-display" id="displayFolder">-</div>
+                                            <input type="text" id="editFolder" class="info-edit" readonly>
+                                        </div>
                                     </div>
 
-                                    <div class="info-card">
-                                        <label for="editAadhaar" class="info-label">
-                                            <i class="fas fa-id-card"></i>
-                                            Aadhaar Number
-                                        </label>
-                                        <div class="info-display" id="displayAadhaar">-</div>
-                                        <input type="text" id="editAadhaar" class="info-edit" style="display: none;">
+                                    <div class="action-group edit-actions" id="editActions">
+                                        <button class="btn-primary" id="saveChangesBtn">
+                                            <i class="fas fa-save"></i> Save Changes
+                                        </button>
+                                        <button class="btn-secondary" id="cancelEditBtn">
+                                            <i class="fas fa-times"></i> Cancel
+                                        </button>
                                     </div>
 
-                                    <div class="info-card full-width">
-                                        <label for="editAddress" class="info-label">
-                                            <i class="fas fa-map-marker-alt"></i>
-                                            Address
-                                        </label>
-                                        <div class="info-display" id="displayAddress">-</div>
-                                        <textarea id="editAddress" class="info-edit" rows="3" style="display: none;"></textarea>
+                                    <div class="action-group default-actions" id="defaultActions">
+                                        <button class="btn-primary" id="proceedToBillBtn">
+                                            <i class="fas fa-arrow-right"></i> Proceed to Billing
+                                        </button>
+                                        <button class="btn-secondary" id="backToSearchBtn">
+                                            <i class="fas fa-arrow-left"></i> Back to Search
+                                        </button>
                                     </div>
-
-                                    <div class="info-card">
-                                        <label for="editMobile" class="info-label">
-                                            <i class="fas fa-phone"></i>
-                                            Mobile Number
-                                        </label>
-                                        <div class="info-display" id="displayMobile">-</div>
-                                        <input type="text" id="editMobile" class="info-edit" style="display: none;">
-                                    </div>
-
-                                    <div class="info-card">
-                                        <label for="editFolder" class="info-label">
-                                            <i class="fas fa-folder"></i>
-                                            Folder Reference
-                                        </label>
-                                        <div class="info-display" id="displayFolder">-</div>
-                                        <input type="text" id="editFolder" class="info-edit" style="display: none;" readonly>
-                                    </div>
-                                </div>
-
-                                <div class="action-buttons" id="editActions" style="display: none;">
-                                    <button class="btn btn-success" id="saveChangesBtn">
-                                        <i class="fas fa-save"></i>
-                                        Save Changes
-                                    </button>
-                                    <button class="btn btn-outline" id="cancelEditBtn">
-                                        <i class="fas fa-times"></i>
-                                        Cancel
-                                    </button>
-                                </div>
-
-                                <div class="action-buttons" id="defaultActions">
-                                    <button class="btn btn-primary" id="proceedToBillBtn">
-                                        <i class="fas fa-file-invoice"></i>
-                                        Proceed to Bill
-                                    </button>
-                                    <button class="btn btn-outline" id="backToSearchBtn">
-                                        <i class="fas fa-arrow-left"></i>
-                                        Back to Search
-                                    </button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Step 3: Real-time Billing System -->
-                    <div class="step-card" id="billingCard" style="display: none;">
-                        <div class="step-header">
-                            <div class="step-indicator">
-                                <span class="step-number">3</span>
-                            </div>
-                            <div class="step-title">
-                                <h2>Real-time Billing System</h2>
-                                <p>Configure billing details with real-time tax calculations</p>
-                            </div>
+                    <!-- Step 3: Billing System -->
+                    <div class="step-card" id="billingCard">
+                        <div class="card-header">
+                            <h3>Billing Configuration</h3>
+                            <p>Configure chassis, batteries and pricing</p>
                         </div>
-
-                        <div class="billing-content">
+                        <div class="card-body">
                             <!-- Customer Summary -->
                             <div class="customer-summary">
-                                <h4><i class="fas fa-user-circle"></i> Customer Information</h4>
+                                <h4>Customer Details</h4>
                                 <div class="summary-grid">
                                     <div class="summary-item">
-                                        <span class="summary-label">Name:</span>
-                                        <span class="summary-value" id="billCustomerName">-</span>
+                                        <span class="label">Name</span>
+                                        <span class="value" id="billCustomerName">-</span>
                                     </div>
                                     <div class="summary-item">
-                                        <span class="summary-label">Aadhaar:</span>
-                                        <span class="summary-value" id="billCustomerAadhaar">-</span>
+                                        <span class="label">Aadhaar</span>
+                                        <span class="value" id="billCustomerAadhaar">-</span>
                                     </div>
                                     <div class="summary-item">
-                                        <span class="summary-label">Mobile:</span>
-                                        <span class="summary-value" id="billCustomerMobile">-</span>
+                                        <span class="label">Mobile</span>
+                                        <span class="value" id="billCustomerMobile">-</span>
                                     </div>
                                     <div class="summary-item full-width">
-                                        <span class="summary-label">Address:</span>
-                                        <span class="summary-value" id="billCustomerAddress">-</span>
+                                        <span class="label">Address</span>
+                                        <span class="value" id="billCustomerAddress">-</span>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Finance Firm Section -->
-                            <div class="selection-section">
-                                <div class="section-header">
-                                    <h4><i class="fas fa-building"></i> Finance Firm (Optional)</h4>
-                                    <p>Enter finance firm name if applicable</p>
-                                </div>
-                                <div class="finance-input-group">
-                                    <input type="text" id="financeFirmInput" placeholder="Enter finance firm name (optional)" class="finance-input">
-                                </div>
-                            </div>
-
-                            <!-- Price Input Section -->
-                            <div class="selection-section">
-                                <div class="section-header">
-                                    <h4><i class="fas fa-rupee-sign"></i> Price & Tax Configuration</h4>
-                                    <p>Enter the base price and configure tax settings</p>
-                                </div>
-
-                                <div class="price-tax-grid">
-                                    <div class="price-input-group">
-                                        <label for="priceInput">Base Price (₹)</label>
-                                        <input type="number" id="priceInput" placeholder="127000" class="price-input" min="0" step="0.01">
+                            <!-- Configuration Sections -->
+                            <div class="config-sections">
+                                <!-- Chassis Selection -->
+                                <div class="config-section">
+                                    <div class="section-title">
+                                        <i class="fas fa-car"></i>
+                                        <h4>Chassis Selection</h4>
                                     </div>
-
-                                    <div class="tax-config-group">
-                                        <div class="igst-checkbox-wrapper">
-                                            <label class="checkbox-label">
-                                                <input type="checkbox" id="igstCheckbox" class="igst-checkbox">
-                                                <span class="checkbox-custom"></span>
-                                                <span class="checkbox-text">Apply IGST (5%) instead of CGST+SGST</span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Tax Calculation Display -->
-                                <div class="tax-calculation-display" id="taxCalculationDisplay" style="display: none;">
-                                    <div class="tax-breakdown">
-                                        <div class="tax-row">
-                                            <span class="tax-label">Base Amount:</span>
-                                            <span class="tax-value" id="baseAmountDisplay">₹0.00</span>
-                                        </div>
-                                        <div class="tax-row" id="cgstRow">
-                                            <span class="tax-label">CGST (2.5%):</span>
-                                            <span class="tax-value" id="cgstDisplay">₹0.00</span>
-                                        </div>
-                                        <div class="tax-row" id="sgstRow">
-                                            <span class="tax-label">SGST (2.5%):</span>
-                                            <span class="tax-value" id="sgstDisplay">₹0.00</span>
-                                        </div>
-                                        <div class="tax-row" id="igstRow" style="display: none;">
-                                            <span class="tax-label">IGST (5%):</span>
-                                            <span class="tax-value" id="igstDisplay">₹0.00</span>
-                                        </div>
-                                        <div class="tax-row">
-                                            <span class="tax-label">Round Off:</span>
-                                            <span class="tax-value" id="roundOffDisplay">₹0.00</span>
-                                        </div>
-                                        <div class="tax-row total-row">
-                                            <span class="tax-label">Total Amount:</span>
-                                            <span class="tax-value total-amount" id="totalAmountDisplay">₹0.00</span>
-                                        </div>
-                                        <div class="amount-words" id="amountWordsDisplay">
-                                            Amount in words: <span id="amountWordsText">Zero</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Real-time Chassis Selection -->
-                            <div class="selection-section">
-                                <div class="section-header">
-                                    <h4><i class="fas fa-car"></i> Chassis Selection</h4>
-                                    <p>Type chassis number or model name to filter results</p>
-                                </div>
-                                <div class="filter-group">
-                                    <div class="filter-input-wrapper">
-                                        <input type="text" id="chassisFilter" placeholder="Type chassis number or model..." class="filter-input">
-                                        <div class="filter-loading" id="chassisLoading" style="display: none;">
+                                    <div class="filter-group">
+                                        <input type="text" id="chassisFilter" placeholder="Search chassis..." class="filter-input">
+                                        <div class="filter-loading" id="chassisLoading">
                                             <i class="fas fa-spinner fa-spin"></i>
                                         </div>
-                                    </div>
-                                    <div class="filter-results" id="chassisResults" style="display: none;">
-                                        <div class="results-list" id="chassisResultsList"></div>
-                                    </div>
-                                </div>
-                                <div class="selected-item" id="selectedChassis" style="display: none;">
-                                    <div class="selected-header">
-                                        <span>Selected Chassis:</span>
-                                        <button class="btn-remove" onclick="clearSelectedChassis()">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                    <div class="selected-details" id="selectedChassisDetails"></div>
-                                </div>
-                            </div>
-
-                            <!-- Real-time Battery Selection -->
-                            <div class="selection-section">
-                                <div class="section-header">
-                                    <h4><i class="fas fa-battery-full"></i> Battery Selection</h4>
-                                    <p>Type battery serial number or brand to filter results</p>
-                                </div>
-                                <div class="filter-group">
-                                    <div class="filter-input-wrapper">
-                                        <input type="text" id="batteryFilter" placeholder="Type battery serial or brand..." class="filter-input">
-                                        <div class="filter-loading" id="batteryLoading" style="display: none;">
-                                            <i class="fas fa-spinner fa-spin"></i>
+                                        <div class="filter-results" id="chassisResults">
+                                            <div class="results-list" id="chassisResultsList"></div>
                                         </div>
                                     </div>
-                                    <div class="filter-results" id="batteryResults" style="display: none;">
-                                        <div class="results-list" id="batteryResultsList"></div>
+                                    <div class="selected-item" id="selectedChassis">
+                                        <div class="selected-header">
+                                            <span>Selected Chassis</span>
+                                            <button class="btn-remove" onclick="clearSelectedChassis()">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <div class="selected-details" id="selectedChassisDetails"></div>
                                     </div>
                                 </div>
-                                <div class="selected-items" id="selectedBatteries" style="display: none;">
-                                    <div class="selected-header">
-                                        <span>Selected Batteries:</span>
-                                        <button class="btn-clear" onclick="clearAllBatteries()">
-                                            <i class="fas fa-trash"></i>
-                                            Clear All
-                                        </button>
+
+                                <!-- Battery Selection -->
+                                <div class="config-section">
+                                    <div class="section-title">
+                                        <i class="fas fa-battery-full"></i>
+                                        <h4>Battery Selection</h4>
+                                        <div class="section-actions">
+                                            <button class="btn-add-battery" id="addBatteryBtn">
+                                                <i class="fas fa-plus"></i>
+                                                Add More Battery
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="selected-list" id="selectedBatteriesList"></div>
-                                </div>
-                            </div>
 
-                            <!-- HSN Code Selection -->
-                            <div class="selection-section">
-                                <div class="section-header">
-                                    <h4><i class="fas fa-code"></i> HSN Code Selection</h4>
-                                    <p>Select the appropriate HSN code for billing</p>
-                                </div>
-                                <div class="hsn-selection">
-                                    <select id="hsnCodeSelect" class="hsn-select">
-                                        <option value="">Select HSN Code</option>
-                                        <option value="8703">8703 - Motor cars and other motor vehicles</option>
-                                        <option value="8504">8504 - Electrical transformers, static converters</option>
-                                        <option value="8507">8507 - Electric accumulators</option>
-                                    </select>
-                                </div>
-                            </div>
+                                    <!-- Battery Input Groups Container -->
+                                    <div class="battery-inputs-container" id="batteryInputsContainer">
+                                        <!-- Initial Battery Input Group -->
+                                        <div class="battery-input-group" data-battery-index="0">
+                                            <div class="battery-group-header">
+                                                <span class="battery-group-title">
+                                                    <i class="fas fa-battery-three-quarters"></i>
+                                                    Battery 1
+                                                </span>
+                                                <button class="btn-remove-battery-group" onclick="removeBatteryInputGroup(0)" style="display: none;">
+                                                    <i class="fas fa-trash"></i>
+                                                    Remove
+                                                </button>
+                                            </div>
+                                            <div class="filter-group">
+                                                <input type="text" class="battery-filter" placeholder="Search batteries..." data-battery-index="0">
+                                                <div class="filter-loading battery-loading" style="display: none;">
+                                                    <i class="fas fa-spinner fa-spin"></i>
+                                                </div>
+                                                <div class="filter-results battery-results" style="display: none;">
+                                                    <div class="results-list battery-results-list"></div>
+                                                </div>
+                                            </div>
+                                            <div class="selected-item battery-selected" style="display: none;">
+                                                <div class="selected-header">
+                                                    <span>Selected Battery</span>
+                                                    <button class="btn-remove" onclick="clearSelectedBatteryInGroup(0)">
+                                                        <i class="fas fa-times"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="selected-details battery-selected-details"></div>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <!-- Description Preview -->
-                            <div class="description-preview" id="descriptionPreview" style="display: none;">
-                                <div class="section-header">
+                                    <!-- All Selected Batteries Summary -->
+                                    <div class="selected-items" id="allSelectedBatteries" style="display: none;">
+                                        <div class="selected-header">
+                                            <span>All Selected Batteries (<span id="batteryCount">0</span>)</span>
+                                            <button class="btn-clear" onclick="clearAllSelectedBatteries()">
+                                                <i class="fas fa-trash"></i>
+                                                Clear All
+                                            </button>
+                                        </div>
+                                        <div class="selected-list" id="allSelectedBatteriesList"></div>
+                                    </div>
+                                </div>
+
+                                <!-- HSN Code & Pricing -->
+                                <div class="config-row">
+                                    <div class="config-section half">
+                                        <div class="section-title">
+                                            <i class="fas fa-code"></i>
+                                            <h4>HSN Code</h4>
+                                        </div>
+                                        <select id="hsnCodeSelect" class="select-input">
+                                            <option value="">Select HSN Code</option>
+                                            <option value="8703">8703 - Motor vehicles</option>
+                                            <option value="8504">8504 - Electrical equipment</option>
+                                            <option value="8507">8507 - Electric batteries</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="config-section half">
+                                        <div class="section-title">
+                                            <i class="fas fa-rupee-sign"></i>
+                                            <h4>Final Amount</h4>
+                                        </div>
+                                        <input type="number" id="baseAmount" value="178899.90" class="number-input" placeholder="Enter final total amount (including taxes)" step="0.01">
+
+                                        <!-- Real-time Calculator -->
+                                        <!-- <div class="calculator-section" id="calculatorSection">
+                                            <div class="calculator-header">
+                                                <h5><i class="fas fa-calculator"></i> Tax Breakdown (Reverse Calculation)</h5>
+                                            </div>
+                                            <div class="calculation-grid" id="calculationGrid">
+                                                <div class="calc-item">
+                                                    <span class="calc-label">Base Amount (Calculated)</span>
+                                                    <span class="calc-value" id="subtotalAmount">₹0.00</span>
+                                                </div>
+                                                <div class="calc-item" id="cgstRow">
+                                                    <span class="calc-label">CGST (2.5%)</span>
+                                                    <span class="calc-value" id="cgstAmount">₹0.00</span>
+                                                </div>
+                                                <div class="calc-item" id="sgstRow">
+                                                    <span class="calc-label">SGST (2.5%)</span>
+                                                    <span class="calc-value" id="sgstAmount">₹0.00</span>
+                                                </div>
+                                                <div class="calc-item" id="igstRow" style="display: none;">
+                                                    <span class="calc-label">IGST (5%)</span>
+                                                    <span class="calc-value" id="igstAmount">₹0.00</span>
+                                                </div>
+                                                <div class="calc-item" id="roundOffRow" style="display: none;">
+                                                    <span class="calc-label">Round Off</span>
+                                                    <span class="calc-value" id="roundOffAmount">₹0.00</span>
+                                                </div>
+                                                <div class="calc-item total-calc">
+                                                    <span class="calc-label">Final Amount (Entered)</span>
+                                                    <span class="calc-value total" id="totalAmount">₹0.00</span>
+                                                </div>
+                                            </div>
+                                            <div class="amount-in-words" id="amountInWords">
+                                                <span class="words-label">Amount in Words:</span>
+                                                <span class="words-text" id="wordsText">Zero Rupees Only</span>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+
+                                <!-- Tax Configuration -->
+                                <div class="config-section">
+                                    <div class="section-title">
+                                        <i class="fas fa-calculator"></i>
+                                        <h4>Tax Configuration</h4>
+                                    </div>
+                                    <div class="tax-config">
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" id="useIgst">
+                                            <span class="checkmark"></span>
+                                            Use IGST (5%) for inter-state transactions
+                                        </label>
+                                        <div class="tax-preview" id="calculationPreview">
+                                            <div class="tax-details" id="calculationDetails"></div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Finance Team -->
+                                <div class="config-section">
+                                    <div class="section-title">
+                                        <i class="fas fa-users"></i>
+                                        <h4>Finance Team</h4>
+                                    </div>
+                                    <input type="text" id="financeTeam" value="MINATO ENTERPRISE" class="text-input">
+                                </div>
+
+                                <!-- Description Preview -->
+                                <div class="description-preview" id="descriptionPreview">
                                     <h4><i class="fas fa-eye"></i> Bill Description Preview</h4>
-                                    <p>This is how the description will appear on the bill</p>
+                                    <div class="preview-text" id="previewContent"></div>
                                 </div>
-                                <div class="preview-content" id="previewContent"></div>
                             </div>
 
-                            <!-- Action Buttons -->
-                            <div class="action-buttons">
-                                <button class="btn btn-success" id="generateBillBtn" disabled>
+                            <div class="action-group">
+                                <button class="btn-primary" id="generateBillBtn" disabled>
+                                    <i class="fas fa-file-invoice"></i> Generate Bill
+                                </button>
+                                <button class="btn-secondary" id="backToReviewBtn">
+                                    <i class="fas fa-arrow-left"></i> Back to Review
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Results -->
+                    <div class="step-card" id="resultsCard">
+                        <div class="card-header success">
+                            <h3><i class="fas fa-check-circle"></i> Bill Generated Successfully</h3>
+                            <p>Your bill has been created and is ready for download</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="success-message">
+                                <div class="success-icon">
                                     <i class="fas fa-file-invoice"></i>
-                                    Generate Bill
-                                </button>
-                                <button class="btn btn-outline" id="backToReviewBtn">
-                                    <i class="fas fa-arrow-left"></i>
-                                    Back to Review
+                                </div>
+                                <h4>Bill Generated Successfully!</h4>
+                                <p>Your professional bill document is ready for download.</p>
+                            </div>
+
+                            <div class="action-group">
+                                <a href="#" class="btn-primary download-btn" id="downloadBillBtn">
+                                    <i class="fas fa-download"></i> Download Bill
+                                </a>
+                                <button class="btn-secondary" id="resetBtn">
+                                    <i class="fas fa-plus"></i> Process Another Customer
                                 </button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Step 4: Final Results -->
-                    <div class="step-card" id="resultsCard" style="display: none;">
-                        <div class="step-header">
-                            <div class="step-indicator success">
-                                <i class="fas fa-check"></i>
+                    <!-- Error Card -->
+                    <div class="step-card error" id="errorCard">
+                        <div class="card-header error">
+                            <h3><i class="fas fa-exclamation-triangle"></i> Processing Error</h3>
+                            <p>Something went wrong</p>
+                        </div>
+                        <div class="card-body">
+                            <div class="error-message" id="errorMessage"></div>
+                            <div class="action-group">
+                                <button class="btn-primary" id="errorResetBtn">
+                                    <i class="fas fa-redo"></i> Try Again
+                                </button>
                             </div>
-                            <div class="step-title">
-                                <h2>Processing Complete</h2>
-                                <p>Document extraction and bill generation results</p>
-                            </div>
-                        </div>
-
-                        <div id="resultsContent" class="results-content">
-                            <!-- Results will be populated here -->
-                        </div>
-
-                        <div class="action-buttons">
-                            <button id="resetBtn" class="btn btn-outline">
-                                <i class="fas fa-plus"></i>
-                                Process Another Customer
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Error Display -->
-                    <div class="step-card error" id="errorCard" style="display: none;">
-                        <div class="step-header">
-                            <div class="step-indicator error">
-                                <i class="fas fa-exclamation-triangle"></i>
-                            </div>
-                            <div class="step-title">
-                                <h2>Processing Error</h2>
-                                <p>An issue occurred during processing</p>
-                            </div>
-                        </div>
-
-                        <div class="error-content">
-                            <div id="errorMessage" class="error-message"></div>
-                        </div>
-
-                        <div class="action-buttons">
-                            <button id="errorResetBtn" class="btn btn-outline">
-                                <i class="fas fa-arrow-left"></i>
-                                Try Again
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -452,32 +568,711 @@
         </main>
 
         <!-- Footer -->
-        <footer class="app-footer">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <i class="fas fa-building"></i>
-                    <span>&copy; 2025 Minato Enterprises. All rights reserved.</span>
-                </div>
-                <div class="footer-tech">
-                    <span>Powered by Real-time Document Processing & Tax Calculation Technology</span>
-                </div>
+        <footer class="footer">
+            <div class="container">
+                <p>&copy; 2025 Minato Enterprises. All rights reserved.</p>
             </div>
         </footer>
     </div>
 
     <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+    <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-content">
-            <div class="loading-animation">
-                <div class="loading-circle"></div>
-                <div class="loading-circle"></div>
-                <div class="loading-circle"></div>
+            <div class="loading-spinner">
+                <div class="spinner"></div>
             </div>
-            <h3 id="loadingText">Processing Documents...</h3>
-            <p>Please wait while we extract the information</p>
+            <h3 id="loadingText">Processing...</h3>
+            <p>Please wait while we process your request</p>
         </div>
     </div>
 
     <script src="/static/script.js"></script>
+<script>
+    // ADD ONLY THE NEW FUNCTIONALITY - Compatible with existing script.js
+
+    // Add these variables to track state
+    let currentExtractionMethod = 'folder';
+    let frontImageFile = null;
+    let backImageFile = null;
+
+    // Camera functionality variables
+    let frontStream = null;
+    let backStream = null;
+    let frontCameraActive = false;
+    let backCameraActive = false;
+
+    // Method switching functionality
+    function initializeMethodSwitching() {
+        const folderTab = document.getElementById('folderMethodTab');
+        const uploadTab = document.getElementById('uploadMethodTab');
+
+        if (folderTab) folderTab.addEventListener('click', () => switchMethod('folder'));
+        if (uploadTab) uploadTab.addEventListener('click', () => switchMethod('upload'));
+
+        initializeImageUpload();
+    }
+
+    function switchMethod(method) {
+        currentExtractionMethod = method;
+
+        // Update tabs
+        document.querySelectorAll('.method-tab').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const activeTab = document.getElementById(method + 'MethodTab');
+        if (activeTab) activeTab.classList.add('active');
+
+        // Update content
+        document.querySelectorAll('.method-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        const activeContent = document.getElementById(method + 'MethodContent');
+        if (activeContent) activeContent.classList.add('active');
+
+        // Reset states
+        if (method === 'folder') {
+            resetImageUpload();
+        } else {
+            if (typeof hideSuggestions === 'function') hideSuggestions();
+            const customerSearch = document.getElementById('customerSearch');
+            if (customerSearch) customerSearch.value = '';
+        }
+    }
+
+    function initializeImageUpload() {
+        const frontInput = document.getElementById('frontImageInput');
+        const backInput = document.getElementById('backImageInput');
+        const frontUploadArea = document.getElementById('frontUploadArea');
+        const backUploadArea = document.getElementById('backUploadArea');
+        const processBtn = document.getElementById('processImagesBtn');
+        const customerNameInput = document.getElementById('uploadCustomerName');
+
+        // Only initialize if elements exist
+        if (!frontInput || !backInput) return;
+
+        // File input handlers
+        frontInput.addEventListener('change', (e) => handleImageUpload(e, 'front'));
+        backInput.addEventListener('change', (e) => handleImageUpload(e, 'back'));
+
+        // Upload area click handlers
+        if (frontUploadArea) frontUploadArea.addEventListener('click', () => frontInput.click());
+        if (backUploadArea) backUploadArea.addEventListener('click', () => backInput.click());
+
+        // Drag and drop
+        if (frontUploadArea) setupDragAndDrop(frontUploadArea, frontInput, 'front');
+        if (backUploadArea) setupDragAndDrop(backUploadArea, backInput, 'back');
+
+        // Remove buttons
+        const removeFrontBtn = document.getElementById('removeFrontBtn');
+        const removeBackBtn = document.getElementById('removeBackBtn');
+        if (removeFrontBtn) removeFrontBtn.addEventListener('click', (e) => { e.stopPropagation(); removeImage('front'); });
+        if (removeBackBtn) removeBackBtn.addEventListener('click', (e) => { e.stopPropagation(); removeImage('back'); });
+
+        // Process button
+        if (processBtn) processBtn.addEventListener('click', processUploadedImages);
+
+        // Customer name validation
+        if (customerNameInput) customerNameInput.addEventListener('input', updateProcessButton);
+
+        // Initialize camera functionality
+        initializeCameraFunctionality();
+    }
+
+    // Camera functionality
+    function initializeCameraFunctionality() {
+        // Upload method tab switching
+        document.querySelectorAll('.upload-method-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const method = this.dataset.method;
+                const side = this.dataset.side;
+                switchUploadMethod(side, method);
+            });
+        });
+
+        // Camera placeholder clicks
+        const frontPlaceholder = document.getElementById('frontCameraPlaceholder');
+        const backPlaceholder = document.getElementById('backCameraPlaceholder');
+
+        if (frontPlaceholder) frontPlaceholder.addEventListener('click', () => startCamera('front'));
+        if (backPlaceholder) backPlaceholder.addEventListener('click', () => startCamera('back'));
+
+        // Camera controls
+        const frontCaptureBtn = document.getElementById('frontCaptureBtn');
+        const backCaptureBtn = document.getElementById('backCaptureBtn');
+        const frontStopBtn = document.getElementById('frontStopBtn');
+        const backStopBtn = document.getElementById('backStopBtn');
+
+        if (frontCaptureBtn) frontCaptureBtn.addEventListener('click', () => captureImage('front'));
+        if (backCaptureBtn) backCaptureBtn.addEventListener('click', () => captureImage('back'));
+        if (frontStopBtn) frontStopBtn.addEventListener('click', () => stopCamera('front'));
+        if (backStopBtn) backStopBtn.addEventListener('click', () => stopCamera('back'));
+    }
+
+    function switchUploadMethod(side, method) {
+        // Update tab states
+        document.querySelectorAll(`[data-side="${side}"]`).forEach(tab => {
+            tab.classList.remove('active');
+        });
+        const activeTab = document.querySelector(`[data-method="${method}"][data-side="${side}"]`);
+        if (activeTab) activeTab.classList.add('active');
+
+        // Show/hide appropriate containers
+        const cameraContainer = document.getElementById(`${side}CameraContainer`);
+        const uploadArea = document.getElementById(`${side}UploadArea`);
+
+        if (method === 'camera') {
+            if (cameraContainer) cameraContainer.style.display = 'flex';
+            if (uploadArea) uploadArea.style.display = 'none';
+            // Stop any active camera
+            stopCamera(side);
+        } else {
+            if (cameraContainer) cameraContainer.style.display = 'none';
+            if (uploadArea) uploadArea.style.display = 'flex';
+            // Stop camera if active
+            stopCamera(side);
+        }
+    }
+
+    async function startCamera(side) {
+        try {
+            const video = document.getElementById(`${side}CameraVideo`);
+            const placeholder = document.getElementById(`${side}CameraPlaceholder`);
+            const controls = document.getElementById(`${side}CameraControls`);
+
+            if (!video || !placeholder || !controls) return;
+
+            // Request camera permission
+            const stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: 'environment', // Use back camera by default
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            });
+
+            // Store stream reference
+            if (side === 'front') {
+                frontStream = stream;
+                frontCameraActive = true;
+            } else {
+                backStream = stream;
+                backCameraActive = true;
+            }
+
+            // Setup video
+            video.srcObject = stream;
+
+            // Show video and controls, hide placeholder
+            placeholder.style.display = 'none';
+            video.style.display = 'block';
+            controls.style.display = 'flex';
+
+            if (typeof showSuccessToast === 'function') {
+                showSuccessToast(`${side} camera started successfully`);
+            }
+
+        } catch (error) {
+            console.error('Camera error:', error);
+            const cameraContainer = document.getElementById(`${side}CameraContainer`);
+            if (cameraContainer) {
+                cameraContainer.innerHTML = `
+                    <div class="camera-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Camera access failed: ${error.message}</p>
+                        <button onclick="startCamera('${side}')" class="btn-secondary" style="margin-top: 1rem;">
+                            Try Again
+                        </button>
+                    </div>
+                `;
+            }
+            if (typeof showErrorToast === 'function') {
+                showErrorToast('Camera access failed. Please allow camera permissions.');
+            }
+        }
+    }
+
+    function captureImage(side) {
+        const video = document.getElementById(`${side}CameraVideo`);
+        if (!video) return;
+
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+
+        // Set canvas dimensions to video dimensions
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+
+        // Draw video frame to canvas
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+        // Convert to blob
+        canvas.toBlob(blob => {
+            // Create a file from blob
+            const file = new File([blob], `${side}_aadhaar_${Date.now()}.jpg`, { type: 'image/jpeg' });
+
+            // Store file reference
+            if (side === 'front') {
+                frontImageFile = file;
+            } else {
+                backImageFile = file;
+            }
+
+            // Show preview
+            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+            showCameraPreview(side, dataUrl);
+
+            // Stop camera after capture
+            stopCamera(side);
+
+            // Update process button
+            updateProcessButton();
+
+            if (typeof showSuccessToast === 'function') {
+                showSuccessToast(`${side} image captured successfully`);
+            }
+
+        }, 'image/jpeg', 0.8);
+    }
+
+    function showCameraPreview(side, imageSrc) {
+        const container = document.getElementById(`${side}CameraContainer`);
+        if (!container) return;
+
+        container.innerHTML = `
+            <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+                <img src="${imageSrc}" style="max-width: 100%; max-height: 200px; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);" alt="${side} preview">
+                <button type="button" class="remove-btn" onclick="resetCamera('${side}')" style="position: absolute; top: 0.5rem; right: 0.5rem;">×</button>
+            </div>
+        `;
+    }
+
+    function stopCamera(side) {
+        const stream = side === 'front' ? frontStream : backStream;
+
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+
+            if (side === 'front') {
+                frontStream = null;
+                frontCameraActive = false;
+            } else {
+                backStream = null;
+                backCameraActive = false;
+            }
+        }
+
+        // Reset UI
+        const video = document.getElementById(`${side}CameraVideo`);
+        const placeholder = document.getElementById(`${side}CameraPlaceholder`);
+        const controls = document.getElementById(`${side}CameraControls`);
+
+        if (video && placeholder && controls) {
+            video.style.display = 'none';
+            controls.style.display = 'none';
+            placeholder.style.display = 'block';
+            video.srcObject = null;
+        }
+    }
+
+    function resetCamera(side) {
+        // Clear file reference
+        if (side === 'front') {
+            frontImageFile = null;
+        } else {
+            backImageFile = null;
+        }
+
+        // Reset camera container
+        const container = document.getElementById(`${side}CameraContainer`);
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="camera-placeholder" id="${side}CameraPlaceholder">
+                <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                <p>Click to start camera</p>
+            </div>
+            <video id="${side}CameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
+            <div class="camera-controls" id="${side}CameraControls" style="display: none;">
+                <button type="button" class="camera-btn capture" id="${side}CaptureBtn">
+                    <i class="fas fa-camera"></i>
+                </button>
+                <button type="button" class="camera-btn" id="${side}StopBtn">
+                    <i class="fas fa-stop"></i>
+                </button>
+            </div>
+        `;
+
+        // Re-attach event listeners
+        const placeholder = document.getElementById(`${side}CameraPlaceholder`);
+        const captureBtn = document.getElementById(`${side}CaptureBtn`);
+        const stopBtn = document.getElementById(`${side}StopBtn`);
+
+        if (placeholder) placeholder.addEventListener('click', () => startCamera(side));
+        if (captureBtn) captureBtn.addEventListener('click', () => captureImage(side));
+        if (stopBtn) stopBtn.addEventListener('click', () => stopCamera(side));
+
+        updateProcessButton();
+        if (typeof showSuccessToast === 'function') {
+            showSuccessToast(`${side} image removed`);
+        }
+    }
+
+    function setupDragAndDrop(uploadArea, input, type) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, (e) => { e.preventDefault(); e.stopPropagation(); }, false);
+        });
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0 && files[0].type.startsWith('image/')) {
+                input.files = files;
+                handleImageUpload({ target: input }, type);
+            }
+        });
+    }
+
+    function handleImageUpload(e, type) {
+        const file = e.target.files[0];
+        if (!file || !file.type.startsWith('image/')) return;
+
+        if (type === 'front') frontImageFile = file;
+        else backImageFile = file;
+
+        const reader = new FileReader();
+        reader.onload = (e) => showImagePreview(type, e.target.result);
+        reader.readAsDataURL(file);
+
+        updateProcessButton();
+        if (typeof showSuccessToast === 'function') {
+            showSuccessToast(`${type === 'front' ? 'Front' : 'Back'} image uploaded`);
+        }
+    }
+
+    function showImagePreview(type, imageSrc) {
+        const preview = document.getElementById(`${type}Preview`);
+        const placeholder = document.getElementById(`${type}UploadArea`).querySelector('.upload-placeholder');
+        const img = document.getElementById(`${type}PreviewImg`);
+
+        if (img && preview && placeholder) {
+            img.src = imageSrc;
+            placeholder.style.display = 'none';
+            preview.style.display = 'flex';
+        }
+    }
+
+    function removeImage(type) {
+        const input = document.getElementById(`${type}ImageInput`);
+        const preview = document.getElementById(`${type}Preview`);
+        const placeholder = document.getElementById(`${type}UploadArea`).querySelector('.upload-placeholder');
+
+        if (input) input.value = '';
+        if (type === 'front') frontImageFile = null;
+        else backImageFile = null;
+
+        if (preview && placeholder) {
+            preview.style.display = 'none';
+            placeholder.style.display = 'flex';
+        }
+
+        updateProcessButton();
+    }
+
+    function updateProcessButton() {
+        const processBtn = document.getElementById('processImagesBtn');
+        const customerName = document.getElementById('uploadCustomerName');
+        if (processBtn && customerName) {
+            processBtn.disabled = !customerName.value.trim() || (!frontImageFile && !backImageFile);
+        }
+    }
+
+    function resetImageUpload() {
+        frontImageFile = null;
+        backImageFile = null;
+
+        const uploadCustomerName = document.getElementById('uploadCustomerName');
+        const frontInput = document.getElementById('frontImageInput');
+        const backInput = document.getElementById('backImageInput');
+
+        if (uploadCustomerName) uploadCustomerName.value = '';
+        if (frontInput) frontInput.value = '';
+        if (backInput) backInput.value = '';
+
+        // Stop any active cameras
+        stopCamera('front');
+        stopCamera('back');
+
+        // Reset camera containers
+        resetCamera('front');
+        resetCamera('back');
+
+        // Reset upload areas
+        removeImage('front');
+        removeImage('back');
+
+        updateProcessButton();
+    }
+
+    async function processUploadedImages() {
+        const customerName = document.getElementById('uploadCustomerName').value.trim();
+        const processBtn = document.getElementById('processImagesBtn');
+
+        if (!customerName || (!frontImageFile && !backImageFile)) return;
+
+        try {
+            if (processBtn) {
+                processBtn.disabled = true;
+                processBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            }
+
+            // Show extraction card
+            if (typeof hideAllCards === 'function') hideAllCards();
+            const extractionCard = document.getElementById('extractionCard');
+            const fetchingContainer = document.getElementById('fetchingContainer');
+            const extractionResults = document.getElementById('extractionResults');
+
+            if (extractionCard) {
+                extractionCard.style.display = 'block';
+                extractionCard.classList.add('active');
+            }
+            if (fetchingContainer) fetchingContainer.style.display = 'block';
+            if (extractionResults) extractionResults.style.display = 'none';
+
+            // Start progress
+            startImageProcessingProgress();
+
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('customer_name', customerName);
+            if (frontImageFile) formData.append('front_image', frontImageFile);
+            if (backImageFile) formData.append('back_image', backImageFile);
+
+            const response = await fetch('/upload-aadhaar-images', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                throw new Error(error.detail || 'Image processing failed');
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Set extracted data (compatible with existing code)
+                if (typeof extractedData !== 'undefined') {
+                    extractedData = {
+                        name: result.name || customerName,
+                        aadhaar: result.aadhar_number || '',
+                        address: result.address || '',
+                        mobile: result.mobile_number || '',
+                        folder: 'Image Upload',
+                        extraction_method: 'image_upload'
+                    };
+                }
+
+                if (typeof showExtractionResults === 'function') {
+                    showExtractionResults();
+                }
+            } else {
+                throw new Error(result.error || 'Processing failed');
+            }
+
+        } catch (error) {
+            console.error('Image processing error:', error);
+            if (typeof showError === 'function') {
+                showError(`Image processing failed: ${error.message}`);
+            }
+        } finally {
+            if (processBtn) {
+                processBtn.disabled = false;
+                processBtn.innerHTML = '<i class="fas fa-magic"></i> Extract Information';
+            }
+        }
+    }
+
+    function startImageProcessingProgress() {
+        const progressText = document.getElementById('progressText');
+        const progressFill = document.getElementById('progressFill');
+
+        if (!progressText || !progressFill) return;
+
+        const steps = [
+            'Uploading images...',
+            'Analyzing front image...',
+            'Analyzing back image...',
+            'Extracting Aadhaar number...',
+            'Extracting address...',
+            'Extracting mobile number...',
+            'Validating data...',
+            'Finalizing...'
+        ];
+
+        let currentStep = 0;
+        const interval = setInterval(() => {
+            if (currentStep < steps.length) {
+                progressText.textContent = steps[currentStep];
+                progressFill.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+                currentStep++;
+            } else {
+                clearInterval(interval);
+            }
+        }, 800);
+    }
+
+    // Override existing performDataExtraction if it exists
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize new functionality
+        initializeMethodSwitching();
+
+        // Override performDataExtraction to use enhanced endpoint for folder method
+        if (typeof window.performDataExtraction === 'function') {
+            const originalFunction = window.performDataExtraction;
+
+            window.performDataExtraction = async function(customer) {
+                try {
+                    let endpoint = '/process';
+                    let requestBody = { folder_path: customer.full_path };
+
+                    // Use enhanced endpoint for folder method
+                    if (currentExtractionMethod === 'folder') {
+                        endpoint = '/process-with-images';
+                        requestBody.use_images_if_pdf_fails = true;
+                    }
+
+                    const result = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    if (!result.ok) {
+                        const error = await result.json();
+                        throw new Error(error.detail || 'Processing failed');
+                    }
+
+                    const data = await result.json();
+
+                    if (data.success) {
+                        if (typeof extractedData !== 'undefined') {
+                            extractedData = {
+                                name: data.name || customer.person_name,
+                                aadhaar: data.aadhar_number,
+                                address: data.address,
+                                mobile: data.mobile_number,
+                                folder: customer.folder_name,
+                                extraction_method: data.extraction_method || 'folder_method'
+                            };
+                        }
+
+                        if (typeof showExtractionResults === 'function') {
+                            showExtractionResults();
+                        }
+                    } else {
+                        if (typeof showError === 'function') {
+                            showError(`Failed to extract information: ${data.error}`);
+                        }
+                    }
+                } catch (error) {
+                    if (typeof showError === 'function') {
+                        showError(`Processing failed: ${error.message}`);
+                    }
+                }
+            };
+        }
+    });
+
+    // Cleanup cameras when page unloads
+    window.addEventListener('beforeunload', function() {
+        stopCamera('front');
+        stopCamera('back');
+    });
+
+    // Make resetCamera available globally for onclick handlers
+    window.resetCamera = resetCamera;
+</script>
+
+   <!-- Add minimal CSS for new elements only -->
+   <style>
+       /* Method Selection Styles */
+       .method-selection { margin-bottom: 2rem; }
+       .method-tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+       .method-tab {
+           flex: 1; background: white; border: 2px solid #e5e7eb; border-radius: 0.75rem;
+           padding: 1.5rem; cursor: pointer; transition: all 0.2s; text-align: center;
+           display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+       }
+       .method-tab:hover { border-color: #6366f1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transform: translateY(-2px); }
+       .method-tab.active { border-color: #6366f1; background: #eff6ff; }
+       .method-tab i { font-size: 2rem; color: #6366f1; margin-bottom: 0.5rem; }
+       .method-tab span { font-weight: 600; color: #1f2937; font-size: 1rem; }
+       .method-tab small { color: #6b7280; font-size: 0.875rem; }
+
+       .method-content { display: none; }
+       .method-content.active { display: block; }
+
+       .search-info, .upload-info {
+           margin-top: 1rem; padding: 1rem; background: #f9fafb; border-radius: 0.75rem;
+           color: #374151; font-size: 0.875rem;
+       }
+       .search-info i, .upload-info i { color: #6366f1; margin-right: 0.5rem; }
+
+       /* Upload Section Styles */
+       .upload-section { display: flex; flex-direction: column; gap: 1.5rem; }
+       .input-group { display: flex; flex-direction: column; gap: 0.5rem; }
+       .input-group label { font-weight: 600; color: #374151; font-size: 0.875rem; }
+
+       .upload-container { display: flex; flex-direction: column; gap: 1.5rem; }
+       .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+       .upload-item { display: flex; flex-direction: column; }
+       .upload-label { cursor: pointer; display: flex; flex-direction: column; gap: 0.75rem; }
+       .upload-label > span { font-weight: 600; color: #374151; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+
+       .upload-area {
+           position: relative; border: 2px dashed #d1d5db; border-radius: 0.75rem; background: #f9fafb;
+           transition: all 0.2s; min-height: 150px; display: flex; align-items: center; justify-content: center;
+       }
+       .upload-area:hover { border-color: #6366f1; background: #eff6ff; }
+       .upload-area.dragover { border-color: #6366f1; background: #dbeafe; border-style: solid; }
+
+       .upload-placeholder {
+           text-align: center; color: #6b7280; display: flex; flex-direction: column;
+           align-items: center; gap: 0.5rem; padding: 1rem;
+       }
+       .upload-placeholder i { font-size: 1.5rem; color: #6366f1; }
+
+       .upload-preview {
+           position: relative; width: 100%; height: 100%; display: flex;
+           align-items: center; justify-content: center;
+       }
+       .upload-preview img { max-width: 100%; max-height: 130px; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+
+       .remove-btn {
+           position: absolute; top: 0.5rem; right: 0.5rem; background: #ef4444; color: white;
+           border: none; border-radius: 50%; width: 20px; height: 20px; display: flex;
+           align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem;
+           transition: all 0.2s;
+       }
+       .remove-btn:hover { background: #dc2626; transform: scale(1.1); }
+
+       .upload-actions { display: flex; justify-content: center; margin-top: 1rem; }
+       .upload-actions .btn-primary { min-width: 200px; }
+
+       /* Responsive */
+       @media (max-width: 768px) {
+           .method-tabs { flex-direction: column; }
+           .upload-row { grid-template-columns: 1fr; }
+           .method-tab { padding: 1rem; }
+           .method-tab i { font-size: 1.5rem; }
+       }
+   </style>
 </body>
 </html>

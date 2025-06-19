@@ -1,3 +1,16 @@
+// Safety override to prevent progress step errors
+window.addEventListener('DOMContentLoaded', function() {
+    // Override any existing functions that might try to access progress steps
+    const originalQuerySelector = document.querySelector;
+    document.querySelector = function(selector) {
+        if (selector && selector.includes('progress-step')) {
+            console.warn('Attempted to access progress-step element that no longer exists:', selector);
+            return null;
+        }
+        return originalQuerySelector.call(document, selector);
+    };
+});
+
 // DOM elements
 const customerSearch = document.getElementById('customerSearch');
 const searchLoading = document.getElementById('searchLoading');
@@ -50,6 +63,7 @@ const billCustomerAadhaar = document.getElementById('billCustomerAadhaar');
 const billCustomerMobile = document.getElementById('billCustomerMobile');
 const billCustomerAddress = document.getElementById('billCustomerAddress');
 
+// Chassis elements
 const chassisFilter = document.getElementById('chassisFilter');
 const chassisLoading = document.getElementById('chassisLoading');
 const chassisResults = document.getElementById('chassisResults');
@@ -57,13 +71,14 @@ const chassisResultsList = document.getElementById('chassisResultsList');
 const selectedChassis = document.getElementById('selectedChassis');
 const selectedChassisDetails = document.getElementById('selectedChassisDetails');
 
-const batteryFilter = document.getElementById('batteryFilter');
-const batteryLoading = document.getElementById('batteryLoading');
-const batteryResults = document.getElementById('batteryResults');
-const batteryResultsList = document.getElementById('batteryResultsList');
-const selectedBatteries = document.getElementById('selectedBatteries');
-const selectedBatteriesList = document.getElementById('selectedBatteriesList');
+// Battery elements
+const addBatteryBtn = document.getElementById('addBatteryBtn');
+const batteryInputsContainer = document.getElementById('batteryInputsContainer');
+const allSelectedBatteries = document.getElementById('allSelectedBatteries');
+const allSelectedBatteriesList = document.getElementById('allSelectedBatteriesList');
+const batteryCount = document.getElementById('batteryCount');
 
+// Other billing elements
 const hsnCodeSelect = document.getElementById('hsnCodeSelect');
 const descriptionPreview = document.getElementById('descriptionPreview');
 const previewContent = document.getElementById('previewContent');
@@ -76,13 +91,21 @@ let extractedData = null;
 let isEditMode = false;
 let searchTimeout = null;
 let chassisTimeout = null;
-let batteryTimeout = null;
 let currentSuggestions = [];
 let selectedSuggestionIndex = -1;
 
 // Billing state
 let selectedChassisData = null;
-let selectedBatteriesData = [];
+let batteryInputGroups = [];
+let batteryTimeouts = {};
+let nextBatteryIndex = 1;
+
+// Initialize first battery group
+batteryInputGroups.push({
+    index: 0,
+    selectedBattery: null,
+    timeout: null
+});
 
 // Create a custom suggestions dropdown that's appended to body
 function createSuggestionsDropdown() {
@@ -155,6 +178,370 @@ function showSuggestions() {
         customSuggestionsDropdown.style.width = `${inputRect.width}px`;
         customSuggestionsDropdown.style.display = 'block';
     }
+}
+
+// Battery Management Functions
+function addBatteryInputGroup() {
+    const newIndex = nextBatteryIndex++;
+
+    // Create new battery input group
+    const batteryGroup = document.createElement('div');
+    batteryGroup.className = 'battery-input-group';
+    batteryGroup.setAttribute('data-battery-index', newIndex);
+
+    batteryGroup.innerHTML = `
+        <div class="battery-group-header">
+            <span class="battery-group-title">
+                <i class="fas fa-battery-three-quarters"></i>
+                Battery ${newIndex + 1}
+            </span>
+            <button class="btn-remove-battery-group" onclick="removeBatteryInputGroup(${newIndex})">
+                <i class="fas fa-trash"></i>
+                Remove
+            </button>
+        </div>
+        <div class="filter-group">
+            <input type="text" class="battery-filter" placeholder="Search batteries..." data-battery-index="${newIndex}">
+            <div class="filter-loading battery-loading" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i>
+            </div>
+            <div class="filter-results battery-results" style="display: none;">
+                <div class="results-list battery-results-list"></div>
+            </div>
+        </div>
+        <div class="selected-item battery-selected" style="display: none;">
+            <div class="selected-header">
+                <span>Selected Battery</span>
+                <button class="btn-remove" onclick="clearSelectedBatteryInGroup(${newIndex})">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="selected-details battery-selected-details"></div>
+        </div>
+    `;
+
+    batteryInputsContainer.appendChild(batteryGroup);
+
+    // Add to battery groups tracking
+    batteryInputGroups.push({
+        index: newIndex,
+        selectedBattery: null,
+        timeout: null
+    });
+
+    // Setup event listeners for the new input
+    setupBatteryInputEventListeners(newIndex);
+
+    // Update remove button visibility
+    updateRemoveButtonVisibility();
+
+    // Show success message
+    showSuccessToast(`Battery ${newIndex + 1} input added!`);
+
+    // Focus on the new input
+    const newInput = batteryGroup.querySelector('.battery-filter');
+    newInput.focus();
+
+    console.log(`Added battery input group ${newIndex + 1}`);
+}
+
+function removeBatteryInputGroup(index) {
+    const batteryGroup = document.querySelector(`[data-battery-index="${index}"]`);
+    if (!batteryGroup) return;
+
+    // Clear any timeout for this group
+    const groupData = batteryInputGroups.find(g => g.index === index);
+    if (groupData && groupData.timeout) {
+        clearTimeout(groupData.timeout);
+    }
+
+    // Remove from DOM
+    batteryGroup.remove();
+
+    // Remove from tracking array
+    batteryInputGroups = batteryInputGroups.filter(g => g.index !== index);
+
+    // Update remove button visibility
+    updateRemoveButtonVisibility();
+
+    // Update all selected batteries summary
+    updateAllSelectedBatteriesSummary();
+
+    // Update description preview and button state
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+
+    showSuccessToast(`Battery input removed!`);
+
+    console.log(`Removed battery input group ${index + 1}`);
+}
+
+function clearSelectedBatteryInGroup(index) {
+    const groupData = batteryInputGroups.find(g => g.index === index);
+    if (!groupData) return;
+
+    const batteryGroup = document.querySelector(`[data-battery-index="${index}"]`);
+    if (!batteryGroup) return;
+
+    // Clear selection
+    groupData.selectedBattery = null;
+
+    // Clear input
+    const input = batteryGroup.querySelector('.battery-filter');
+    input.value = '';
+
+    // Hide selected display
+    const selectedDisplay = batteryGroup.querySelector('.battery-selected');
+    selectedDisplay.style.display = 'none';
+
+    // Update all selected batteries summary
+    updateAllSelectedBatteriesSummary();
+
+    // Update description preview and button state
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+
+    showSuccessToast('Battery selection cleared!');
+}
+
+function clearAllSelectedBatteries() {
+    // Clear all selections in all groups
+    batteryInputGroups.forEach(group => {
+        group.selectedBattery = null;
+
+        const batteryGroup = document.querySelector(`[data-battery-index="${group.index}"]`);
+        if (batteryGroup) {
+            // Clear input
+            const input = batteryGroup.querySelector('.battery-filter');
+            input.value = '';
+
+            // Hide selected display
+            const selectedDisplay = batteryGroup.querySelector('.battery-selected');
+            selectedDisplay.style.display = 'none';
+        }
+    });
+
+    // Update summary
+    updateAllSelectedBatteriesSummary();
+
+    // Update description preview and button state
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+
+    showSuccessToast('All battery selections cleared!');
+}
+
+function updateRemoveButtonVisibility() {
+    const removeButtons = document.querySelectorAll('.btn-remove-battery-group');
+
+    // Hide remove button if only one battery group exists
+    if (batteryInputGroups.length <= 1) {
+        removeButtons.forEach(btn => btn.style.display = 'none');
+    } else {
+        removeButtons.forEach(btn => btn.style.display = 'inline-flex');
+    }
+}
+
+function setupBatteryInputEventListeners(index) {
+    const batteryGroup = document.querySelector(`[data-battery-index="${index}"]`);
+    if (!batteryGroup) return;
+
+    const input = batteryGroup.querySelector('.battery-filter');
+    const loading = batteryGroup.querySelector('.battery-loading');
+    const results = batteryGroup.querySelector('.battery-results');
+    const resultsList = batteryGroup.querySelector('.battery-results-list');
+
+    input.addEventListener('input', async (e) => {
+        const query = e.target.value.trim();
+        const groupData = batteryInputGroups.find(g => g.index === index);
+
+        if (!groupData) return;
+
+        if (groupData.timeout) {
+            clearTimeout(groupData.timeout);
+        }
+
+        if (query.length === 0) {
+            results.style.display = 'none';
+            return;
+        }
+
+        loading.style.display = 'block';
+
+        groupData.timeout = setTimeout(async () => {
+            try {
+                const batteryResults = await filterBatteries(query);
+                renderBatteryResultsForGroup(index, batteryResults);
+            } catch (error) {
+                console.error(`Battery filter failed for group ${index}:`, error);
+            } finally {
+                loading.style.display = 'none';
+            }
+        }, 300);
+    });
+}
+
+function renderBatteryResultsForGroup(groupIndex, results) {
+    const batteryGroup = document.querySelector(`[data-battery-index="${groupIndex}"]`);
+    if (!batteryGroup) return;
+
+    const resultsContainer = batteryGroup.querySelector('.battery-results');
+    const resultsList = batteryGroup.querySelector('.battery-results-list');
+
+    if (!results || results.length === 0) {
+        resultsContainer.style.display = 'none';
+        return;
+    }
+
+    resultsList.innerHTML = '';
+
+    results.forEach(battery => {
+        // Check if this battery is already selected in any group
+        const isAlreadySelected = batteryInputGroups.some(group =>
+            group.selectedBattery && group.selectedBattery.bat_serial_number === battery.bat_serial_number
+        );
+
+        const resultItem = document.createElement('div');
+        resultItem.className = 'result-item';
+
+        if (isAlreadySelected) {
+            resultItem.classList.add('already-selected');
+            resultItem.style.opacity = '0.5';
+            resultItem.style.cursor = 'not-allowed';
+        }
+
+        resultItem.innerHTML = `
+            <div class="result-details">
+                <div class="result-title">${battery.make} ${battery.model}</div>
+                <div class="result-subtitle">Serial: ${battery.bat_serial_number} (${battery.last_four})</div>
+                ${isAlreadySelected ? '<div class="already-selected-text">Already selected</div>' : ''}
+            </div>
+            <div class="result-action">
+                <i class="fas fa-${isAlreadySelected ? 'check' : 'plus'}"></i>
+            </div>
+        `;
+
+        if (!isAlreadySelected) {
+            resultItem.addEventListener('click', () => selectBatteryForGroup(groupIndex, battery));
+        }
+
+        resultsList.appendChild(resultItem);
+    });
+
+    resultsContainer.style.display = 'block';
+}
+
+function selectBatteryForGroup(groupIndex, battery) {
+    const groupData = batteryInputGroups.find(g => g.index === groupIndex);
+    if (!groupData) return;
+
+    const batteryGroup = document.querySelector(`[data-battery-index="${groupIndex}"]`);
+    if (!batteryGroup) return;
+
+    // Check if battery is already selected in another group
+    const isAlreadySelected = batteryInputGroups.some(group =>
+        group.selectedBattery &&
+        group.selectedBattery.bat_serial_number === battery.bat_serial_number &&
+        group.index !== groupIndex
+    );
+
+    if (isAlreadySelected) {
+        showSuccessToast('Battery already selected in another group!');
+        return;
+    }
+
+    // Set selection
+    groupData.selectedBattery = battery;
+
+    // Update input value
+    const input = batteryGroup.querySelector('.battery-filter');
+    input.value = battery.display_text;
+
+    // Hide results
+    const results = batteryGroup.querySelector('.battery-results');
+    results.style.display = 'none';
+
+    // Show selected display
+    const selectedDisplay = batteryGroup.querySelector('.battery-selected');
+    const selectedDetails = batteryGroup.querySelector('.battery-selected-details');
+
+    selectedDetails.innerHTML = `
+        <div style="margin-bottom: 0.5rem;"><strong>Make:</strong> ${battery.make}</div>
+        <div style="margin-bottom: 0.5rem;"><strong>Model:</strong> ${battery.model}</div>
+        <div style="margin-bottom: 0.5rem;"><strong>Serial Number:</strong> ${battery.bat_serial_number}</div>
+        <div style="margin-bottom: 0.5rem;"><strong>Ampere:</strong> ${battery.ampere}Ah</div>
+        <div><strong>Warranty:</strong> ${battery.warranty}</div>
+    `;
+
+    selectedDisplay.style.display = 'block';
+
+    // Update all selected batteries summary
+    updateAllSelectedBatteriesSummary();
+
+    // Update description preview and button state
+    updateDescriptionPreview();
+    updateGenerateBillButton();
+
+    showSuccessToast(`Battery selected for Battery ${groupIndex + 1}!`);
+}
+
+function updateAllSelectedBatteriesSummary() {
+    const selectedBatteries = batteryInputGroups
+        .filter(group => group.selectedBattery)
+        .map(group => group.selectedBattery);
+
+    if (selectedBatteries.length === 0) {
+        allSelectedBatteries.style.display = 'none';
+        batteryCount.textContent = '0';
+        return;
+    }
+
+    // Update count
+    batteryCount.textContent = selectedBatteries.length;
+
+    // Render selected batteries list
+    allSelectedBatteriesList.innerHTML = '';
+
+    selectedBatteries.forEach((battery, index) => {
+        const batteryDiv = document.createElement('div');
+        batteryDiv.className = 'selected-battery';
+        batteryDiv.innerHTML = `
+            <div class="battery-info">
+                <div class="battery-serial">${battery.bat_serial_number}</div>
+                <div class="battery-details">${battery.make} ${battery.model} - ${battery.ampere}Ah</div>
+            </div>
+            <div class="battery-group-indicator">Battery ${getGroupIndexForBattery(battery.bat_serial_number) + 1}</div>
+        `;
+
+        allSelectedBatteriesList.appendChild(batteryDiv);
+    });
+
+    allSelectedBatteries.style.display = 'block';
+
+    // Mark battery section as completed if has selections
+    const batterySection = batteryInputsContainer.closest('.config-section');
+    if (selectedBatteries.length > 0) {
+        batterySection.classList.add('has-selection');
+        const sectionHeader = batterySection.querySelector('.section-title');
+        sectionHeader.classList.add('completed');
+    } else {
+        batterySection.classList.remove('has-selection');
+        const sectionHeader = batterySection.querySelector('.section-title');
+        sectionHeader.classList.remove('completed');
+    }
+}
+
+function getGroupIndexForBattery(serialNumber) {
+    const group = batteryInputGroups.find(g =>
+        g.selectedBattery && g.selectedBattery.bat_serial_number === serialNumber
+    );
+    return group ? group.index : -1;
+}
+
+function getAllSelectedBatteries() {
+    return batteryInputGroups
+        .filter(group => group.selectedBattery)
+        .map(group => group.selectedBattery);
 }
 
 // Real-time search functionality
@@ -418,30 +805,34 @@ function setupBillingEventListeners() {
         }, 300);
     });
 
-    // Battery filter
-    batteryFilter.addEventListener('input', async (e) => {
-        const query = e.target.value.trim();
+    // Add battery button
+    addBatteryBtn.addEventListener('click', addBatteryInputGroup);
 
-        if (batteryTimeout) {
-            clearTimeout(batteryTimeout);
-        }
-
-        batteryLoading.style.display = 'block';
-
-        batteryTimeout = setTimeout(async () => {
-            try {
-                const results = await filterBatteries(query);
-                renderBatteryResults(results);
-            } catch (error) {
-                console.error('Battery filter failed:', error);
-            } finally {
-                batteryLoading.style.display = 'none';
-            }
-        }, 300);
+    // Setup event listeners for existing battery inputs
+    batteryInputGroups.forEach(group => {
+        setupBatteryInputEventListeners(group.index);
     });
 
     // HSN code change
-    hsnCodeSelect.addEventListener('change', updateDescriptionPreview);
+    hsnCodeSelect.addEventListener('change', () => {
+        updateDescriptionPreview();
+        updateGenerateBillButton();
+    });
+
+    // Price and tax configuration
+    const baseAmountInput = document.getElementById('baseAmount');
+    const useIgstCheckbox = document.getElementById('useIgst');
+    const financeTeamInput = document.getElementById('financeTeam');
+
+    if (baseAmountInput) {
+        baseAmountInput.addEventListener('input', updateTaxCalculation);
+    }
+    if (useIgstCheckbox) {
+        useIgstCheckbox.addEventListener('change', updateTaxCalculation);
+    }
+    if (financeTeamInput) {
+        financeTeamInput.addEventListener('input', updateGenerateBillButton);
+    }
 
     // Generate bill button
     generateBillBtn.addEventListener('click', generateBill);
@@ -454,7 +845,8 @@ function setupBillingEventListeners() {
         extractionCard.scrollIntoView({ behavior: 'smooth' });
     });
 
-    // Update bill button state
+    // Initial calculations and button state
+    updateTaxCalculation();
     updateGenerateBillButton();
 }
 
@@ -526,9 +918,9 @@ function selectChassis(chassis) {
     selectedChassis.style.display = 'block';
 
     // Mark section as completed
-    const chassisSection = chassisFilter.closest('.selection-section');
+    const chassisSection = chassisFilter.closest('.config-section');
     chassisSection.classList.add('has-selection');
-    const sectionHeader = chassisSection.querySelector('.section-header');
+    const sectionHeader = chassisSection.querySelector('.section-title');
     sectionHeader.classList.add('completed');
 
     updateDescriptionPreview();
@@ -540,9 +932,9 @@ function clearSelectedChassis() {
     chassisFilter.value = '';
     selectedChassis.style.display = 'none';
 
-    const chassisSection = chassisFilter.closest('.selection-section');
+    const chassisSection = chassisFilter.closest('.config-section');
     chassisSection.classList.remove('has-selection');
-    const sectionHeader = chassisSection.querySelector('.section-header');
+    const sectionHeader = chassisSection.querySelector('.section-title');
     sectionHeader.classList.remove('completed');
 
     updateDescriptionPreview();
@@ -573,107 +965,98 @@ async function filterBatteries(query) {
     }
 }
 
-function renderBatteryResults(results) {
-    if (results.length === 0) {
-        batteryResults.style.display = 'none';
+async function updateTaxCalculation() {
+    const baseAmount = parseFloat(document.getElementById('baseAmount')?.value) || 0;
+    const useIgst = document.getElementById('useIgst')?.checked || false;
+    const calculationPreview = document.getElementById('calculationPreview');
+    const calculationDetails = document.getElementById('calculationDetails');
+
+    if (baseAmount <= 0) {
+        if (calculationPreview) calculationPreview.style.display = 'none';
+        updateGenerateBillButton();
         return;
     }
 
-    batteryResultsList.innerHTML = '';
+    try {
+        const response = await fetch('/calculate-bill-amount', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                base_amount: baseAmount,
+                use_igst: useIgst
+            })
+        });
 
-    results.forEach(battery => {
-        const resultItem = document.createElement('div');
-        resultItem.className = 'result-item';
-        resultItem.innerHTML = `
-            <div class="result-details">
-                <div class="result-title">${battery.make} ${battery.model}</div>
-                <div class="result-subtitle">Serial: ${battery.bat_serial_number} (${battery.last_four})</div>
-            </div>
-            <div class="result-action">
-                <i class="fas fa-plus"></i>
-            </div>
-        `;
+        if (!response.ok) {
+            throw new Error('Failed to calculate taxes');
+        }
 
-        resultItem.addEventListener('click', () => selectBattery(battery));
-        batteryResultsList.appendChild(resultItem);
-    });
+        const result = await response.json();
 
-    batteryResults.style.display = 'block';
-}
+        if (result.success && calculationDetails) {
+            calculationDetails.innerHTML = `
+                <div class="calc-row">
+                    <span class="calc-label">SUBTOTAL:</span>
+                    <span class="calc-value">₹${result.subtotal.toFixed(2)}</span>
+                </div>
+                ${result.cgst > 0 ? `
+                <div class="calc-row">
+                    <span class="calc-label">C.G.S.T @ 2.5%:</span>
+                    <span class="calc-value">₹${result.cgst.toFixed(2)}</span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">S.G.S.T @ 2.5%:</span>
+                    <span class="calc-value">₹${result.sgst.toFixed(2)}</span>
+                </div>` : ''}
+                ${result.igst > 0 ? `
+                <div class="calc-row">
+                    <span class="calc-label">I.G.S.T @ 5%:</span>
+                    <span class="calc-value">₹${result.igst.toFixed(2)}</span>
+                </div>` : ''}
+                ${result.round_off !== 0 ? `
+                <div class="calc-row">
+                    <span class="calc-label">ROUND OFF:</span>
+                    <span class="calc-value">₹${result.round_off.toFixed(2)}</span>
+                </div>` : ''}
+                <div class="calc-row total-row">
+                    <span class="calc-label"><strong>TOTAL:</strong></span>
+                    <span class="calc-value"><strong>₹${result.total_amount.toFixed(2)}</strong></span>
+                </div>
+                <div class="calc-row">
+                    <span class="calc-label">Amount in Words:</span>
+                    <span class="calc-value amount-words">${result.amount_in_words}</span>
+                </div>
+                <div class="calc-row state-info">
+                    <span class="calc-label">Tax Type:</span>
+                    <span class="calc-value">${useIgst ? 'IGST (Inter-state)' : 'CGST + SGST (Intra-state)'}</span>
+                </div>
+            `;
 
-function selectBattery(battery) {
-    // Check if battery is already selected
-    if (selectedBatteriesData.find(b => b.bat_serial_number === battery.bat_serial_number)) {
-        showSuccessToast('Battery already selected!');
-        return;
+            if (calculationPreview) calculationPreview.style.display = 'block';
+
+            // Mark pricing section as completed
+            const pricingSection = document.getElementById('pricingSection');
+            if (pricingSection) {
+                pricingSection.classList.add('has-selection');
+                const sectionHeader = pricingSection.querySelector('.section-header');
+                if (sectionHeader) sectionHeader.classList.add('completed');
+            }
+        }
+
+        updateGenerateBillButton();
+    } catch (error) {
+        console.error('Tax calculation error:', error);
+        if (calculationPreview) calculationPreview.style.display = 'none';
+        updateGenerateBillButton();
     }
-
-    selectedBatteriesData.push(battery);
-    batteryResults.style.display = 'none';
-    batteryFilter.value = '';
-
-    renderSelectedBatteries();
-    updateDescriptionPreview();
-    updateGenerateBillButton();
-}
-
-function renderSelectedBatteries() {
-    if (selectedBatteriesData.length === 0) {
-        selectedBatteries.style.display = 'none';
-
-        const batterySection = batteryFilter.closest('.selection-section');
-        batterySection.classList.remove('has-selection');
-        const sectionHeader = batterySection.querySelector('.section-header');
-        sectionHeader.classList.remove('completed');
-        return;
-    }
-
-    selectedBatteriesList.innerHTML = '';
-
-    selectedBatteriesData.forEach((battery, index) => {
-        const batteryDiv = document.createElement('div');
-        batteryDiv.className = 'selected-battery';
-        batteryDiv.innerHTML = `
-            <div class="battery-info">
-                <div class="battery-serial">${battery.bat_serial_number}</div>
-                <div class="battery-details">${battery.make} ${battery.model} - ${battery.ampere}Ah</div>
-            </div>
-            <button class="btn-remove" onclick="removeBattery(${index})">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-
-        selectedBatteriesList.appendChild(batteryDiv);
-    });
-
-    selectedBatteries.style.display = 'block';
-
-    // Mark section as completed
-    const batterySection = batteryFilter.closest('.selection-section');
-    batterySection.classList.add('has-selection');
-    const sectionHeader = batterySection.querySelector('.section-header');
-    sectionHeader.classList.add('completed');
-}
-
-function removeBattery(index) {
-    selectedBatteriesData.splice(index, 1);
-    renderSelectedBatteries();
-    updateDescriptionPreview();
-    updateGenerateBillButton();
-}
-
-function clearAllBatteries() {
-    selectedBatteriesData = [];
-    renderSelectedBatteries();
-    updateDescriptionPreview();
-    updateGenerateBillButton();
 }
 
 // Description preview
 function updateDescriptionPreview() {
     const chassisInfo = selectedChassisData;
-    const batteries = selectedBatteriesData;
-    const hsnCode = hsnCodeSelect.value;
+    const batteries = getAllSelectedBatteries();
 
     if (!chassisInfo && batteries.length === 0) {
         descriptionPreview.style.display = 'none';
@@ -682,23 +1065,31 @@ function updateDescriptionPreview() {
 
     let description = '';
 
-    // Add chassis information
+    // Add chassis information (required for the new format)
     if (chassisInfo) {
         description += `E-RICKSHAW ${chassisInfo.make_model.toUpperCase()} `;
         description += `CHASSIS NO-${chassisInfo.chassis_number} `;
         description += `MOTOR NO-${chassisInfo.motor_number}`;
-    }
 
-    // Add battery information
-    if (batteries.length > 0) {
-        if (description) description += ' ';
-        description += `WITH SF SONIC 12 MONTHS BATTERY `;
+        // Add battery information in the new format
+        if (batteries.length > 0) {
+            description += ' WITH ';
 
-        batteries.forEach((battery, index) => {
-            const serialNumber = battery.bat_serial_number;
-            const lastFour = serialNumber.slice(-4);
-            description += `${index + 1})${serialNumber} ${lastFour} `;
+            const batteryDescriptions = batteries.map((battery, index) => {
+                // Format: {make} {warranty} {model} {ampere}
+                return `${battery.make} ${battery.warranty} ${battery.model} ${battery.ampere}`;
+            });
+
+            // Join multiple batteries with commas
+            description += batteryDescriptions.join(', ');
+        }
+    } else if (batteries.length > 0) {
+        // If only batteries selected without chassis, show battery info only
+        description = 'BATTERIES: ';
+        const batteryDescriptions = batteries.map((battery, index) => {
+            return `${battery.make} ${battery.warranty} ${battery.model} ${battery.ampere}`;
         });
+        description += batteryDescriptions.join(', ');
     }
 
     if (description) {
@@ -711,9 +1102,11 @@ function updateDescriptionPreview() {
 
 function updateGenerateBillButton() {
     const hasHsnCode = hsnCodeSelect.value.trim() !== '';
-    const hasItems = selectedChassisData || selectedBatteriesData.length > 0;
+    const hasItems = selectedChassisData || getAllSelectedBatteries().length > 0;
+    const hasAmount = parseFloat(document.getElementById('baseAmount')?.value || 0) > 0;
+    const hasFinanceTeam = document.getElementById('financeTeam')?.value.trim() !== '';
 
-    generateBillBtn.disabled = !hasHsnCode || !hasItems;
+    generateBillBtn.disabled = !hasHsnCode || !hasItems || !hasAmount || !hasFinanceTeam;
 
     if (generateBillBtn.disabled) {
         generateBillBtn.style.opacity = '0.6';
@@ -733,14 +1126,30 @@ async function generateBill() {
         generateBtn.disabled = true;
         generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Bill...';
 
+        const baseAmount = parseFloat(document.getElementById('baseAmount').value) || 169523.81;
+        const useIgst = document.getElementById('useIgst').checked;
+        const financeTeam = document.getElementById('financeTeam').value.trim();
+
+        const selectedBatteries = getAllSelectedBatteries();
+
+        console.log('Generating bill with data:', {
+            customer_name: extractedData.name,
+            chassis: selectedChassisData?.chassis_number,
+            batteries: selectedBatteries.length,
+            base_amount: baseAmount
+        });
+
         const billingData = {
             customer_name: extractedData.name,
             aadhaar_number: extractedData.aadhaar,
             address: extractedData.address,
             mobile_number: extractedData.mobile,
             chassis_number: selectedChassisData ? selectedChassisData.chassis_number : null,
-            selected_batteries: selectedBatteriesData.map(b => b.bat_serial_number),
+            selected_batteries: selectedBatteries.map(b => b.bat_serial_number),
             hsn_code: hsnCodeSelect.value,
+            base_amount: baseAmount,
+            use_igst: useIgst,
+            finance_team: financeTeam,
             additional_notes: null
         };
 
@@ -760,6 +1169,7 @@ async function generateBill() {
         const result = await response.json();
 
         if (result.success) {
+            console.log('Bill generation successful, showing results...');
             showBillSuccess(result);
         } else {
             throw new Error(result.error || 'Bill generation failed');
@@ -779,16 +1189,33 @@ function showBillSuccess(result) {
     renderBillResults(result);
     resultsCard.style.display = 'block';
     resultsCard.classList.add('active');
+
+    // Update download button in results card
+    const downloadBtn = document.getElementById('downloadBillBtn');
+    if (downloadBtn && result.download_url) {
+        downloadBtn.href = result.download_url;
+        downloadBtn.style.display = 'inline-flex';
+    }
+
     resultsCard.scrollIntoView({ behavior: 'smooth' });
+
+    console.log('Bill generated successfully!');
 }
 
 function renderBillResults(result) {
+    const selectedBatteries = getAllSelectedBatteries();
+
+    if (!resultsContent) {
+        console.error('Results content element not found');
+        return;
+    }
+
     resultsContent.innerHTML = `
         <div class="results-success">
             <h3>✅ Bill Generated Successfully</h3>
 
             <div class="result-section">
-                <h4>Customer Information</h4>
+                <h4><i class="fas fa-user"></i> Customer Information</h4>
                 <div class="result-item">
                     <span class="result-label">Name:</span>
                     <div class="result-value">${extractedData.name}</div>
@@ -808,10 +1235,14 @@ function renderBillResults(result) {
             </div>
 
             <div class="result-section">
-                <h4>Bill Details</h4>
+                <h4><i class="fas fa-file-invoice"></i> Bill Details</h4>
                 <div class="result-item">
                     <span class="result-label">Bill Number:</span>
                     <div class="result-value">${result.bill_number}</div>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Invoice Number:</span>
+                    <div class="result-value">${result.invoice_number}</div>
                 </div>
                 <div class="result-item">
                     <span class="result-label">HSN Code:</span>
@@ -822,14 +1253,44 @@ function renderBillResults(result) {
                     <span class="result-label">Chassis Number:</span>
                     <div class="result-value">${selectedChassisData.chassis_number}</div>
                 </div>` : ''}
-                ${selectedBatteriesData.length > 0 ? `
+                ${selectedBatteries.length > 0 ? `
                 <div class="result-item">
-                    <span class="result-label">Selected Batteries:</span>
-                    <div class="result-value">${selectedBatteriesData.map(b => b.bat_serial_number).join(', ')}</div>
+                    <span class="result-label">Selected Batteries (${selectedBatteries.length}):</span>
+                    <div class="result-value">${selectedBatteries.map(b => b.bat_serial_number).join(', ')}</div>
                 </div>` : ''}
                 <div class="result-item">
                     <span class="result-label">Description:</span>
                     <div class="result-value">${result.description || 'N/A'}</div>
+                </div>
+            </div>
+
+            <div class="result-section">
+                <h4><i class="fas fa-calculator"></i> Financial Summary</h4>
+                <div class="result-item">
+                    <span class="result-label">Base Amount:</span>
+                    <div class="result-value">₹${document.getElementById('baseAmount')?.value || '169523.81'}</div>
+                </div>
+                ${result.cgst > 0 ? `
+                <div class="result-item">
+                    <span class="result-label">CGST @ 2.5%:</span>
+                    <div class="result-value">₹${result.cgst.toFixed(2)}</div>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">SGST @ 2.5%:</span>
+                    <div class="result-value">₹${result.sgst.toFixed(2)}</div>
+                </div>` : ''}
+                ${result.igst > 0 ? `
+                <div class="result-item">
+                    <span class="result-label">IGST @ 5%:</span>
+                    <div class="result-value">₹${result.igst.toFixed(2)}</div>
+                </div>` : ''}
+                <div class="result-item">
+                    <span class="result-label">Total Amount:</span>
+                    <div class="result-value total-amount">₹${result.total_amount.toFixed(2)}</div>
+                </div>
+                <div class="result-item">
+                    <span class="result-label">Amount in Words:</span>
+                    <div class="result-value amount-words">${result.amount_in_words}</div>
                 </div>
                 <div class="result-item">
                     <span class="result-label">File Path:</span>
@@ -862,13 +1323,68 @@ function resetToSearch() {
     extractedData = null;
     isEditMode = false;
     selectedChassisData = null;
-    selectedBatteriesData = [];
+
+    // Reset battery state
+    batteryInputGroups = [{
+        index: 0,
+        selectedBattery: null,
+        timeout: null
+    }];
+    nextBatteryIndex = 1;
 
     // Reset form values
     customerSearch.value = '';
     chassisFilter.value = '';
-    batteryFilter.value = '';
     hsnCodeSelect.value = '';
+
+    // Reset battery inputs container to initial state
+    batteryInputsContainer.innerHTML = `
+        <div class="battery-input-group" data-battery-index="0">
+            <div class="battery-group-header">
+                <span class="battery-group-title">
+                    <i class="fas fa-battery-three-quarters"></i>
+                    Battery 1
+                </span>
+                <button class="btn-remove-battery-group" onclick="removeBatteryInputGroup(0)" style="display: none;">
+                    <i class="fas fa-trash"></i>
+                    Remove
+                </button>
+            </div>
+            <div class="filter-group">
+                <input type="text" class="battery-filter" placeholder="Search batteries..." data-battery-index="0">
+                <div class="filter-loading battery-loading" style="display: none;">
+                    <i class="fas fa-spinner fa-spin"></i>
+                </div>
+                <div class="filter-results battery-results" style="display: none;">
+                    <div class="results-list battery-results-list"></div>
+                </div>
+            </div>
+            <div class="selected-item battery-selected" style="display: none;">
+                <div class="selected-header">
+                    <span>Selected Battery</span>
+                    <button class="btn-remove" onclick="clearSelectedBatteryInGroup(0)">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="selected-details battery-selected-details"></div>
+            </div>
+        </div>
+    `;
+
+    // Reset pricing and finance team if exists
+    const baseAmountInput = document.getElementById('baseAmount');
+    const useIgstCheckbox = document.getElementById('useIgst');
+    const financeTeamInput = document.getElementById('financeTeam');
+
+    if (baseAmountInput) {
+        baseAmountInput.value = '178899.90';
+    }
+    if (useIgstCheckbox) {
+        useIgstCheckbox.checked = false;
+    }
+    if (financeTeamInput) {
+        financeTeamInput.value = 'MINATO ENTERPRISE';
+    }
 
     // Clear results
     resultsContent.innerHTML = '';
@@ -887,15 +1403,23 @@ function resetToSearch() {
 
     // Reset billing card states
     if (selectedChassis) selectedChassis.style.display = 'none';
-    if (selectedBatteries) selectedBatteries.style.display = 'none';
+    if (allSelectedBatteries) allSelectedBatteries.style.display = 'none';
     if (chassisResults) chassisResults.style.display = 'none';
-    if (batteryResults) batteryResults.style.display = 'none';
     if (descriptionPreview) descriptionPreview.style.display = 'none';
 
+    // Reset calculation preview
+    const calculationPreview = document.getElementById('calculationPreview');
+    if (calculationPreview) {
+        calculationPreview.style.display = 'none';
+    }
+
     // Reset section states
-    document.querySelectorAll('.selection-section').forEach(section => {
+    document.querySelectorAll('.config-section').forEach(section => {
         section.classList.remove('has-selection');
-        section.querySelector('.section-header').classList.remove('completed');
+        const sectionHeader = section.querySelector('.section-title');
+        if (sectionHeader) {
+            sectionHeader.classList.remove('completed');
+        }
     });
 
     customerSearch.focus();
@@ -990,243 +1514,195 @@ style.textContent = `
         letter-spacing: 0.5px;
     }
 
-    .filter-input-wrapper {
-        position: relative;
+    /* Battery Input Group Styles */
+    .battery-input-group {
+        background: rgba(255, 255, 255, 0.8);
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
         margin-bottom: 1rem;
+        transition: all 0.3s ease;
     }
 
-    .filter-input {
-        width: 100%;
-        padding: 0.75rem 1rem 0.75rem 1rem;
-        border: 2px solid var(--border-color);
-        border-radius: var(--radius-lg);
-        font-size: 1rem;
-        background: var(--bg-primary);
-        color: var(--text-primary);
-        transition: var(--transition);
-        outline: none;
+    .battery-input-group:hover {
+        border-color: #d4af37;
+        box-shadow: 0 4px 6px -1px rgba(212, 175, 55, 0.1);
     }
 
-    .filter-input:focus {
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgb(212 175 55 / 0.1);
-    }
-
-    .filter-loading {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--primary-color);
-        font-size: 1rem;
-    }
-
-    .filter-results {
-        background: var(--bg-secondary);
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--border-color);
-        max-height: 200px;
-        overflow-y: auto;
-        margin-top: 0.5rem;
-    }
-
-    .results-list {
-        padding: 0.5rem;
-    }
-
-    .result-item {
-        background: white;
-        border: 1px solid var(--border-color);
-        border-radius: var(--radius-md);
-        padding: 1rem;
-        margin-bottom: 0.5rem;
-        cursor: pointer;
-        transition: var(--transition);
+    .battery-group-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #e5e7eb;
     }
 
-    .result-item:hover {
-        border-color: var(--primary-color);
-        background: linear-gradient(135deg, #fefce8, #fef3c7);
+    .battery-group-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: #374151;
+        font-size: 0.95rem;
+    }
+
+    .battery-group-title i {
+        color: #10b981;
+        font-size: 1rem;
+    }
+
+    .btn-add-battery {
+        background: linear-gradient(135deg, #10b981, #059669);
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-left: auto;
+    }
+
+    .btn-add-battery:hover {
+        background: linear-gradient(135deg, #059669, #047857);
         transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
 
-    .result-item:hover .result-action {
-        transform: scale(1.2);
-        color: var(--primary-hover);
+    .btn-remove-battery-group {
+        background: #ef4444;
+        color: white;
+        border: none;
+        padding: 0.375rem 0.75rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
     }
 
-    .result-item:last-child {
+    .btn-remove-battery-group:hover {
+        background: #dc2626;
+        transform: scale(1.05);
+    }
+
+    .section-actions {
+        margin-left: auto;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        width: 100%;
+    }
+
+    .battery-group-indicator {
+        font-size: 0.75rem;
+        color: #6b7280;
+        background: rgba(212, 175, 55, 0.1);
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+
+    .already-selected {
+        opacity: 0.5;
+        cursor: not-allowed !important;
+    }
+
+    .already-selected-text {
+        font-size: 0.75rem;
+        color: #f59e0b;
+        font-style: italic;
+        margin-top: 0.25rem;
+    }
+
+    .result-item.already-selected:hover {
+        background: #fef3c7 !important;
+        border-color: #f59e0b !important;
+        transform: none !important;
+    }
+
+    .battery-count-badge {
+        background: #10b981;
+        color: white;
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.375rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    /* Animation for new battery groups */
+    .battery-input-group {
+        animation: slideInUp 0.3s ease-out;
+    }
+
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Enhanced selected batteries summary */
+    #allSelectedBatteries {
+        background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+        border: 2px solid #10b981;
+    }
+
+    #allSelectedBatteries .selected-header {
+        color: #047857;
+        font-weight: 600;
+    }
+
+    .selected-battery {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 0.75rem;
+        border-radius: 0.5rem;
+        margin-bottom: 0.5rem;
+        border-left: 4px solid #10b981;
+    }
+
+    .selected-battery:last-child {
         margin-bottom: 0;
     }
 
-    .result-details {
-        flex: 1;
+    .total-amount {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #d4af37;
+        background: linear-gradient(135deg, #fefce8, #fef3c7);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #d4af37;
     }
 
-    .result-title {
-        font-weight: 600;
-        color: var(--text-primary);
-        margin-bottom: 0.25rem;
-    }
-
-    .result-subtitle {
+    .amount-words {
+        font-family: 'Inter', sans-serif !important;
         font-size: 0.875rem;
-        color: var(--text-secondary);
-        font-family: 'Monaco', 'Menlo', monospace;
-    }
-
-    .result-action {
-        color: var(--primary-color);
-        font-size: 1.25rem;
-        transition: var(--transition);
-    }
-
-    .selection-section.has-selection {
-        border-color: #28a745;
-        background: linear-gradient(135deg, #f8fff9, #f0fff4);
-    }
-
-    .section-header.completed h4 {
-        color: #28a745;
-    }
-
-    .section-header.completed h4 i {
-        color: #28a745;
+        font-weight: 500;
+        color: #1565c0;
+        font-style: italic;
     }
 `;
 document.head.appendChild(style);
-
-// Initialize the app
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Minato Enterprises - Document Processor & Billing System initialized');
-
-    // Focus on the search input
-    customerSearch.focus();
-
-    // Add helpful tips
-    setTimeout(() => {
-        const helpText = document.createElement('div');
-        helpText.style.cssText = `
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            font-size: 0.875rem;
-            color: #4a4a4a;
-            max-width: 320px;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            border: 2px solid #d4af37;
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        `;
-
-        const closeButton = document.createElement('button');
-        closeButton.innerHTML = '<i class="fas fa-times"></i>';
-        closeButton.style.cssText = `
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            background: none;
-            border: none;
-            color: #6b7280;
-            cursor: pointer;
-            padding: 0.25rem;
-            border-radius: 0.25rem;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 1.5rem;
-            height: 1.5rem;
-            font-size: 0.75rem;
-        `;
-
-        closeButton.addEventListener('mouseenter', () => {
-            closeButton.style.background = '#f8f9fa';
-            closeButton.style.color = '#d4af37';
-        });
-
-        closeButton.addEventListener('mouseleave', () => {
-            closeButton.style.background = 'none';
-            closeButton.style.color = '#6b7280';
-        });
-
-        const closeTips = () => {
-            if (helpText.parentNode) {
-                helpText.style.transform = 'translateY(100px)';
-                helpText.style.opacity = '0';
-                setTimeout(() => {
-                    if (helpText.parentNode) {
-                        helpText.remove();
-                    }
-                }, 300);
-            }
-        };
-
-        closeButton.addEventListener('click', closeTips);
-
-        helpText.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #d4af37; font-weight: 600;">
-                <i class="fas fa-file-invoice"></i>
-                <span>Smart Document Processor & Billing</span>
-            </div>
-            <div style="margin-bottom: 0.75rem;">
-                <strong style="color: #1a1a1a;">Workflow:</strong><br>
-                • Search customers<br>
-                • Extract document info<br>
-                • Select chassis & batteries<br>
-                • Generate Word bills
-            </div>
-            <div>
-                <strong style="color: #1a1a1a;">Features:</strong><br>
-                • Real-time search & filtering<br>
-                • Mobile number extraction<br>
-                • Editable information review<br>
-                • HSN code selection<br>
-                • Word document generation
-            </div>
-        `;
-
-        helpText.appendChild(closeButton);
-
-        document.body.appendChild(helpText);
-
-        setTimeout(() => {
-            helpText.style.transform = 'translateY(0)';
-            helpText.style.opacity = '1';
-        }, 100);
-
-        setTimeout(() => {
-            closeTips();
-        }, 15000);
-    }, 3000);
-
-    // Check data status on startup
-    checkDataStatus();
-});
-
-async function checkDataStatus() {
-    try {
-        const response = await fetch('/data-status');
-        const status = await response.json();
-
-        console.log('Data Status:', status);
-
-        if (!status.chassis_loaded || !status.battery_loaded) {
-            console.warn('Warning: Some data files may not be loaded properly');
-        }
-    } catch (error) {
-        console.error('Failed to check data status:', error);
-    }
-}
 
 // API calls
 async function searchCustomers(query) {
@@ -1432,5 +1908,140 @@ function showExtractionResults() {
 
 // Make functions globally available for onclick handlers
 window.clearSelectedChassis = clearSelectedChassis;
-window.removeBattery = removeBattery;
-window.clearAllBatteries = clearAllBatteries;
+window.removeBatteryInputGroup = removeBatteryInputGroup;
+window.clearSelectedBatteryInGroup = clearSelectedBatteryInGroup;
+window.clearAllSelectedBatteries = clearAllSelectedBatteries;
+
+// Initialize the app
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Minato Enterprises - Document Processor & Billing System initialized');
+
+    // Focus on the search input
+    customerSearch.focus();
+
+    // Setup initial battery input event listeners
+    setupBatteryInputEventListeners(0);
+
+    // Add helpful tips
+    setTimeout(() => {
+        const helpText = document.createElement('div');
+        helpText.style.cssText = `
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            color: #4a4a4a;
+            max-width: 320px;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+            border: 2px solid #d4af37;
+            z-index: 1000;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        `;
+
+        const closeButton = document.createElement('button');
+        closeButton.innerHTML = '<i class="fas fa-times"></i>';
+        closeButton.style.cssText = `
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background: none;
+            border: none;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0.25rem;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.5rem;
+            height: 1.5rem;
+            font-size: 0.75rem;
+        `;
+
+        closeButton.addEventListener('mouseenter', () => {
+            closeButton.style.background = '#f8f9fa';
+            closeButton.style.color = '#d4af37';
+        });
+
+        closeButton.addEventListener('mouseleave', () => {
+            closeButton.style.background = 'none';
+            closeButton.style.color = '#6b7280';
+        });
+
+        // const closeTips = () => {
+        //     if (helpText.parentNode) {
+        //         helpText.style.transform = 'translateY(100px)';
+        //         helpText.style.opacity = '0';
+        //         setTimeout(() => {
+        //             if (helpText.parentNode) {
+        //                 helpText.remove();
+        //             }
+        //         }, 300);
+        //     }
+        // };
+
+        // closeButton.addEventListener('click', closeTips);
+
+        // helpText.innerHTML = `
+        //     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #d4af37; font-weight: 600;">
+        //         <i class="fas fa-file-invoice"></i>
+        //         <span>Smart Document Processor & Billing</span>
+        //     </div>
+        //     <div style="margin-bottom: 0.75rem;">
+        //         <strong style="color: #1a1a1a;">Workflow:</strong><br>
+        //         • Search customers<br>
+        //         • Extract document info<br>
+        //         • Select chassis & multiple batteries<br>
+        //         • Set pricing & calculate taxes<br>
+        //         • Generate Word bills
+        //     </div>
+        //     <div>
+        //         <strong style="color: #1a1a1a;">New Features:</strong><br>
+        //         • Add multiple battery inputs<br>
+        //         • Individual battery selection<br>
+        //         • Prevent duplicate selections<br>
+        //         • Battery summary with count<br>
+        //         • Remove specific battery groups<br>
+        //         • Enhanced battery tracking
+        //     </div>
+        // `;
+
+        // helpText.appendChild(closeButton);
+
+        // document.body.appendChild(helpText);
+
+        setTimeout(() => {
+            helpText.style.transform = 'translateY(0)';
+            helpText.style.opacity = '1';
+        }, 100);
+
+        setTimeout(() => {
+            closeTips();
+        }, 18000);
+    }, 3000);
+
+    // Check data status on startup
+    checkDataStatus();
+});
+
+async function checkDataStatus() {
+    try {
+        const response = await fetch('/data-status');
+        const status = await response.json();
+
+        console.log('Data Status:', status);
+
+        if (!status.chassis_loaded || !status.battery_loaded) {
+            console.warn('Warning: Some data files may not be loaded properly');
+        }
+    } catch (error) {
+        console.error('Failed to check data status:', error);
+    }
+}

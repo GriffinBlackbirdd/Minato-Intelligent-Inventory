@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minato Enterprises - Dashboard</title>
+    <link rel="stylesheet" href="static/dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>Minato</h1>
+                    <span>Enterprise</span>
+                </div>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+
+        <div class="sidebar-nav">
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <a href="#dashboard" class="nav-link" data-page="dashboard">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#billing" class="nav-link" data-page="billing">
+                        <i class="fas fa-file-invoice"></i>
+                        <span>Billing System</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#inventory" class="nav-link" data-page="inventory">
+                        <i class="fas fa-boxes"></i>
+                        <span>Inventory</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#customers" class="nav-link" data-page="customers">
+                        <i class="fas fa-users"></i>
+                        <span>Customers</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#reports" class="nav-link" data-page="reports">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Reports</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#settings" class="nav-link" data-page="settings">
+                        <i class="fas fa-cog"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <div class="user-name">Admin User</div>
+                    <div class="user-role">Administrator</div>
+                </div>
+            </div>
+            <button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="mobile-sidebar-toggle" id="mobileSidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="breadcrumb">
+                    <span class="breadcrumb-item">Dashboard</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search anything..." id="globalSearch">
+                </div>
+                <div class="notifications">
+                    <button class="notification-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                </div>
+                <div class="theme-toggle">
+                    <button class="theme-btn" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard-content" id="dashboardContent">
+            <!-- Quick Stats -->
+            <section class="quick-stats">
+                <div class="stat-card revenue">
+                    <div class="stat-icon">
+                        <i class="fas fa-rupee-sign"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalRevenue">₹12,45,890</div>
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+15.2%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card sales">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalSales">342</div>
+                        <div class="stat-label">Total Sales</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+8.1%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card customers">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="totalCustomers">1,234</div>
+                        <div class="stat-label">Total Customers</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12.5%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stat-card inventory">
+                    <div class="stat-icon">
+                        <i class="fas fa-box"></i>
+                    </div>
+                    <div class="stat-content">
+                        <div class="stat-value" id="inventoryCount">89</div>
+                        <div class="stat-label">Items in Stock</div>
+                        <div class="stat-change negative">
+                            <i class="fas fa-arrow-down"></i>
+                            <span>-3.2%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Charts Section -->
+            <section class="charts-section">
+                <div class="chart-container large">
+                    <div class="chart-header">
+                        <h3>Revenue Overview</h3>
+                        <div class="chart-controls">
+                            <select class="period-selector" id="revenuePeriod">
+                                <option value="7d">Last 7 Days</option>
+                                <option value="30d" selected>Last 30 Days</option>
+                                <option value="90d">Last 90 Days</option>
+                                <option value="1y">Last Year</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="chart-container medium">
+                    <div class="chart-header">
+                        <h3>Sales Distribution</h3>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Recent Activity & Top Products -->
+            <section class="activity-section">
+                <div class="activity-container">
+                    <div class="activity-header">
+                        <h3>Recent Activity</h3>
+                        <button class="view-all-btn">View All</button>
+                    </div>
+                    <div class="activity-list" id="activityList">
+                        <!-- Activity items will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="products-container">
+                    <div class="products-header">
+                        <h3>Top Products</h3>
+                        <button class="view-all-btn">View All</button>
+                    </div>
+                    <div class="products-list" id="productsList">
+                        <!-- Product items will be populated by JavaScript -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Inventory Status -->
+            <section class="inventory-section">
+                <div class="inventory-header">
+                    <h3>Inventory Status</h3>
+                    <div class="inventory-filters">
+                        <button class="filter-btn active" data-filter="all">All</button>
+                        <button class="filter-btn" data-filter="chassis">Chassis</button>
+                        <button class="filter-btn" data-filter="batteries">Batteries</button>
+                        <button class="filter-btn" data-filter="low-stock">Low Stock</button>
+                    </div>
+                </div>
+                <div class="inventory-grid" id="inventoryGrid">
+                    <!-- Inventory items will be populated by JavaScript -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Billing System Content (Hidden by default) -->
+        <div class="page-content" id="billingContent" style="display: none;">
+            <iframe src="index.html" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+
+        <!-- Other page contents (placeholders) -->
+        <div class="page-content" id="inventoryContent" style="display: none;">
+            <div class="page-placeholder">
+                <i class="fas fa-boxes"></i>
+                <h2>Inventory Management</h2>
+                <p>Inventory management system will be implemented here.</p>
+            </div>
+        </div>
+
+        <div class="page-content" id="customersContent" style="display: none;">
+            <div class="page-placeholder">
+                <i class="fas fa-users"></i>
+                <h2>Customer Management</h2>
+                <p>Customer management system will be implemented here.</p>
+            </div>
+        </div>
+
+        <div class="page-content" id="reportsContent" style="display: none;">
+            <div class="page-placeholder">
+                <i class="fas fa-chart-bar"></i>
+                <h2>Reports & Analytics</h2>
+                <p>Detailed reports and analytics will be available here.</p>
+            </div>
+        </div>
+
+        <div class="page-content" id="settingsContent" style="display: none;">
+            <div class="page-placeholder">
+                <i class="fas fa-cog"></i>
+                <h2>System Settings</h2>
+                <p>System configuration and settings will be available here.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+        </div>
+        <div class="loading-text">Loading Dashboard...</div>
+    </div>
+
+    <!-- Chart.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="static/dashboard.js"></script>
+</body>
+</html>
