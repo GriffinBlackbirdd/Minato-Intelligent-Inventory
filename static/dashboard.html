@@ -36,7 +36,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#billing" class="nav-link" data-page="billing">
+                    <a href="/billing" class="nav-link" data-page="billing">
                         <i class="fas fa-file-invoice"></i>
                         <span>Billing System</span>
                     </a>
@@ -74,11 +74,11 @@
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="user-info">
-                    <div class="user-name">Admin User</div>
-                    <div class="user-role">Administrator</div>
+                    <div class="user-name" id="currentUserName">Loading...</div>
+                    <div class="user-role" id="currentUserRole">Loading...</div>
                 </div>
             </div>
-            <button class="logout-btn">
+            <button class="logout-btn" id="logoutButton">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
         </div>
@@ -280,5 +280,154 @@
     <!-- Chart.js Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
     <script src="static/dashboard.js"></script>
+    <script>
+// Add this JavaScript to your dashboard.html file
+
+// Function to load current user profile
+async function loadCurrentUserProfile() {
+    try {
+        const token = localStorage.getItem('authToken');
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
+
+        const response = await fetch('/api/auth/profile', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) {
+            if (response.status === 401) {
+                // Token expired or invalid
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                window.location.href = '/login';
+                return;
+            }
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const userProfile = await response.json();
+
+        // Update the UI with user information
+        document.getElementById('currentUserName').textContent = userProfile.full_name;
+        document.getElementById('currentUserRole').textContent = userProfile.role;
+
+        // Store user info in localStorage for quick access
+        localStorage.setItem('currentUser', JSON.stringify(userProfile));
+
+    } catch (error) {
+        console.error('Error loading user profile:', error);
+
+        // Try to get user info from localStorage as fallback
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+            try {
+                const userInfo = JSON.parse(storedUser);
+                document.getElementById('currentUserName').textContent = userInfo.full_name;
+                document.getElementById('currentUserRole').textContent = userInfo.role;
+            } catch (e) {
+                console.error('Error parsing stored user info:', e);
+                document.getElementById('currentUserName').textContent = 'Unknown User';
+                document.getElementById('currentUserRole').textContent = 'Unknown Role';
+            }
+        } else {
+            document.getElementById('currentUserName').textContent = 'Unknown User';
+            document.getElementById('currentUserRole').textContent = 'Unknown Role';
+        }
+    }
+}
+
+// Function to handle logout
+async function handleLogout() {
+    try {
+        const token = localStorage.getItem('authToken');
+
+        if (token) {
+            // Call logout API
+            await fetch('/api/auth/logout', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Logout API error:', error);
+    } finally {
+        // Always clear local storage and redirect
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('currentUser');
+        window.location.href = '/login';
+    }
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Load user profile
+    loadCurrentUserProfile();
+
+    // Add logout button event listener
+    const logoutButton = document.getElementById('logoutButton');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function(e) {
+            e.preventDefault();
+
+            // Optional: Show confirmation dialog
+            if (confirm('Are you sure you want to logout?')) {
+                handleLogout();
+            }
+        });
+    }
+
+    // Verify token periodically (optional)
+    setInterval(async () => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            try {
+                const response = await fetch('/api/auth/verify-token', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Token verification failed');
+                }
+            } catch (error) {
+                console.error('Token verification failed:', error);
+                localStorage.removeItem('authToken');
+                localStorage.removeItem('currentUser');
+                window.location.href = '/login';
+            }
+        }
+    }, 300000); // Check every 5 minutes
+});
+
+// Alternative method: If you prefer to get user info from login response
+// This can be used if you store user info during login
+function loadUserFromLoginData() {
+    const storedUser = localStorage.getItem('currentUser');
+    if (storedUser) {
+        try {
+            const userInfo = JSON.parse(storedUser);
+            document.getElementById('currentUserName').textContent = userInfo.full_name;
+            document.getElementById('currentUserRole').textContent = userInfo.role;
+        } catch (error) {
+            console.error('Error parsing stored user info:', error);
+            loadCurrentUserProfile(); // Fallback to API call
+        }
+    } else {
+        loadCurrentUserProfile(); // Fallback to API call
+    }
+}
+</script>
 </body>
 </html>
