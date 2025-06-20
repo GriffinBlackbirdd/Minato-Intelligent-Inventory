@@ -1400,14 +1400,53 @@ def extract_aadhaar_info(pdf_path: Path) -> ExtractionResult:
     try:
         logger.info(f"Processing PDF: {pdf_path}")
 
+        # Alternative File creation approaches
+        pdf_file = None
+
+        # Approach 1: Try with absolute path string
+        try:
+            pdf_file = File(filepath=str(pdf_path.absolute()))
+            logger.info("File object created with absolute path")
+        except Exception as e1:
+            logger.warning(f"Approach 1 failed: {e1}")
+
+            # Approach 2: Try with relative path
+            try:
+                pdf_file = File(filepath=str(pdf_path))
+                logger.info("File object created with relative path")
+            except Exception as e2:
+                logger.warning(f"Approach 2 failed: {e2}")
+
+                # Approach 3: Try reading file content
+                try:
+                    with open(pdf_path, 'rb') as f:
+                        content = f.read()
+                    pdf_file = File(content=content, name=pdf_path.name)
+                    logger.info("File object created with content")
+                except Exception as e3:
+                    logger.error(f"All File creation approaches failed: {e1}, {e2}, {e3}")
+                    return ExtractionResult(
+                        success=False,
+                        aadhar_number=None,
+                        address=None,
+                        mobile_number=None,
+                        source='pdf',
+                        extraction_method='folder_method',
+                        error=f"Failed to create File object: {str(e3)}"
+                    )
+
+        if pdf_file is None:
+            raise Exception("Failed to create File object")
+
+        # Run the agent
         response = pdf_agent.run(
             "Please extract the Aadhaar number, complete address, and mobile/phone number from this document. "
             "Look carefully for any 10-digit mobile numbers that typically start with 6, 7, 8, or 9. "
             "The mobile number might be listed as 'Mobile', 'Phone', or just appear as a 10-digit number.",
-            files=[File(filepath=pdf_path)]
+            files=[pdf_file]
         )
 
-        if response.content:
+        if response and response.content:
             return ExtractionResult(
                 success=True,
                 aadhar_number=response.content.aadharNumber,
@@ -1440,7 +1479,7 @@ def extract_aadhaar_info(pdf_path: Path) -> ExtractionResult:
             error=str(e)
         )
 # API Routes
-@app.get("/", response_class=HTMLResponse)
+@app.get("/billing", response_class=HTMLResponse)
 async def read_root():
     """Serve the main HTML page"""
     return FileResponse("static/index.html")
@@ -1791,7 +1830,7 @@ async def upload_aadhaar_images(
     customer_name: str = Form(...),
     aadhaar_number: Optional[str] = Form(None)
 ):
-    """Upload Aadhaar front and back images for extraction"""
+    """Upload Aadhaar front and back images for extraction with auto-save to user folder"""
     try:
         logger.info(f"Processing uploaded images for customer: {customer_name}")
 
@@ -1803,7 +1842,7 @@ async def upload_aadhaar_images(
 
         uploaded_paths = {}
 
-        # Validate and save front image
+        # Validate and save front image temporarily
         if front_image:
             if not front_image.content_type.startswith('image/'):
                 raise HTTPException(status_code=400, detail="Front file must be an image")
@@ -1811,11 +1850,10 @@ async def upload_aadhaar_images(
             front_path = save_uploaded_image(front_image, "front")
             uploaded_paths['front_image_path'] = front_path
 
-            # Validate image quality
             if not validate_image_quality(front_path):
                 logger.warning("Front image quality may be insufficient")
 
-        # Validate and save back image
+        # Validate and save back image temporarily
         if back_image:
             if not back_image.content_type.startswith('image/'):
                 raise HTTPException(status_code=400, detail="Back file must be an image")
@@ -1823,7 +1861,6 @@ async def upload_aadhaar_images(
             back_path = save_uploaded_image(back_image, "back")
             uploaded_paths['back_image_path'] = back_path
 
-            # Validate image quality
             if not validate_image_quality(back_path):
                 logger.warning("Back image quality may be insufficient")
 
@@ -1833,29 +1870,102 @@ async def upload_aadhaar_images(
             back_image_path=uploaded_paths.get('back_image_path')
         )
 
-        # Debug logging
+        # Log extraction results
         logger.info(f"Extraction result: {result}")
-        if result.image_results:
-            logger.info(f"Front result: {result.image_results.get('front_result')}")
-            logger.info(f"Back result: {result.image_results.get('back_result')}")
-            logger.info(f"Combined result: {result.image_results.get('combined_result')}")
 
-        # If extraction was successful, log the results
-        if result.success:
+        if result.success and result.name:
+            extracted_name = result.name
+            extracted_aadhaar = result.aadhar_number
+
+            logger.info(f"Successfully extracted: Name='{extracted_name}', Aadhaar='{extracted_aadhaar}'")
+
+            # Try to find existing user folder
+            user_folder = find_user_folder_by_name(extracted_name)
+
+            if user_folder:
+                logger.info(f"Found existing folder for '{extracted_name}': {user_folder.name}")
+
+                # Save images to existing folder
+                save_results = await save_aadhaar_images_to_folder(
+                    folder_path=user_folder,
+                    name=extracted_name,
+                    front_image_path=uploaded_paths.get('front_image_path'),
+                    back_image_path=uploaded_paths.get('back_image_path')
+                )
+
+                logger.info(f"Image save results: {save_results}")
+
+                # Update the result with folder information
+                result.folder_path = str(user_folder)
+                result.images_saved = save_results
+
+                print(f"\n{'='*60}")
+                print(f"IMAGES SAVED TO EXISTING FOLDER")
+                print(f"{'='*60}")
+                print(f"Customer: {extracted_name}")
+                print(f"Existing Folder: {user_folder.name}")
+                print(f"Front Image: {save_results.get('front_saved', 'Not saved')}")
+                print(f"Back Image: {save_results.get('back_saved', 'Not saved')}")
+                print(f"{'='*60}\n")
+
+            elif extracted_aadhaar:
+                # Create new folder if no existing folder found and we have Aadhaar number
+                logger.info(f"No existing folder found for '{extracted_name}'. Creating new folder.")
+
+                try:
+                    user_folder = create_user_folder_if_not_exists(extracted_name, extracted_aadhaar)
+
+                    # Save images to new folder
+                    save_results = await save_aadhaar_images_to_folder(
+                        folder_path=user_folder,
+                        name=extracted_name,
+                        front_image_path=uploaded_paths.get('front_image_path'),
+                        back_image_path=uploaded_paths.get('back_image_path')
+                    )
+
+                    result.folder_path = str(user_folder)
+                    result.images_saved = save_results
+
+                    print(f"\n{'='*60}")
+                    print(f"NEW FOLDER CREATED AND IMAGES SAVED")
+                    print(f"{'='*60}")
+                    print(f"Customer: {extracted_name}")
+                    print(f"New Folder: {user_folder.name}")
+                    print(f"Front Image: {save_results.get('front_saved', 'Not saved')}")
+                    print(f"Back Image: {save_results.get('back_saved', 'Not saved')}")
+                    print(f"{'='*60}\n")
+
+                except Exception as folder_error:
+                    logger.error(f"Failed to create new folder: {folder_error}")
+                    # Continue without saving to folder
+            else:
+                logger.warning(f"Cannot save images: No existing folder found and no Aadhaar number extracted")
+
+            # Set extracted data for response
+            window_extracted_data = {
+                'name': result.name or '',
+                'aadhaar': result.aadhar_number or '',
+                'address': result.address or '',
+                'mobile': result.mobile_number or '',
+                'folder': getattr(result, 'folder_path', 'Image Upload'),
+                'extraction_method': 'enhanced_image_upload_with_save'
+            }
+
+            # Log success
             print(f"\n{'='*60}")
-            print(f"IMAGE UPLOAD EXTRACTION SUCCESSFUL")
+            print(f"ENHANCED IMAGE EXTRACTION SUCCESSFUL")
             print(f"{'='*60}")
-            print(f"Customer Name (provided): {customer_name}")
             print(f"Extracted Name: {result.name}")
             print(f"Aadhaar Number: {result.aadhar_number}")
             print(f"Address: {result.address}")
             print(f"Mobile Number: {result.mobile_number}")
-            print(f"Date of Birth: {result.date_of_birth}")
-            print(f"Gender: {result.gender}")
-            print(f"Father's Name: {result.father_name}")
-            print(f"Uploaded Files: {list(uploaded_paths.keys())}")
+            print(f"Enhancement: Auto-crop + Quality boost applied")
+            print(f"Folder Management: {'Saved to existing folder' if user_folder else 'No folder action'}")
+            print(f"Method: Enhanced Image Upload with Auto-Save")
             print(f"{'='*60}\n")
+
         else:
+            logger.warning("Extraction failed or no name found - cannot save to user folder")
             print(f"\n{'='*60}")
             print(f"IMAGE UPLOAD EXTRACTION FAILED")
             print(f"{'='*60}")
@@ -1863,6 +1973,15 @@ async def upload_aadhaar_images(
             print(f"Error: {result.error}")
             print(f"Uploaded Files: {list(uploaded_paths.keys())}")
             print(f"{'='*60}\n")
+
+        # Clean up temporary files
+        try:
+            for temp_path in uploaded_paths.values():
+                if temp_path and Path(temp_path).exists():
+                    Path(temp_path).unlink()
+                    logger.debug(f"Cleaned up temporary file: {temp_path}")
+        except Exception as cleanup_error:
+            logger.warning(f"Error cleaning up temporary files: {cleanup_error}")
 
         return result
 
@@ -1872,15 +1991,51 @@ async def upload_aadhaar_images(
         logger.error(f"Error in upload Aadhaar images: {e}")
         raise HTTPException(status_code=500, detail=f"Image upload processing failed: {str(e)}")
 
+# Add this new endpoint to check folder status
+@app.get("/check-user-folder/{name}")
+async def check_user_folder(name: str):
+    """Check if a user folder exists for the given name"""
+    try:
+        user_folder = find_user_folder_by_name(name)
+
+        if user_folder:
+            # List existing files in the folder
+            existing_files = []
+            for file in user_folder.iterdir():
+                if file.is_file() and file.suffix.lower() in ['.jpg', '.jpeg', '.png', '.pdf']:
+                    existing_files.append(file.name)
+
+            return {
+                "folder_exists": True,
+                "folder_path": str(user_folder),
+                "folder_name": user_folder.name,
+                "existing_files": existing_files
+            }
+        else:
+            return {
+                "folder_exists": False,
+                "message": f"No folder found for name: {name}"
+            }
+
+    except Exception as e:
+        logger.error(f"Error checking user folder: {e}")
+        return {
+            "folder_exists": False,
+            "error": str(e)
+        }
+
 @app.post("/process-with-images", response_model=ExtractionResult)
 async def process_customer_with_images(request: ImageProcessRequest):
     """Process customer folder with PDF + Image fallback support"""
     folder_path = Path(request.folder_path)
 
-    if not folder_path.exists() or not folder_path.is_dir():
-        raise HTTPException(status_code=404, detail="Customer folder not found")
+    logger.info(f"=== ENHANCED PROCESSING START ===")
+    logger.info(f"Folder path: {folder_path}")
+    logger.info(f"Use images if PDF fails: {request.use_images_if_pdf_fails}")
 
-    logger.info(f"Processing customer folder with image support: {folder_path}")
+    if not folder_path.exists() or not folder_path.is_dir():
+        logger.error(f"Customer folder not found: {folder_path}")
+        raise HTTPException(status_code=404, detail="Customer folder not found")
 
     try:
         folder_parts = folder_path.name.split('_')
@@ -1892,50 +2047,81 @@ async def process_customer_with_images(request: ImageProcessRequest):
             if name_match:
                 person_name = name_match.group(1)
 
-        # First, try PDF extraction
+        # STEP 1: Try the original PDF processing method first
         expected_uid_filename = create_uid_filename(person_name)
         logger.info(f"Looking for UID file: {expected_uid_filename}")
 
         uid_file_path = find_uid_file(folder_path, expected_uid_filename)
-        pdf_result = None
 
         if uid_file_path:
             logger.info(f"Found UID file: {uid_file_path}")
-            pdf_result = extract_aadhaar_info(uid_file_path)
+            logger.info("Using original PDF processing method...")
 
-            if pdf_result.success:
-                logger.info("PDF extraction successful, returning PDF results")
-                return pdf_result
+            try:
+                # Use the original extract_aadhaar_info_original function
+                pdf_result = extract_aadhaar_info_original(uid_file_path)
+                logger.info(f"Original PDF extraction success: {pdf_result.success}")
 
-        # If PDF failed or not found, try image extraction
+                if pdf_result.success:
+                    logger.info("Original PDF extraction successful, returning results")
+                    logger.info(f"PDF extracted data: Aadhaar={pdf_result.aadhar_number}, Mobile={pdf_result.mobile_number}")
+                    return pdf_result
+                else:
+                    logger.warning(f"Original PDF extraction failed: {pdf_result.error}")
+            except Exception as pdf_error:
+                logger.error(f"Original PDF processing failed: {pdf_error}")
+        else:
+            logger.warning(f"No UID file found for: {expected_uid_filename}")
+
+        # STEP 2: Try image extraction if PDF failed and images are available
         if request.use_images_if_pdf_fails:
-            logger.info("PDF extraction failed or not found, attempting image extraction...")
+            logger.info("PDF extraction failed or not found, checking for images...")
 
             image_files = find_aadhaar_images(folder_path)
+            logger.info(f"Image scan result: {image_files}")
 
-            if image_files['front'] or image_files['back']:
-                logger.info(f"Found images - Front: {image_files['front']}, Back: {image_files['back']}")
+            # Check if we actually have usable images
+            has_images = bool(image_files['front'] or image_files['back'])
+
+            if has_images:
+                logger.info(f"Found usable images - Front: {image_files['front']}, Back: {image_files['back']}")
 
                 image_result = extract_aadhaar_info_from_images_enhanced(
                     front_image_path=image_files['front'],
                     back_image_path=image_files['back']
                 )
 
+                logger.info(f"Image extraction success: {image_result.success}")
                 if image_result.success:
-                    # Add folder information
-                    image_result.extraction_method = 'folder_method'
+                    image_result.extraction_method = 'folder_method_images'
                     logger.info("Image extraction successful from folder")
+                    logger.info(f"Image extracted data: Aadhaar={image_result.aadhar_number}, Mobile={image_result.mobile_number}")
                     return image_result
                 else:
                     logger.warning(f"Image extraction failed: {image_result.error}")
             else:
-                logger.warning("No images found in folder")
+                logger.info("No usable images found in folder")
 
-        # If both methods failed
-        error_msg = "Both PDF and image extraction failed"
-        if pdf_result and pdf_result.error:
-            error_msg += f". PDF error: {pdf_result.error}"
+        # STEP 3: Return error if both methods failed
+        error_msg = "Document processing failed"
+        error_details = []
 
+        if uid_file_path:
+            error_details.append("PDF processing failed")
+        else:
+            error_details.append("No PDF file found")
+
+        if request.use_images_if_pdf_fails:
+            if not has_images:
+                error_details.append("No images found in folder")
+            else:
+                error_details.append("Image processing also failed")
+        else:
+            error_details.append("Image fallback disabled")
+
+        error_msg += ". " + "; ".join(error_details)
+
+        logger.error(error_msg)
         return ExtractionResult(
             success=False,
             error=error_msg,
@@ -1946,7 +2132,50 @@ async def process_customer_with_images(request: ImageProcessRequest):
     except Exception as e:
         logger.error(f"Error processing customer with images: {e}")
         raise HTTPException(status_code=500, detail=f"Processing failed: {str(e)}")
+def extract_aadhaar_info_original(pdf_path: Path) -> ExtractionResult:
+    """Original PDF extraction method that was working"""
+    try:
+        logger.info(f"Processing PDF with original method: {pdf_path}")
 
+        response = pdf_agent.run(
+            "Please extract the Aadhaar number, complete address, and mobile/phone number from this document. "
+            "Look carefully for any 10-digit mobile numbers that typically start with 6, 7, 8, or 9. "
+            "The mobile number might be listed as 'Mobile', 'Phone', or just appear as a 10-digit number.",
+            files=[File(filepath=pdf_path)]
+        )
+
+        if response.content:
+            return ExtractionResult(
+                success=True,
+                aadhar_number=response.content.aadharNumber,
+                address=response.content.address,
+                mobile_number=response.content.mobileNumber,
+                source='pdf',
+                extraction_method='folder_method_original',
+                error=None
+            )
+        else:
+            return ExtractionResult(
+                success=False,
+                aadhar_number=None,
+                address=None,
+                mobile_number=None,
+                source='pdf',
+                extraction_method='folder_method_original',
+                error='No content in response'
+            )
+
+    except Exception as e:
+        logger.error(f"Error processing {pdf_path} with original method: {str(e)}")
+        return ExtractionResult(
+            success=False,
+            aadhar_number=None,
+            address=None,
+            mobile_number=None,
+            source='pdf',
+            extraction_method='folder_method_original',
+            error=str(e)
+        )
 @app.post("/process", response_model=ExtractionResult)
 async def process_customer(request: ProcessRequest):
     """Process the selected customer folder to extract Aadhaar information (PDF only - legacy method)"""
@@ -2643,6 +2872,165 @@ async def test_with_sample_images():
     except Exception as e:
         logger.error(f"Error in sample test: {e}")
         raise HTTPException(status_code=500, detail=f"Sample test failed: {str(e)}")
+
+def find_user_folder_by_name(name: str) -> Optional[Path]:
+    """Find existing user folder by name in the Data directory"""
+    try:
+        base_path = Path(DATA_FOLDER_PATH)
+        if not base_path.exists():
+            logger.warning(f"Data folder does not exist: {DATA_FOLDER_PATH}")
+            return None
+
+        # Clean the extracted name for comparison
+        clean_name = clean_name_for_comparison(name)
+        logger.info(f"Searching for folder matching name: '{name}' (cleaned: '{clean_name}')")
+
+        for folder in base_path.iterdir():
+            if not folder.is_dir():
+                continue
+
+            # Parse folder name: format is usually "### NAME_AADHAAR"
+            folder_parts = folder.name.split('_')
+            if len(folder_parts) >= 2:
+                # Extract name part (everything except last part which is Aadhaar number)
+                name_part = '_'.join(folder_parts[:-1])
+
+                # Remove leading numbers (e.g., "001 John Doe" -> "John Doe")
+                name_match = re.match(r'^\d{3}\s+(.+)$', name_part)
+                if name_match:
+                    folder_name = name_match.group(1)
+                    clean_folder_name = clean_name_for_comparison(folder_name)
+
+                    logger.debug(f"Comparing '{clean_name}' with folder '{clean_folder_name}'")
+
+                    # Check for exact match or partial match
+                    if (clean_name == clean_folder_name or
+                        clean_name in clean_folder_name or
+                        clean_folder_name in clean_name):
+
+                        logger.info(f"Found matching folder: {folder.name}")
+                        return folder
+
+        logger.info(f"No matching folder found for name: '{name}'")
+        return None
+
+    except Exception as e:
+        logger.error(f"Error searching for user folder: {e}")
+        return None
+
+def clean_name_for_comparison(name: str) -> str:
+    """Clean name for better comparison"""
+    if not name:
+        return ""
+
+    # Convert to uppercase, remove extra spaces, special characters
+    cleaned = re.sub(r'[^\w\s]', '', name.upper())
+    cleaned = ' '.join(cleaned.split())  # Remove extra spaces
+    return cleaned
+import io
+async def save_aadhaar_images_to_folder(
+    folder_path: Path,
+    name: str,
+    front_image_file: Optional[UploadFile] = None,
+    back_image_file: Optional[UploadFile] = None,
+    front_image_path: Optional[str] = None,
+    back_image_path: Optional[str] = None
+) -> Dict[str, str]:
+    """Save Aadhaar images to the user's existing folder"""
+    try:
+        results = {"front_saved": None, "back_saved": None, "folder_path": str(folder_path)}
+
+        # Clean username for filename
+        clean_username = re.sub(r'[^\w\s-]', '', name).strip()
+        clean_username = re.sub(r'[-\s]+', '_', clean_username).upper()
+
+        logger.info(f"Saving images to folder: {folder_path}")
+        logger.info(f"Clean username for files: {clean_username}")
+
+        # Save front image
+        if front_image_file or front_image_path:
+            front_filename = f"UID_{clean_username}_FRONT.jpg"
+            front_save_path = folder_path / front_filename
+
+            if front_image_file:
+                # Save from uploaded file
+                await save_image_file(front_image_file, front_save_path)
+            elif front_image_path and Path(front_image_path).exists():
+                # Copy from enhanced image path
+                shutil.copy2(front_image_path, front_save_path)
+
+            if front_save_path.exists():
+                results["front_saved"] = str(front_save_path)
+                logger.info(f"Front image saved: {front_filename}")
+
+        # Save back image
+        if back_image_file or back_image_path:
+            back_filename = f"UID_{clean_username}_BACK.jpg"
+            back_save_path = folder_path / back_filename
+
+            if back_image_file:
+                # Save from uploaded file
+                await save_image_file(back_image_file, back_save_path)
+            elif back_image_path and Path(back_image_path).exists():
+                # Copy from enhanced image path
+                shutil.copy2(back_image_path, back_save_path)
+
+            if back_save_path.exists():
+                results["back_saved"] = str(back_save_path)
+                logger.info(f"Back image saved: {back_filename}")
+
+        return results
+
+    except Exception as e:
+        logger.error(f"Error saving Aadhaar images: {e}")
+        return {"error": str(e), "folder_path": str(folder_path)}
+
+async def save_image_file(image_file: UploadFile, save_path: Path) -> bool:
+    """Save uploaded image file to specified path with optimization"""
+    try:
+        # Read the uploaded file
+        contents = await image_file.read()
+
+        # Open with PIL for optimization
+        with Image.open(io.BytesIO(contents)) as img:
+            # Convert to RGB if necessary
+            if img.mode in ('RGBA', 'P'):
+                img = img.convert('RGB')
+
+            # Optimize and save
+            img.save(save_path, 'JPEG', quality=85, optimize=True)
+
+        logger.info(f"Image saved successfully: {save_path}")
+        return True
+
+    except Exception as e:
+        logger.error(f"Error saving image file: {e}")
+        return False
+
+def create_user_folder_if_not_exists(name: str, aadhaar_number: str) -> Path:
+    """Create a new user folder if it doesn't exist"""
+    try:
+        base_path = Path(DATA_FOLDER_PATH)
+        base_path.mkdir(exist_ok=True)
+
+        # Generate folder name: "001 NAME_AADHAAR"
+        existing_folders = [f for f in base_path.iterdir() if f.is_dir()]
+        next_number = len(existing_folders) + 1
+
+        clean_name = re.sub(r'[^\w\s-]', '', name).strip()
+        clean_name = re.sub(r'[-\s]+', '_', clean_name).upper()
+
+        folder_name = f"{next_number:03d} {clean_name}_{aadhaar_number}"
+        folder_path = base_path / folder_name
+
+        folder_path.mkdir(exist_ok=True)
+        logger.info(f"Created new user folder: {folder_name}")
+
+        return folder_path
+
+    except Exception as e:
+        logger.error(f"Error creating user folder: {e}")
+        raise
 
 if __name__ == "__main__":
     import uvicorn

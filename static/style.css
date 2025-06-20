@@ -1565,3 +1565,416 @@ body {
     background: white;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
+
+/* Add these CSS styles to your existing style.css or index.html <style> section */
+
+/* Enhancement Status Indicators */
+.enhancement-status {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 600;
+    z-index: 15;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    animation: fadeInSlide 0.4s ease-out;
+}
+
+.enhancement-status.processing {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border-color: #2196f3;
+    animation: pulseBlue 2s infinite;
+}
+
+.enhancement-status.completed {
+    background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+    border-color: #4caf50;
+    animation: bounceIn 0.6s ease-out;
+}
+
+.enhancement-status.error {
+    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border-color: #ff9800;
+}
+
+/* Enhancement Badge */
+.enhancement-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: linear-gradient(135deg, #4caf50, #26a69a);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 11px;
+    font-weight: 700;
+    z-index: 15;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    animation: shimmer 2s infinite;
+}
+
+/* Enhanced Upload Areas */
+.upload-area.enhanced {
+    border-color: #4caf50;
+    background: linear-gradient(135deg, #e8f5e8, #f1f8e9);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+.camera-container.enhanced {
+    border: 2px solid #4caf50;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.2);
+}
+
+/* Processing Overlay */
+.processing-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.75rem;
+    z-index: 20;
+    backdrop-filter: blur(2px);
+}
+
+.processing-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #e3f2fd;
+    border-top: 3px solid #2196f3;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 12px;
+}
+
+.processing-text {
+    font-size: 12px;
+    font-weight: 600;
+    color: #1976d2;
+    text-align: center;
+}
+
+/* Enhanced Process Button */
+.btn-primary.enhanced {
+    background: linear-gradient(135deg, #4caf50, #45a049);
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary.enhanced::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: left 0.6s;
+}
+
+.btn-primary.enhanced:hover::before {
+    left: 100%;
+}
+
+/* Enhanced Preview Containers */
+.upload-preview.enhanced,
+.camera-preview.enhanced {
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-preview.enhanced::after,
+.camera-preview.enhanced::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.1), transparent);
+    pointer-events: none;
+}
+
+/* Progress Indicators */
+.enhancement-progress {
+    position: absolute;
+    bottom: 8px;
+    left: 8px;
+    right: 8px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #1976d2;
+    text-align: center;
+    z-index: 15;
+}
+
+.enhancement-progress-bar {
+    width: 100%;
+    height: 2px;
+    background: #e3f2fd;
+    border-radius: 1px;
+    margin-top: 4px;
+    overflow: hidden;
+}
+
+.enhancement-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2196f3, #21cbf3);
+    border-radius: 1px;
+    animation: progressSlide 2s ease-in-out infinite;
+}
+
+/* Comparison View */
+.image-comparison {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f8f9fa;
+    border-radius: 0.75rem;
+    border: 1px solid #e9ecef;
+}
+
+.comparison-item {
+    text-align: center;
+}
+
+.comparison-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.comparison-image {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* Animation Keyframes */
+@keyframes fadeInSlide {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulseBlue {
+    0%, 100% {
+        box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    }
+    50% {
+        box-shadow: 0 4px 16px rgba(33, 150, 243, 0.6);
+    }
+}
+
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes progressSlide {
+    0% {
+        transform: translateX(-100%);
+    }
+    50% {
+        transform: translateX(0%);
+    }
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* Enhancement Info Panel */
+.enhancement-info {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #e3f2fd, #f3e5f5);
+    border-radius: 0.75rem;
+    border-left: 4px solid #2196f3;
+}
+
+.enhancement-info h4 {
+    color: #1565c0;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.enhancement-info p {
+    color: #424242;
+    font-size: 12px;
+    line-height: 1.4;
+    margin: 0;
+}
+
+.enhancement-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.enhancement-feature {
+    background: rgba(255, 255, 255, 0.8);
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #1565c0;
+    border: 1px solid rgba(21, 101, 192, 0.2);
+}
+
+/* Toast Enhancements */
+.toast.enhanced {
+    background: linear-gradient(135deg, #e8f5e8, #c8e6c9);
+    border: 2px solid #4caf50;
+    color: #2e7d32;
+}
+
+.toast.processing {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    border: 2px solid #2196f3;
+    color: #1565c0;
+}
+
+/* Mobile Responsive Enhancements */
+@media (max-width: 768px) {
+    .enhancement-status {
+        padding: 4px 8px;
+        font-size: 10px;
+    }
+
+    .enhancement-badge {
+        padding: 4px 8px;
+        font-size: 9px;
+    }
+
+    .image-comparison {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+
+    .enhancement-info {
+        padding: 0.75rem;
+    }
+
+    .enhancement-features {
+        gap: 4px;
+    }
+
+    .enhancement-feature {
+        padding: 2px 6px;
+        font-size: 9px;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .enhancement-status {
+        background: rgba(30, 30, 30, 0.95);
+        color: #ffffff;
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .enhancement-info {
+        background: linear-gradient(135deg, #1a237e, #3949ab);
+        color: #ffffff;
+    }
+
+    .enhancement-feature {
+        background: rgba(255, 255, 255, 0.1);
+        color: #bbdefb;
+        border-color: rgba(187, 222, 251, 0.3);
+    }
+}
+
+/* Accessibility Improvements */
+.enhancement-status:focus,
+.enhancement-badge:focus {
+    outline: 2px solid #2196f3;
+    outline-offset: 2px;
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    .enhancement-status,
+    .enhancement-badge {
+        border-width: 2px;
+        font-weight: 700;
+    }
+
+    .enhancement-badge {
+        background: #388e3c;
+    }
+
+    .enhancement-status.processing {
+        background: #1976d2;
+        color: #ffffff;
+    }
+
+    .enhancement-status.completed {
+        background: #388e3c;
+        color: #ffffff;
+    }
+
+    .enhancement-status.error {
+        background: #f57c00;
+        color: #ffffff;
+    }
+}

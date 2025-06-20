@@ -16,17 +16,17 @@ const navLinks = document.querySelectorAll('.nav-link');
 
 // ===== API CONFIGURATION =====
 const API_BASE_URL = window.location.origin;
+// Update the API endpoints to remove products endpoint
 const API_ENDPOINTS = {
     stats: '/api/dashboard/stats',
     activities: '/api/dashboard/activities',
-    products: '/api/dashboard/products',
+    // Removed products: '/api/dashboard/products',
     revenueData: '/api/dashboard/revenue-data',
     salesDistribution: '/api/dashboard/sales-distribution',
     inventory: '/api/dashboard/inventory',
     addActivity: '/api/dashboard/add-activity',
     billGenerated: '/api/dashboard/bill-generated'
 };
-
 // ===== API FUNCTIONS =====
 async function fetchAPI(endpoint, options = {}) {
     try {
@@ -122,7 +122,7 @@ function initDashboard() {
             await Promise.all([
                 updateStats(),
                 populateActivityList(),
-                populateProductsList(),
+                // Removed populateProductsList()
                 populateInventoryGrid()
             ]);
 
@@ -147,6 +147,7 @@ function initDashboard() {
         }
     }, 1000);
 }
+
 
 function showLoading() {
     if (loadingOverlay) {
@@ -296,6 +297,12 @@ function loadSavedTheme() {
 
 // ===== NAVIGATION =====
 function navigateToPage(page) {
+    // Special handling for billing page - redirect to /billing
+    if (page === 'billing') {
+        window.location.href = '/billing';
+        return;
+    }
+
     // Hide all content sections
     const contentSections = document.querySelectorAll('.dashboard-content, .page-content');
     contentSections.forEach(section => {
@@ -332,7 +339,6 @@ function navigateToPage(page) {
         sidebar.classList.remove('open');
     }
 }
-
 function capitalizeFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
@@ -1378,7 +1384,7 @@ window.addEventListener('unhandledrejection', function(e) {
     });
 
     e.preventDefault();
-    showErrorMessage('A network error occurred. Please check your connection.');
+    showErrorMessage('A network error occurred. Please check your connectizon.');
 });
 
 // ===== CLEANUP =====

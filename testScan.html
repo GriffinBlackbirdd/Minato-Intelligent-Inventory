@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aadhaar Card Auto-Crop & Enhancement</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .title {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .input-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px dashed #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .status.loading {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .image-container {
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            background: white;
+        }
+
+        .image-container h3 {
+            margin-top: 0;
+            color: #333;
+            text-align: center;
+        }
+
+        .image-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .image-container canvas {
+            width: 100%;
+            height: auto;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .processing-steps {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 5px;
+        }
+
+        .step {
+            padding: 5px 0;
+            color: #666;
+        }
+
+        .step.active {
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        .step.completed {
+            color: #28a745;
+        }
+
+        @media (max-width: 768px) {
+            .results {
+                grid-template-columns: 1fr;
+            }
+
+            .buttons {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">🎯 Aadhaar Card Auto-Crop & Enhancement</h1>
+        <p style="text-align: center; color: #666; margin-bottom: 30px;">
+            Upload an Aadhaar card image and watch it get automatically cropped and enhanced like CamScanner!
+        </p>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label for="imageInput">Choose Aadhaar Card Image:</label>
+                <input type="file" id="imageInput" accept="image/*">
+            </div>
+
+            <div class="buttons">
+                <button class="btn-primary" id="processBtn" disabled>
+                    🔄 Process Image
+                </button>
+                <button class="btn-secondary" id="resetBtn">
+                    🗑️ Reset
+                </button>
+                <button class="btn-success" id="downloadBtn" style="display: none;">
+                    💾 Download Enhanced Image
+                </button>
+            </div>
+        </div>
+
+        <div id="status" class="status" style="display: none;"></div>
+
+        <div class="processing-steps" id="processingSteps" style="display: none;">
+            <h4>Processing Steps:</h4>
+            <div class="step" id="step1">1. Loading image...</div>
+            <div class="step" id="step2">2. Converting to grayscale...</div>
+            <div class="step" id="step3">3. Detecting edges...</div>
+            <div class="step" id="step4">4. Finding card boundaries...</div>
+            <div class="step" id="step5">5. Auto-cropping card...</div>
+            <div class="step" id="step6">6. Enhancing image quality...</div>
+            <div class="step" id="step7">7. Finalizing result...</div>
+        </div>
+
+        <div class="results" id="results" style="display: none;">
+            <div class="image-container">
+                <h3>📷 Original Image</h3>
+                <img id="originalImage" src="" alt="Original">
+            </div>
+
+            <div class="image-container">
+                <h3>✨ Enhanced Result</h3>
+                <canvas id="resultCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- OpenCV.js -->
+    <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+
+    <script>
+        let cv = null;
+        let originalMat = null;
+        let processedImage = null;
+
+        // DOM Elements
+        const imageInput = document.getElementById('imageInput');
+        const processBtn = document.getElementById('processBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const status = document.getElementById('status');
+        const processingSteps = document.getElementById('processingSteps');
+        const results = document.getElementById('results');
+        const originalImage = document.getElementById('originalImage');
+        const resultCanvas = document.getElementById('resultCanvas');
+
+        // OpenCV.js ready callback
+        function onOpenCvReady() {
+            cv = window.cv;
+            showStatus('✅ OpenCV.js loaded successfully!', 'success');
+            console.log('OpenCV.js version:', cv.getBuildInformation());
+        }
+
+        // Event Listeners
+        imageInput.addEventListener('change', handleImageUpload);
+        processBtn.addEventListener('click', processAadhaarCard);
+        resetBtn.addEventListener('click', resetAll);
+        downloadBtn.addEventListener('click', downloadResult);
+
+        function handleImageUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showStatus('❌ Please select a valid image file', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                originalImage.src = e.target.result;
+                originalImage.onload = function() {
+                    processBtn.disabled = false;
+                    showStatus('📸 Image loaded! Ready to process.', 'success');
+                };
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function showStatus(message, type) {
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.style.display = 'block';
+        }
+
+        function updateStep(stepNumber, isActive = false, isCompleted = false) {
+            const step = document.getElementById(`step${stepNumber}`);
+            if (!step) return;
+
+            step.className = 'step';
+            if (isCompleted) step.classList.add('completed');
+            else if (isActive) step.classList.add('active');
+        }
+
+        async function processAadhaarCard() {
+            if (!cv || !originalImage.src) {
+                showStatus('❌ OpenCV not ready or no image loaded', 'error');
+                return;
+            }
+
+            try {
+                showStatus('🔄 Processing Aadhaar card...', 'loading');
+                processingSteps.style.display = 'block';
+                processBtn.disabled = true;
+
+                // Step 1: Load image into OpenCV Mat
+                updateStep(1, true);
+                await sleep(500);
+
+                const img = cv.imread(originalImage);
+                originalMat = img.clone();
+                console.log('Original image size:', img.rows, 'x', img.cols);
+                updateStep(1, false, true);
+
+                // Step 2: Convert to grayscale
+                updateStep(2, true);
+                await sleep(300);
+
+                const gray = new cv.Mat();
+                cv.cvtColor(img, gray, cv.COLOR_RGBA2GRAY);
+                updateStep(2, false, true);
+
+                // Step 3: Enhanced edge detection
+                updateStep(3, true);
+                await sleep(300);
+
+                const processed = new cv.Mat();
+                const blurred = new cv.Mat();
+                const edges = new cv.Mat();
+
+                // Multiple blur and edge detection for better results
+                cv.bilateralFilter(gray, processed, 9, 75, 75);
+                cv.GaussianBlur(processed, blurred, new cv.Size(5, 5), 0);
+
+                // Adaptive threshold for better edge detection
+                const thresh = new cv.Mat();
+                cv.adaptiveThreshold(blurred, thresh, 255, cv.ADAPTIVE_THRESH_GAUSSIAN_C, cv.THRESH_BINARY, 11, 2);
+
+                // Canny edge detection with different parameters
+                cv.Canny(blurred, edges, 30, 80, 3);
+
+                // Morphological operations to improve edge connectivity
+                const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
+                cv.morphologyEx(edges, edges, cv.MORPH_CLOSE, kernel);
+                cv.morphologyEx(edges, edges, cv.MORPH_DILATE, kernel);
+
+                updateStep(3, false, true);
+
+                // Step 4: Find card boundaries with improved algorithm
+                updateStep(4, true);
+                await sleep(500);
+
+                const contours = new cv.MatVector();
+                const hierarchy = new cv.Mat();
+
+                cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+                console.log('Found contours:', contours.size());
+
+                let bestContour = null;
+                let maxScore = 0;
+                const imageArea = img.rows * img.cols;
+
+                for (let i = 0; i < contours.size(); i++) {
+                    const contour = contours.get(i);
+                    const area = cv.contourArea(contour);
+                    const perimeter = cv.arcLength(contour, true);
+
+                    // Skip very small contours
+                    if (area < imageArea * 0.1) {
+                        contour.delete();
+                        continue;
+                    }
+
+                    // Approximate contour to polygon
+                    const approx = new cv.Mat();
+                    const epsilon = 0.02 * perimeter;
+                    cv.approxPolyDP(contour, approx, epsilon, true);
+
+                    console.log(`Contour ${i}: area=${area}, vertices=${approx.rows}, area ratio=${(area/imageArea).toFixed(3)}`);
+
+                    // Score based on area, vertex count, and aspect ratio
+                    let score = 0;
+
+                    // Area score (prefer larger contours but not too large)
+                    const areaRatio = area / imageArea;
+                    if (areaRatio > 0.2 && areaRatio < 0.9) {
+                        score += areaRatio * 100;
+                    }
+
+                    // Vertex score (prefer 4 vertices but allow some flexibility)
+                    if (approx.rows === 4) {
+                        score += 50;
+                    } else if (approx.rows >= 4 && approx.rows <= 8) {
+                        score += 30;
+                    }
+
+                    // Aspect ratio score (Aadhaar cards are ~1.6:1 ratio)
+                    const rect = cv.boundingRect(contour);
+                    const aspectRatio = rect.width / rect.height;
+                    if (aspectRatio > 1.2 && aspectRatio < 2.0) {
+                        score += 30;
+                    }
+
+                    console.log(`Contour ${i} score: ${score}`);
+
+                    if (score > maxScore) {
+                        maxScore = score;
+                        if (bestContour) bestContour.delete();
+                        bestContour = approx.clone();
+                    }
+
+                    approx.delete();
+                    contour.delete();
+                }
+
+                console.log('Best contour score:', maxScore);
+                updateStep(4, false, true);
+
+                // Step 5: Auto-crop the card
+                updateStep(5, true);
+                await sleep(500);
+
+                let croppedImg;
+
+                if (bestContour && maxScore > 50) {
+                    console.log('Using contour-based cropping');
+                    // Apply perspective transformation
+                    croppedImg = applyPerspectiveTransform(img, bestContour);
+                } else {
+                    console.log('Using fallback cropping');
+                    // Fallback: use edge-based bounding box detection
+                    croppedImg = edgeBasedCrop(img, edges);
+                }
+                updateStep(5, false, true);
+
+                // Step 6: Enhance image quality
+                updateStep(6, true);
+                await sleep(500);
+
+                const enhanced = enhanceImage(croppedImg);
+                updateStep(6, false, true);
+
+                // Step 7: Display result
+                updateStep(7, true);
+                await sleep(300);
+
+                cv.imshow(resultCanvas, enhanced);
+                processedImage = enhanced.clone();
+                updateStep(7, false, true);
+
+                // Show results
+                results.style.display = 'grid';
+                downloadBtn.style.display = 'inline-block';
+                showStatus('✅ Aadhaar card processed successfully!', 'success');
+
+                // Cleanup
+                img.delete();
+                gray.delete();
+                processed.delete();
+                blurred.delete();
+                edges.delete();
+                thresh.delete();
+                kernel.delete();
+                contours.delete();
+                hierarchy.delete();
+                if (bestContour) bestContour.delete();
+                croppedImg.delete();
+
+            } catch (error) {
+                console.error('Processing error:', error);
+                showStatus(`❌ Error processing image: ${error.message}`, 'error');
+            } finally {
+                processBtn.disabled = false;
+            }
+        }
+
+        function applyPerspectiveTransform(img, contour) {
+            try {
+                // Get contour points
+                const points = [];
+                const data = contour.data32S;
+
+                for (let i = 0; i < contour.rows; i++) {
+                    points.push([data[i * 2], data[i * 2 + 1]]);
+                }
+
+                console.log('Contour points:', points);
+
+                // If we have more than 4 points, find the 4 corner points
+                let cornerPoints;
+                if (points.length === 4) {
+                    cornerPoints = points;
+                } else {
+                    // Find the 4 corner points from the contour
+                    cornerPoints = findCornerPoints(points);
+                }
+
+                console.log('Corner points:', cornerPoints);
+
+                // Order points: top-left, top-right, bottom-right, bottom-left
+                const orderedPoints = orderPoints(cornerPoints);
+                console.log('Ordered points:', orderedPoints);
+
+                // Calculate dimensions for the destination rectangle
+                const widthA = Math.sqrt(Math.pow(orderedPoints[2][0] - orderedPoints[3][0], 2) +
+                                       Math.pow(orderedPoints[2][1] - orderedPoints[3][1], 2));
+                const widthB = Math.sqrt(Math.pow(orderedPoints[1][0] - orderedPoints[0][0], 2) +
+                                       Math.pow(orderedPoints[1][1] - orderedPoints[0][1], 2));
+                const maxWidth = Math.max(widthA, widthB);
+
+                const heightA = Math.sqrt(Math.pow(orderedPoints[1][0] - orderedPoints[2][0], 2) +
+                                        Math.pow(orderedPoints[1][1] - orderedPoints[2][1], 2));
+                const heightB = Math.sqrt(Math.pow(orderedPoints[0][0] - orderedPoints[3][0], 2) +
+                                        Math.pow(orderedPoints[0][1] - orderedPoints[3][1], 2));
+                const maxHeight = Math.max(heightA, heightB);
+
+                // Ensure minimum dimensions and maintain Aadhaar aspect ratio
+                const aspectRatio = 1.58; // Aadhaar card aspect ratio
+                let finalWidth = Math.max(maxWidth, 600);
+                let finalHeight = Math.max(maxHeight, finalWidth / aspectRatio);
+
+                // Adjust to maintain aspect ratio
+                if (finalWidth / finalHeight > aspectRatio) {
+                    finalHeight = finalWidth / aspectRatio;
+                } else {
+                    finalWidth = finalHeight * aspectRatio;
+                }
+
+                console.log('Final dimensions:', finalWidth, 'x', finalHeight);
+
+                // Create source and destination point matrices
+                const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                    orderedPoints[0][0], orderedPoints[0][1], // top-left
+                    orderedPoints[1][0], orderedPoints[1][1], // top-right
+                    orderedPoints[2][0], orderedPoints[2][1], // bottom-right
+                    orderedPoints[3][0], orderedPoints[3][1]  // bottom-left
+                ]);
+
+                const dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                    0, 0,
+                    finalWidth, 0,
+                    finalWidth, finalHeight,
+                    0, finalHeight
+                ]);
+
+                // Get perspective transformation matrix and apply it
+                const transformMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints);
+                const result = new cv.Mat();
+                cv.warpPerspective(img, result, transformMatrix, new cv.Size(finalWidth, finalHeight));
+
+                // Cleanup
+                srcPoints.delete();
+                dstPoints.delete();
+                transformMatrix.delete();
+
+                console.log('Perspective transform applied successfully');
+                return result;
+
+            } catch (error) {
+                console.error('Perspective transform error:', error);
+                // Fallback to bounding rect crop
+                const rect = cv.boundingRect(contour);
+                console.log('Falling back to bounding rect:', rect);
+                const roi = img.roi(rect);
+                return roi;
+            }
+        }
+
+        function findCornerPoints(points) {
+            // Find the 4 extreme points
+            let topLeft = points[0];
+            let topRight = points[0];
+            let bottomLeft = points[0];
+            let bottomRight = points[0];
+
+            points.forEach(point => {
+                // Top-left: minimum sum of coordinates
+                if (point[0] + point[1] < topLeft[0] + topLeft[1]) {
+                    topLeft = point;
+                }
+                // Top-right: maximum difference (x - y)
+                if (point[0] - point[1] > topRight[0] - topRight[1]) {
+                    topRight = point;
+                }
+                // Bottom-left: minimum difference (x - y)
+                if (point[0] - point[1] < bottomLeft[0] - bottomLeft[1]) {
+                    bottomLeft = point;
+                }
+                // Bottom-right: maximum sum of coordinates
+                if (point[0] + point[1] > bottomRight[0] + bottomRight[1]) {
+                    bottomRight = point;
+                }
+            });
+
+            return [topLeft, topRight, bottomRight, bottomLeft];
+        }
+
+        function orderPoints(points) {
+            // Sort points to get consistent ordering
+            // Calculate center point
+            const centerX = points.reduce((sum, p) => sum + p[0], 0) / points.length;
+            const centerY = points.reduce((sum, p) => sum + p[1], 0) / points.length;
+
+            // Sort by angle from center
+            const sortedPoints = points.slice().sort((a, b) => {
+                const angleA = Math.atan2(a[1] - centerY, a[0] - centerX);
+                const angleB = Math.atan2(b[1] - centerY, b[0] - centerX);
+                return angleA - angleB;
+            });
+
+            // Find the top-left point (closest to origin)
+            let topLeftIndex = 0;
+            let minDistance = Infinity;
+
+            sortedPoints.forEach((point, index) => {
+                const distance = Math.sqrt(point[0] * point[0] + point[1] * point[1]);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    topLeftIndex = index;
+                }
+            });
+
+            // Reorder starting from top-left
+            const orderedPoints = [];
+            for (let i = 0; i < 4; i++) {
+                orderedPoints.push(sortedPoints[(topLeftIndex + i) % 4]);
+            }
+
+            return orderedPoints;
+        }
+
+        function edgeBasedCrop(img, edges) {
+            // Find bounding box of all edge pixels
+            const nonZero = new cv.Mat();
+            cv.findNonZero(edges, nonZero);
+
+            if (nonZero.rows === 0) {
+                console.log('No edges found, using center crop');
+                nonZero.delete();
+                return smartCrop(img);
+            }
+
+            // Find bounding rectangle of edge pixels
+            const boundingRect = cv.boundingRect(nonZero);
+            console.log('Edge-based bounding rect:', boundingRect);
+
+            // Add some padding and ensure we don't go outside image bounds
+            const padding = 20;
+            const x = Math.max(0, boundingRect.x - padding);
+            const y = Math.max(0, boundingRect.y - padding);
+            const width = Math.min(img.cols - x, boundingRect.width + 2 * padding);
+            const height = Math.min(img.rows - y, boundingRect.height + 2 * padding);
+
+            const cropRect = new cv.Rect(x, y, width, height);
+            const cropped = img.roi(cropRect);
+
+            nonZero.delete();
+            return cropped;
+        }
+
+        function smartCrop(img) {
+            // Improved fallback cropping method
+            const height = img.rows;
+            const width = img.cols;
+
+            console.log('Smart crop - original size:', width, 'x', height);
+
+            // Try to detect content area using gradient analysis
+            const gray = new cv.Mat();
+            cv.cvtColor(img, gray, cv.COLOR_RGBA2GRAY);
+
+            // Calculate gradients to find content boundaries
+            const gradX = new cv.Mat();
+            const gradY = new cv.Mat();
+            cv.Sobel(gray, gradX, cv.CV_32F, 1, 0, 3);
+            cv.Sobel(gray, gradY, cv.CV_32F, 0, 1, 3);
+
+            // Calculate gradient magnitude
+            const magnitude = new cv.Mat();
+            cv.magnitude(gradX, gradY, magnitude);
+
+            // Find content boundaries by analyzing gradient sums
+            const rowSums = [];
+            const colSums = [];
+
+            // Calculate sum of gradients for each row and column
+            for (let i = 0; i < height; i++) {
+                let rowSum = 0;
+                for (let j = 0; j < width; j++) {
+                    rowSum += magnitude.floatAt(i, j);
+                }
+                rowSums.push(rowSum);
+            }
+
+            for (let j = 0; j < width; j++) {
+                let colSum = 0;
+                for (let i = 0; i < height; i++) {
+                    colSum += magnitude.floatAt(i, j);
+                }
+                colSums.push(colSum);
+            }
+
+            // Find content boundaries (areas with high gradient activity)
+            const rowThreshold = Math.max(...rowSums) * 0.1;
+            const colThreshold = Math.max(...colSums) * 0.1;
+
+            let topBound = 0;
+            let bottomBound = height - 1;
+            let leftBound = 0;
+            let rightBound = width - 1;
+
+            // Find top boundary
+            for (let i = 0; i < height; i++) {
+                if (rowSums[i] > rowThreshold) {
+                    topBound = Math.max(0, i - 10);
+                    break;
+                }
+            }
+
+            // Find bottom boundary
+            for (let i = height - 1; i >= 0; i--) {
+                if (rowSums[i] > rowThreshold) {
+                    bottomBound = Math.min(height - 1, i + 10);
+                    break;
+                }
+            }
+
+            // Find left boundary
+            for (let j = 0; j < width; j++) {
+                if (colSums[j] > colThreshold) {
+                    leftBound = Math.max(0, j - 10);
+                    break;
+                }
+            }
+
+            // Find right boundary
+            for (let j = width - 1; j >= 0; j--) {
+                if (colSums[j] > colThreshold) {
+                    rightBound = Math.min(width - 1, j + 10);
+                    break;
+                }
+            }
+
+            // Ensure minimum crop area
+            const cropWidth = rightBound - leftBound;
+            const cropHeight = bottomBound - topBound;
+
+            if (cropWidth < width * 0.5 || cropHeight < height * 0.5) {
+                // Fallback to center crop if detected area is too small
+                const cropPercent = 0.1;
+                leftBound = Math.floor(width * cropPercent);
+                topBound = Math.floor(height * cropPercent);
+                rightBound = width - leftBound;
+                bottomBound = height - topBound;
+            }
+
+            const finalWidth = rightBound - leftBound;
+            const finalHeight = bottomBound - topBound;
+
+            console.log('Smart crop boundaries:', leftBound, topBound, finalWidth, finalHeight);
+
+            const rect = new cv.Rect(leftBound, topBound, finalWidth, finalHeight);
+            const cropped = img.roi(rect);
+
+            // Cleanup
+            gray.delete();
+            gradX.delete();
+            gradY.delete();
+            magnitude.delete();
+
+            return cropped;
+        }
+
+        function enhanceImage(img) {
+            const enhanced = new cv.Mat();
+
+            // Convert to LAB color space for better enhancement
+            const lab = new cv.Mat();
+            cv.cvtColor(img, lab, cv.COLOR_BGR2Lab);
+
+            // Split channels
+            const labChannels = new cv.MatVector();
+            cv.split(lab, labChannels);
+
+            // Enhance L channel (brightness)
+            const lChannel = labChannels.get(0);
+            const enhancedL = new cv.Mat();
+
+            // Apply CLAHE (Contrast Limited Adaptive Histogram Equalization)
+            const clahe = new cv.CLAHE(2.0, new cv.Size(8, 8));
+            clahe.apply(lChannel, enhancedL);
+
+            // Replace L channel
+            labChannels.set(0, enhancedL);
+
+            // Merge channels back
+            cv.merge(labChannels, lab);
+
+            // Convert back to BGR
+            cv.cvtColor(lab, enhanced, cv.COLOR_Lab2BGR);
+
+            // Apply sharpening
+            const sharpened = sharpenImage(enhanced);
+
+            // Cleanup
+            lab.delete();
+            labChannels.delete();
+            lChannel.delete();
+            enhancedL.delete();
+            enhanced.delete();
+
+            return sharpened;
+        }
+
+        function sharpenImage(img) {
+            // Sharpening kernel
+            const kernel = cv.matFromArray(3, 3, cv.CV_32FC1, [
+                0, -1, 0,
+                -1, 5, -1,
+                0, -1, 0
+            ]);
+
+            const sharpened = new cv.Mat();
+            cv.filter2D(img, sharpened, cv.CV_8U, kernel);
+
+            kernel.delete();
+            return sharpened;
+        }
+
+        function downloadResult() {
+            if (!processedImage) return;
+
+            const canvas = document.createElement('canvas');
+            cv.imshow(canvas, processedImage);
+
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `aadhaar_enhanced_${Date.now()}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+
+                showStatus('💾 Enhanced image downloaded!', 'success');
+            }, 'image/png', 0.95);
+        }
+
+        function resetAll() {
+            // Clear images
+            originalImage.src = '';
+            resultCanvas.getContext('2d').clearRect(0, 0, resultCanvas.width, resultCanvas.height);
+
+            // Clear file input
+            imageInput.value = '';
+
+            // Hide elements
+            results.style.display = 'none';
+            processingSteps.style.display = 'none';
+            downloadBtn.style.display = 'none';
+            status.style.display = 'none';
+
+            // Reset buttons
+            processBtn.disabled = true;
+
+            // Cleanup OpenCV matrices
+            if (originalMat) {
+                originalMat.delete();
+                originalMat = null;
+            }
+            if (processedImage) {
+                processedImage.delete();
+                processedImage = null;
+            }
+
+            showStatus('🔄 Reset complete. Upload a new image to start.', 'success');
+        }
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Handle OpenCV loading errors
+        window.addEventListener('error', function(e) {
+            if (e.filename && e.filename.includes('opencv.js')) {
+                showStatus('❌ Failed to load OpenCV.js. Please check your internet connection.', 'error');
+            }
+        });
+    </script>
+</body>
+</html>

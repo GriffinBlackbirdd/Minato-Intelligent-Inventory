@@ -1,20 +1,7 @@
-// Safety override to prevent progress step errors
-window.addEventListener('DOMContentLoaded', function() {
-    // Override any existing functions that might try to access progress steps
-    const originalQuerySelector = document.querySelector;
-    document.querySelector = function(selector) {
-        if (selector && selector.includes('progress-step')) {
-            console.warn('Attempted to access progress-step element that no longer exists:', selector);
-            return null;
-        }
-        return originalQuerySelector.call(document, selector);
-    };
-});
+// Simplified script.js for upload-only functionality
+// Removed all folder method dependencies
 
 // DOM elements
-const customerSearch = document.getElementById('customerSearch');
-const searchLoading = document.getElementById('searchLoading');
-const searchCard = document.getElementById('searchCard');
 const extractionCard = document.getElementById('extractionCard');
 const billingCard = document.getElementById('billingCard');
 const resultsCard = document.getElementById('resultsCard');
@@ -55,7 +42,6 @@ const errorResetBtn = document.getElementById('errorResetBtn');
 const loadingOverlay = document.getElementById('loadingOverlay');
 const loadingText = document.getElementById('loadingText');
 const errorMessage = document.getElementById('errorMessage');
-const resultsContent = document.getElementById('resultsContent');
 
 // Billing elements
 const billCustomerName = document.getElementById('billCustomerName');
@@ -86,13 +72,9 @@ const generateBillBtn = document.getElementById('generateBillBtn');
 const backToReviewBtn = document.getElementById('backToReviewBtn');
 
 // State
-let selectedCustomerData = null;
 let extractedData = null;
 let isEditMode = false;
-let searchTimeout = null;
 let chassisTimeout = null;
-let currentSuggestions = [];
-let selectedSuggestionIndex = -1;
 
 // Billing state
 let selectedChassisData = null;
@@ -107,55 +89,23 @@ batteryInputGroups.push({
     timeout: null
 });
 
-// Create a custom suggestions dropdown that's appended to body
-function createSuggestionsDropdown() {
-    const dropdown = document.createElement('div');
-    dropdown.id = 'customSuggestionsDropdown';
-    dropdown.style.cssText = `
-        position: fixed;
-        background: white;
-        border: 2px solid #d4af37;
-        border-radius: 0 0 0.75rem 0.75rem;
-        box-shadow: 0 10px 25px -5px rgb(212 175 55 / 0.2), 0 4px 6px -4px rgb(212 175 55 / 0.1);
-        z-index: 999999;
-        max-height: 300px;
-        overflow-y: auto;
-        display: none;
-        min-width: 300px;
-    `;
-
-    const suggestionsList = document.createElement('div');
-    suggestionsList.className = 'suggestions-list';
-    suggestionsList.style.cssText = `
-        padding: 0.5rem 0;
-    `;
-
-    dropdown.appendChild(suggestionsList);
-    document.body.appendChild(dropdown);
-
-    return { dropdown, suggestionsList };
-}
-
-// Initialize custom dropdown
-const customDropdown = createSuggestionsDropdown();
-const customSuggestionsDropdown = customDropdown.dropdown;
-const customSuggestionsList = customDropdown.suggestionsList;
-
 // Utility functions
 function showLoading(text = 'Processing...') {
-    loadingText.textContent = text;
-    loadingOverlay.style.display = 'flex';
+    if (loadingText) loadingText.textContent = text;
+    if (loadingOverlay) loadingOverlay.style.display = 'flex';
 }
 
 function hideLoading() {
-    loadingOverlay.style.display = 'none';
+    if (loadingOverlay) loadingOverlay.style.display = 'none';
 }
 
 function showError(message) {
     hideAllCards();
-    errorMessage.textContent = message;
-    errorCard.style.display = 'block';
-    errorCard.classList.add('active');
+    if (errorMessage) errorMessage.textContent = message;
+    if (errorCard) {
+        errorCard.style.display = 'block';
+        errorCard.classList.add('active');
+    }
 }
 
 function hideAllCards() {
@@ -163,21 +113,6 @@ function hideAllCards() {
         card.style.display = 'none';
         card.classList.remove('active');
     });
-}
-
-function hideSuggestions() {
-    customSuggestionsDropdown.style.display = 'none';
-    selectedSuggestionIndex = -1;
-}
-
-function showSuggestions() {
-    if (currentSuggestions.length > 0) {
-        const inputRect = customerSearch.getBoundingClientRect();
-        customSuggestionsDropdown.style.top = `${inputRect.bottom}px`;
-        customSuggestionsDropdown.style.left = `${inputRect.left}px`;
-        customSuggestionsDropdown.style.width = `${inputRect.width}px`;
-        customSuggestionsDropdown.style.display = 'block';
-    }
 }
 
 // Battery Management Functions
@@ -491,32 +426,34 @@ function updateAllSelectedBatteriesSummary() {
         .map(group => group.selectedBattery);
 
     if (selectedBatteries.length === 0) {
-        allSelectedBatteries.style.display = 'none';
-        batteryCount.textContent = '0';
+        if (allSelectedBatteries) allSelectedBatteries.style.display = 'none';
+        if (batteryCount) batteryCount.textContent = '0';
         return;
     }
 
     // Update count
-    batteryCount.textContent = selectedBatteries.length;
+    if (batteryCount) batteryCount.textContent = selectedBatteries.length;
 
     // Render selected batteries list
-    allSelectedBatteriesList.innerHTML = '';
+    if (allSelectedBatteriesList) {
+        allSelectedBatteriesList.innerHTML = '';
 
-    selectedBatteries.forEach((battery, index) => {
-        const batteryDiv = document.createElement('div');
-        batteryDiv.className = 'selected-battery';
-        batteryDiv.innerHTML = `
-            <div class="battery-info">
-                <div class="battery-serial">${battery.bat_serial_number}</div>
-                <div class="battery-details">${battery.make} ${battery.model} - ${battery.ampere}Ah</div>
-            </div>
-            <div class="battery-group-indicator">Battery ${getGroupIndexForBattery(battery.bat_serial_number) + 1}</div>
-        `;
+        selectedBatteries.forEach((battery, index) => {
+            const batteryDiv = document.createElement('div');
+            batteryDiv.className = 'selected-battery';
+            batteryDiv.innerHTML = `
+                <div class="battery-info">
+                    <div class="battery-serial">${battery.bat_serial_number}</div>
+                    <div class="battery-details">${battery.make} ${battery.model} - ${battery.ampere}Ah</div>
+                </div>
+                <div class="battery-group-indicator">Battery ${getGroupIndexForBattery(battery.bat_serial_number) + 1}</div>
+            `;
 
-        allSelectedBatteriesList.appendChild(batteryDiv);
-    });
+            allSelectedBatteriesList.appendChild(batteryDiv);
+        });
+    }
 
-    allSelectedBatteries.style.display = 'block';
+    if (allSelectedBatteries) allSelectedBatteries.style.display = 'block';
 
     // Mark battery section as completed if has selections
     const batterySection = batteryInputsContainer.closest('.config-section');
@@ -544,132 +481,36 @@ function getAllSelectedBatteries() {
         .map(group => group.selectedBattery);
 }
 
-// Real-time search functionality
-customerSearch.addEventListener('input', async (e) => {
-    const query = e.target.value.trim();
-
-    if (searchTimeout) {
-        clearTimeout(searchTimeout);
-    }
-
-    if (query.length < 2) {
-        hideSuggestions();
-        return;
-    }
-
-    searchLoading.style.display = 'block';
-
-    searchTimeout = setTimeout(async () => {
-        try {
-            const suggestions = await searchCustomers(query);
-            renderSuggestions(suggestions);
-        } catch (error) {
-            console.error('Search failed:', error);
-        } finally {
-            searchLoading.style.display = 'none';
-        }
-    }, 300);
-});
-
-// Keyboard navigation for suggestions
-customerSearch.addEventListener('keydown', (e) => {
-    if (!customSuggestionsDropdown.style.display || customSuggestionsDropdown.style.display === 'none') {
-        return;
-    }
-
-    const suggestionItems = customSuggestionsList.querySelectorAll('.suggestion-item');
-
-    switch (e.key) {
-        case 'ArrowDown':
-            e.preventDefault();
-            selectedSuggestionIndex = Math.min(selectedSuggestionIndex + 1, suggestionItems.length - 1);
-            updateSuggestionSelection(suggestionItems);
-            break;
-
-        case 'ArrowUp':
-            e.preventDefault();
-            selectedSuggestionIndex = Math.max(selectedSuggestionIndex - 1, -1);
-            updateSuggestionSelection(suggestionItems);
-            break;
-
-        case 'Enter':
-            e.preventDefault();
-            if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < currentSuggestions.length) {
-                selectCustomer(currentSuggestions[selectedSuggestionIndex]);
-            }
-            break;
-
-        case 'Escape':
-            hideSuggestions();
-            break;
-    }
-});
-
-function updateSuggestionSelection(suggestionItems) {
-    suggestionItems.forEach((item, index) => {
-        if (index === selectedSuggestionIndex) {
-            item.classList.add('selected');
-            item.style.background = 'linear-gradient(135deg, #fefce8, #fef3c7)';
-            item.style.borderLeft = '4px solid #d4af37';
-            item.scrollIntoView({ block: 'nearest' });
-        } else {
-            item.classList.remove('selected');
-            item.style.background = 'white';
-            item.style.borderLeft = 'none';
-        }
-    });
-}
-
-// Hide suggestions when clicking outside
-document.addEventListener('click', (e) => {
-    if (!e.target.closest('#customerSearch') && !e.target.closest('#customSuggestionsDropdown')) {
-        hideSuggestions();
-    }
-});
-
-// Update dropdown position on scroll/resize
-window.addEventListener('scroll', () => {
-    if (customSuggestionsDropdown.style.display === 'block') {
-        const inputRect = customerSearch.getBoundingClientRect();
-        customSuggestionsDropdown.style.top = `${inputRect.bottom}px`;
-        customSuggestionsDropdown.style.left = `${inputRect.left}px`;
-    }
-});
-
-window.addEventListener('resize', () => {
-    if (customSuggestionsDropdown.style.display === 'block') {
-        const inputRect = customerSearch.getBoundingClientRect();
-        customSuggestionsDropdown.style.top = `${inputRect.bottom}px`;
-        customSuggestionsDropdown.style.left = `${inputRect.left}px`;
-        customSuggestionsDropdown.style.width = `${inputRect.width}px`;
-    }
-});
-
 // Edit functionality
 function toggleEditMode() {
     isEditMode = !isEditMode;
 
     if (isEditMode) {
-        editToggleBtn.innerHTML = '<i class="fas fa-eye"></i> View';
-        editToggleBtn.classList.add('active');
+        if (editToggleBtn) {
+            editToggleBtn.innerHTML = '<i class="fas fa-eye"></i> View';
+            editToggleBtn.classList.add('active');
+        }
 
-        displayName.style.display = 'none';
-        displayAadhaar.style.display = 'none';
-        displayAddress.style.display = 'none';
-        displayMobile.style.display = 'none';
-        displayFolder.style.display = 'none';
+        // Hide display elements
+        if (displayName) displayName.style.display = 'none';
+        if (displayAadhaar) displayAadhaar.style.display = 'none';
+        if (displayAddress) displayAddress.style.display = 'none';
+        if (displayMobile) displayMobile.style.display = 'none';
+        if (displayFolder) displayFolder.style.display = 'none';
 
-        editName.style.display = 'block';
-        editAadhaar.style.display = 'block';
-        editAddress.style.display = 'block';
-        editMobile.style.display = 'block';
-        editFolder.style.display = 'block';
+        // Show edit elements
+        if (editName) editName.style.display = 'block';
+        if (editAadhaar) editAadhaar.style.display = 'block';
+        if (editAddress) editAddress.style.display = 'block';
+        if (editMobile) editMobile.style.display = 'block';
+        if (editFolder) editFolder.style.display = 'block';
 
-        editActions.style.display = 'flex';
-        defaultActions.style.display = 'none';
+        if (editActions) editActions.style.display = 'flex';
+        if (defaultActions) defaultActions.style.display = 'none';
 
-        document.querySelector('.customer-info-section').classList.add('edit-mode');
-        editName.focus();
+        const customerInfoSection = document.querySelector('.customer-profile');
+        if (customerInfoSection) customerInfoSection.classList.add('edit-mode');
+        if (editName) editName.focus();
     } else {
         exitEditMode();
     }
@@ -678,38 +519,45 @@ function toggleEditMode() {
 function exitEditMode() {
     isEditMode = false;
 
-    editToggleBtn.innerHTML = '<i class="fas fa-edit"></i> Edit';
-    editToggleBtn.classList.remove('active');
+    if (editToggleBtn) {
+        editToggleBtn.innerHTML = '<i class="fas fa-edit"></i> Edit';
+        editToggleBtn.classList.remove('active');
+    }
 
-    displayName.style.display = 'flex';
-    displayAadhaar.style.display = 'flex';
-    displayAddress.style.display = 'flex';
-    displayMobile.style.display = 'flex';
-    displayFolder.style.display = 'flex';
+    // Show display elements
+    if (displayName) displayName.style.display = 'flex';
+    if (displayAadhaar) displayAadhaar.style.display = 'flex';
+    if (displayAddress) displayAddress.style.display = 'flex';
+    if (displayMobile) displayMobile.style.display = 'flex';
+    if (displayFolder) displayFolder.style.display = 'flex';
 
-    editName.style.display = 'none';
-    editAadhaar.style.display = 'none';
-    editAddress.style.display = 'none';
-    editMobile.style.display = 'none';
-    editFolder.style.display = 'none';
+    // Hide edit elements
+    if (editName) editName.style.display = 'none';
+    if (editAadhaar) editAadhaar.style.display = 'none';
+    if (editAddress) editAddress.style.display = 'none';
+    if (editMobile) editMobile.style.display = 'none';
+    if (editFolder) editFolder.style.display = 'none';
 
-    editActions.style.display = 'none';
-    defaultActions.style.display = 'flex';
+    if (editActions) editActions.style.display = 'none';
+    if (defaultActions) defaultActions.style.display = 'flex';
 
-    document.querySelector('.customer-info-section').classList.remove('edit-mode');
+    const customerInfoSection = document.querySelector('.customer-profile');
+    if (customerInfoSection) customerInfoSection.classList.remove('edit-mode');
 }
 
 function saveChanges() {
-    extractedData.name = editName.value.trim();
-    extractedData.aadhaar = editAadhaar.value.trim();
-    extractedData.address = editAddress.value.trim();
-    extractedData.mobile = editMobile.value.trim();
+    if (extractedData) {
+        extractedData.name = editName.value.trim();
+        extractedData.aadhaar = editAadhaar.value.trim();
+        extractedData.address = editAddress.value.trim();
+        extractedData.mobile = editMobile.value.trim();
 
-    customerTitle.textContent = extractedData.name;
-    displayName.textContent = extractedData.name;
-    displayAadhaar.textContent = extractedData.aadhaar;
-    displayAddress.textContent = extractedData.address;
-    displayMobile.textContent = extractedData.mobile;
+        if (customerTitle) customerTitle.textContent = extractedData.name;
+        if (displayName) displayName.textContent = extractedData.name;
+        if (displayAadhaar) displayAadhaar.textContent = extractedData.aadhaar;
+        if (displayAddress) displayAddress.textContent = extractedData.address;
+        if (displayMobile) displayMobile.textContent = extractedData.mobile;
+    }
 
     exitEditMode();
     showSuccessToast('Changes saved successfully!');
@@ -750,63 +598,77 @@ function showSuccessToast(message) {
 }
 
 // Event listeners for edit functionality
-editToggleBtn.addEventListener('click', toggleEditMode);
-saveChangesBtn.addEventListener('click', saveChanges);
-cancelEditBtn.addEventListener('click', () => {
-    editName.value = extractedData.name;
-    editAadhaar.value = extractedData.aadhaar;
-    editAddress.value = extractedData.address;
-    editMobile.value = extractedData.mobile;
-    exitEditMode();
-});
+if (editToggleBtn) editToggleBtn.addEventListener('click', toggleEditMode);
+if (saveChangesBtn) saveChangesBtn.addEventListener('click', saveChanges);
+if (cancelEditBtn) {
+    cancelEditBtn.addEventListener('click', () => {
+        if (extractedData) {
+            editName.value = extractedData.name;
+            editAadhaar.value = extractedData.aadhaar;
+            editAddress.value = extractedData.address;
+            editMobile.value = extractedData.mobile;
+        }
+        exitEditMode();
+    });
+}
 
 // Proceed to billing button
-proceedToBillBtn.addEventListener('click', () => {
-    showBillingStep();
-});
+if (proceedToBillBtn) {
+    proceedToBillBtn.addEventListener('click', () => {
+        showBillingStep();
+    });
+}
 
 function showBillingStep() {
     hideAllCards();
-    billingCard.style.display = 'block';
-    billingCard.classList.add('active');
+    if (billingCard) {
+        billingCard.style.display = 'block';
+        billingCard.classList.add('active');
+    }
 
     // Populate customer information in billing card
-    billCustomerName.textContent = extractedData.name;
-    billCustomerAadhaar.textContent = extractedData.aadhaar;
-    billCustomerMobile.textContent = extractedData.mobile;
-    billCustomerAddress.textContent = extractedData.address;
+    if (extractedData) {
+        if (billCustomerName) billCustomerName.textContent = extractedData.name;
+        if (billCustomerAadhaar) billCustomerAadhaar.textContent = extractedData.aadhaar;
+        if (billCustomerMobile) billCustomerMobile.textContent = extractedData.mobile;
+        if (billCustomerAddress) billCustomerAddress.textContent = extractedData.address;
+    }
 
     // Setup billing event listeners
     setupBillingEventListeners();
 
-    billingCard.scrollIntoView({ behavior: 'smooth' });
+    if (billingCard) billingCard.scrollIntoView({ behavior: 'smooth' });
 }
 
 function setupBillingEventListeners() {
     // Chassis filter
-    chassisFilter.addEventListener('input', async (e) => {
-        const query = e.target.value.trim();
+    if (chassisFilter) {
+        chassisFilter.addEventListener('input', async (e) => {
+            const query = e.target.value.trim();
 
-        if (chassisTimeout) {
-            clearTimeout(chassisTimeout);
-        }
-
-        chassisLoading.style.display = 'block';
-
-        chassisTimeout = setTimeout(async () => {
-            try {
-                const results = await filterChassis(query);
-                renderChassisResults(results);
-            } catch (error) {
-                console.error('Chassis filter failed:', error);
-            } finally {
-                chassisLoading.style.display = 'none';
+            if (chassisTimeout) {
+                clearTimeout(chassisTimeout);
             }
-        }, 300);
-    });
+
+            if (chassisLoading) chassisLoading.style.display = 'block';
+
+            chassisTimeout = setTimeout(async () => {
+                try {
+                    const results = await filterChassis(query);
+                    renderChassisResults(results);
+                } catch (error) {
+                    console.error('Chassis filter failed:', error);
+                } finally {
+                    if (chassisLoading) chassisLoading.style.display = 'none';
+                }
+            }, 300);
+        });
+    }
 
     // Add battery button
-    addBatteryBtn.addEventListener('click', addBatteryInputGroup);
+    if (addBatteryBtn) {
+        addBatteryBtn.addEventListener('click', addBatteryInputGroup);
+    }
 
     // Setup event listeners for existing battery inputs
     batteryInputGroups.forEach(group => {
@@ -814,10 +676,12 @@ function setupBillingEventListeners() {
     });
 
     // HSN code change
-    hsnCodeSelect.addEventListener('change', () => {
-        updateDescriptionPreview();
-        updateGenerateBillButton();
-    });
+    if (hsnCodeSelect) {
+        hsnCodeSelect.addEventListener('change', () => {
+            updateDescriptionPreview();
+            updateGenerateBillButton();
+        });
+    }
 
     // Price and tax configuration
     const baseAmountInput = document.getElementById('baseAmount');
@@ -835,15 +699,21 @@ function setupBillingEventListeners() {
     }
 
     // Generate bill button
-    generateBillBtn.addEventListener('click', generateBill);
+    if (generateBillBtn) {
+        generateBillBtn.addEventListener('click', generateBill);
+    }
 
     // Back to review button
-    backToReviewBtn.addEventListener('click', () => {
-        hideAllCards();
-        extractionCard.style.display = 'block';
-        extractionCard.classList.add('active');
-        extractionCard.scrollIntoView({ behavior: 'smooth' });
-    });
+    if (backToReviewBtn) {
+        backToReviewBtn.addEventListener('click', () => {
+            hideAllCards();
+            if (extractionCard) {
+                extractionCard.style.display = 'block';
+                extractionCard.classList.add('active');
+                extractionCard.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
 
     // Initial calculations and button state
     updateTaxCalculation();
@@ -875,6 +745,8 @@ async function filterChassis(query) {
 }
 
 function renderChassisResults(results) {
+    if (!chassisResults || !chassisResultsList) return;
+
     if (results.length === 0) {
         chassisResults.style.display = 'none';
         return;
@@ -904,24 +776,28 @@ function renderChassisResults(results) {
 
 function selectChassis(chassis) {
     selectedChassisData = chassis;
-    chassisResults.style.display = 'none';
-    chassisFilter.value = chassis.display_text;
+    if (chassisResults) chassisResults.style.display = 'none';
+    if (chassisFilter) chassisFilter.value = chassis.display_text;
 
-    selectedChassisDetails.innerHTML = `
-        <div style="margin-bottom: 0.5rem;"><strong>Model:</strong> ${chassis.make_model}</div>
-        <div style="margin-bottom: 0.5rem;"><strong>Chassis Number:</strong> ${chassis.chassis_number}</div>
-        <div style="margin-bottom: 0.5rem;"><strong>Motor Number:</strong> ${chassis.motor_number}</div>
-        <div style="margin-bottom: 0.5rem;"><strong>Controller:</strong> ${chassis.controller_number}</div>
-        <div><strong>Color:</strong> ${chassis.color}</div>
-    `;
+    if (selectedChassisDetails) {
+        selectedChassisDetails.innerHTML = `
+            <div style="margin-bottom: 0.5rem;"><strong>Model:</strong> ${chassis.make_model}</div>
+            <div style="margin-bottom: 0.5rem;"><strong>Chassis Number:</strong> ${chassis.chassis_number}</div>
+            <div style="margin-bottom: 0.5rem;"><strong>Motor Number:</strong> ${chassis.motor_number}</div>
+            <div style="margin-bottom: 0.5rem;"><strong>Controller:</strong> ${chassis.controller_number}</div>
+            <div><strong>Color:</strong> ${chassis.color}</div>
+        `;
+    }
 
-    selectedChassis.style.display = 'block';
+    if (selectedChassis) selectedChassis.style.display = 'block';
 
     // Mark section as completed
-    const chassisSection = chassisFilter.closest('.config-section');
-    chassisSection.classList.add('has-selection');
-    const sectionHeader = chassisSection.querySelector('.section-title');
-    sectionHeader.classList.add('completed');
+    const chassisSection = chassisFilter ? chassisFilter.closest('.config-section') : null;
+    if (chassisSection) {
+        chassisSection.classList.add('has-selection');
+        const sectionHeader = chassisSection.querySelector('.section-title');
+        if (sectionHeader) sectionHeader.classList.add('completed');
+    }
 
     updateDescriptionPreview();
     updateGenerateBillButton();
@@ -929,13 +805,15 @@ function selectChassis(chassis) {
 
 function clearSelectedChassis() {
     selectedChassisData = null;
-    chassisFilter.value = '';
-    selectedChassis.style.display = 'none';
+    if (chassisFilter) chassisFilter.value = '';
+    if (selectedChassis) selectedChassis.style.display = 'none';
 
-    const chassisSection = chassisFilter.closest('.config-section');
-    chassisSection.classList.remove('has-selection');
-    const sectionHeader = chassisSection.querySelector('.section-title');
-    sectionHeader.classList.remove('completed');
+    const chassisSection = chassisFilter ? chassisFilter.closest('.config-section') : null;
+    if (chassisSection) {
+        chassisSection.classList.remove('has-selection');
+        const sectionHeader = chassisSection.querySelector('.section-title');
+        if (sectionHeader) sectionHeader.classList.remove('completed');
+    }
 
     updateDescriptionPreview();
     updateGenerateBillButton();
@@ -1035,14 +913,6 @@ async function updateTaxCalculation() {
             `;
 
             if (calculationPreview) calculationPreview.style.display = 'block';
-
-            // Mark pricing section as completed
-            const pricingSection = document.getElementById('pricingSection');
-            if (pricingSection) {
-                pricingSection.classList.add('has-selection');
-                const sectionHeader = pricingSection.querySelector('.section-header');
-                if (sectionHeader) sectionHeader.classList.add('completed');
-            }
         }
 
         updateGenerateBillButton();
@@ -1059,7 +929,7 @@ function updateDescriptionPreview() {
     const batteries = getAllSelectedBatteries();
 
     if (!chassisInfo && batteries.length === 0) {
-        descriptionPreview.style.display = 'none';
+        if (descriptionPreview) descriptionPreview.style.display = 'none';
         return;
     }
 
@@ -1092,52 +962,60 @@ function updateDescriptionPreview() {
         description += batteryDescriptions.join(', ');
     }
 
-    if (description) {
+    if (description && previewContent) {
         previewContent.textContent = description.trim();
-        descriptionPreview.style.display = 'block';
+        if (descriptionPreview) descriptionPreview.style.display = 'block';
     } else {
-        descriptionPreview.style.display = 'none';
+        if (descriptionPreview) descriptionPreview.style.display = 'none';
     }
 }
 
 function updateGenerateBillButton() {
-    const hasHsnCode = hsnCodeSelect.value.trim() !== '';
+    const hasHsnCode = hsnCodeSelect ? hsnCodeSelect.value.trim() !== '' : false;
     const hasItems = selectedChassisData || getAllSelectedBatteries().length > 0;
     const hasAmount = parseFloat(document.getElementById('baseAmount')?.value || 0) > 0;
     const hasFinanceTeam = document.getElementById('financeTeam')?.value.trim() !== '';
 
-    generateBillBtn.disabled = !hasHsnCode || !hasItems || !hasAmount || !hasFinanceTeam;
+    if (generateBillBtn) {
+        generateBillBtn.disabled = !hasHsnCode || !hasItems || !hasAmount || !hasFinanceTeam;
 
-    if (generateBillBtn.disabled) {
-        generateBillBtn.style.opacity = '0.6';
-        generateBillBtn.style.cursor = 'not-allowed';
-    } else {
-        generateBillBtn.style.opacity = '1';
-        generateBillBtn.style.cursor = 'pointer';
+        if (generateBillBtn.disabled) {
+            generateBillBtn.style.opacity = '0.6';
+            generateBillBtn.style.cursor = 'not-allowed';
+        } else {
+            generateBillBtn.style.opacity = '1';
+            generateBillBtn.style.cursor = 'pointer';
+        }
     }
 }
 
 // Bill generation
 async function generateBill() {
     const generateBtn = generateBillBtn;
-    const originalContent = generateBtn.innerHTML;
+    const originalContent = generateBtn ? generateBtn.innerHTML : '';
 
     try {
-        generateBtn.disabled = true;
-        generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Bill...';
+        if (generateBtn) {
+            generateBtn.disabled = true;
+            generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Bill...';
+        }
 
-        const baseAmount = parseFloat(document.getElementById('baseAmount').value) || 169523.81;
-        const useIgst = document.getElementById('useIgst').checked;
-        const financeTeam = document.getElementById('financeTeam').value.trim();
+        const baseAmount = parseFloat(document.getElementById('baseAmount')?.value) || 178899.90;
+        const useIgst = document.getElementById('useIgst')?.checked || false;
+        const financeTeam = document.getElementById('financeTeam')?.value.trim() || 'MINATO ENTERPRISE';
 
         const selectedBatteries = getAllSelectedBatteries();
 
         console.log('Generating bill with data:', {
-            customer_name: extractedData.name,
+            customer_name: extractedData?.name,
             chassis: selectedChassisData?.chassis_number,
             batteries: selectedBatteries.length,
             base_amount: baseAmount
         });
+
+        if (!extractedData) {
+            throw new Error('No customer data available');
+        }
 
         const billingData = {
             customer_name: extractedData.name,
@@ -1146,7 +1024,7 @@ async function generateBill() {
             mobile_number: extractedData.mobile,
             chassis_number: selectedChassisData ? selectedChassisData.chassis_number : null,
             selected_batteries: selectedBatteries.map(b => b.bat_serial_number),
-            hsn_code: hsnCodeSelect.value,
+            hsn_code: hsnCodeSelect ? hsnCodeSelect.value : '',
             base_amount: baseAmount,
             use_igst: useIgst,
             finance_team: financeTeam,
@@ -1179,16 +1057,20 @@ async function generateBill() {
         console.error('Bill generation error:', error);
         showError(`Failed to generate bill: ${error.message}`);
     } finally {
-        generateBtn.disabled = false;
-        generateBtn.innerHTML = originalContent;
+        if (generateBtn) {
+            generateBtn.disabled = false;
+            generateBtn.innerHTML = originalContent;
+        }
     }
 }
 
 function showBillSuccess(result) {
     hideAllCards();
     renderBillResults(result);
-    resultsCard.style.display = 'block';
-    resultsCard.classList.add('active');
+    if (resultsCard) {
+        resultsCard.style.display = 'block';
+        resultsCard.classList.add('active');
+    }
 
     // Update download button in results card
     const downloadBtn = document.getElementById('downloadBillBtn');
@@ -1197,13 +1079,14 @@ function showBillSuccess(result) {
         downloadBtn.style.display = 'inline-flex';
     }
 
-    resultsCard.scrollIntoView({ behavior: 'smooth' });
+    if (resultsCard) resultsCard.scrollIntoView({ behavior: 'smooth' });
 
     console.log('Bill generated successfully!');
 }
 
 function renderBillResults(result) {
     const selectedBatteries = getAllSelectedBatteries();
+    const resultsContent = document.getElementById('resultsContent');
 
     if (!resultsContent) {
         console.error('Results content element not found');
@@ -1218,19 +1101,19 @@ function renderBillResults(result) {
                 <h4><i class="fas fa-user"></i> Customer Information</h4>
                 <div class="result-item">
                     <span class="result-label">Name:</span>
-                    <div class="result-value">${extractedData.name}</div>
+                    <div class="result-value">${extractedData?.name || 'N/A'}</div>
                 </div>
                 <div class="result-item">
                     <span class="result-label">Aadhaar Number:</span>
-                    <div class="result-value">${extractedData.aadhaar}</div>
+                    <div class="result-value">${extractedData?.aadhaar || 'N/A'}</div>
                 </div>
                 <div class="result-item">
                     <span class="result-label">Mobile Number:</span>
-                    <div class="result-value">${extractedData.mobile}</div>
+                    <div class="result-value">${extractedData?.mobile || 'N/A'}</div>
                 </div>
                 <div class="result-item">
                     <span class="result-label">Address:</span>
-                    <div class="result-value">${extractedData.address}</div>
+                    <div class="result-value">${extractedData?.address || 'N/A'}</div>
                 </div>
             </div>
 
@@ -1246,7 +1129,7 @@ function renderBillResults(result) {
                 </div>
                 <div class="result-item">
                     <span class="result-label">HSN Code:</span>
-                    <div class="result-value">${hsnCodeSelect.value}</div>
+                    <div class="result-value">${hsnCodeSelect ? hsnCodeSelect.value : 'N/A'}</div>
                 </div>
                 ${selectedChassisData ? `
                 <div class="result-item">
@@ -1268,7 +1151,7 @@ function renderBillResults(result) {
                 <h4><i class="fas fa-calculator"></i> Financial Summary</h4>
                 <div class="result-item">
                     <span class="result-label">Base Amount:</span>
-                    <div class="result-value">₹${document.getElementById('baseAmount')?.value || '169523.81'}</div>
+                    <div class="result-value">₹${document.getElementById('baseAmount')?.value || '178899.90'}</div>
                 </div>
                 ${result.cgst > 0 ? `
                 <div class="result-item">
@@ -1309,17 +1192,19 @@ function renderBillResults(result) {
 }
 
 // Navigation buttons
-backToSearchBtn.addEventListener('click', resetToSearch);
-resetBtn.addEventListener('click', resetToSearch);
-errorResetBtn.addEventListener('click', resetToSearch);
+if (backToSearchBtn) backToSearchBtn.addEventListener('click', resetToSearch);
+if (resetBtn) resetBtn.addEventListener('click', resetToSearch);
+if (errorResetBtn) errorResetBtn.addEventListener('click', resetToSearch);
 
 function resetToSearch() {
     hideAllCards();
-    searchCard.style.display = 'block';
-    searchCard.classList.add('active');
+    const mainSearchCard = document.getElementById('searchCard');
+    if (mainSearchCard) {
+        mainSearchCard.style.display = 'block';
+        mainSearchCard.classList.add('active');
+    }
 
     // Reset all state
-    selectedCustomerData = null;
     extractedData = null;
     isEditMode = false;
     selectedChassisData = null;
@@ -1333,73 +1218,63 @@ function resetToSearch() {
     nextBatteryIndex = 1;
 
     // Reset form values
-    customerSearch.value = '';
-    chassisFilter.value = '';
-    hsnCodeSelect.value = '';
+    if (chassisFilter) chassisFilter.value = '';
+    if (hsnCodeSelect) hsnCodeSelect.value = '';
 
     // Reset battery inputs container to initial state
-    batteryInputsContainer.innerHTML = `
-        <div class="battery-input-group" data-battery-index="0">
-            <div class="battery-group-header">
-                <span class="battery-group-title">
-                    <i class="fas fa-battery-three-quarters"></i>
-                    Battery 1
-                </span>
-                <button class="btn-remove-battery-group" onclick="removeBatteryInputGroup(0)" style="display: none;">
-                    <i class="fas fa-trash"></i>
-                    Remove
-                </button>
-            </div>
-            <div class="filter-group">
-                <input type="text" class="battery-filter" placeholder="Search batteries..." data-battery-index="0">
-                <div class="filter-loading battery-loading" style="display: none;">
-                    <i class="fas fa-spinner fa-spin"></i>
-                </div>
-                <div class="filter-results battery-results" style="display: none;">
-                    <div class="results-list battery-results-list"></div>
-                </div>
-            </div>
-            <div class="selected-item battery-selected" style="display: none;">
-                <div class="selected-header">
-                    <span>Selected Battery</span>
-                    <button class="btn-remove" onclick="clearSelectedBatteryInGroup(0)">
-                        <i class="fas fa-times"></i>
+    if (batteryInputsContainer) {
+        batteryInputsContainer.innerHTML = `
+            <div class="battery-input-group" data-battery-index="0">
+                <div class="battery-group-header">
+                    <span class="battery-group-title">
+                        <i class="fas fa-battery-three-quarters"></i>
+                        Battery 1
+                    </span>
+                    <button class="btn-remove-battery-group" onclick="removeBatteryInputGroup(0)" style="display: none;">
+                        <i class="fas fa-trash"></i>
+                        Remove
                     </button>
                 </div>
-                <div class="selected-details battery-selected-details"></div>
+                <div class="filter-group">
+                    <input type="text" class="battery-filter" placeholder="Search batteries..." data-battery-index="0">
+                    <div class="filter-loading battery-loading" style="display: none;">
+                        <i class="fas fa-spinner fa-spin"></i>
+                    </div>
+                    <div class="filter-results battery-results" style="display: none;">
+                        <div class="results-list battery-results-list"></div>
+                    </div>
+                </div>
+                <div class="selected-item battery-selected" style="display: none;">
+                    <div class="selected-header">
+                        <span>Selected Battery</span>
+                        <button class="btn-remove" onclick="clearSelectedBatteryInGroup(0)">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="selected-details battery-selected-details"></div>
+                </div>
             </div>
-        </div>
-    `;
+        `;
+    }
 
     // Reset pricing and finance team if exists
     const baseAmountInput = document.getElementById('baseAmount');
     const useIgstCheckbox = document.getElementById('useIgst');
     const financeTeamInput = document.getElementById('financeTeam');
 
-    if (baseAmountInput) {
-        baseAmountInput.value = '178899.90';
-    }
-    if (useIgstCheckbox) {
-        useIgstCheckbox.checked = false;
-    }
-    if (financeTeamInput) {
-        financeTeamInput.value = 'MINATO ENTERPRISE';
-    }
-
-    // Clear results
-    resultsContent.innerHTML = '';
-    hideSuggestions();
+    if (baseAmountInput) baseAmountInput.value = '178899.90';
+    if (useIgstCheckbox) useIgstCheckbox.checked = false;
+    if (financeTeamInput) financeTeamInput.value = 'MINATO ENTERPRISE';
 
     // Reset extraction card state
-    fetchingContainer.style.display = 'block';
-    extractionResults.style.display = 'none';
-    progressFill.style.width = '0%';
-    progressText.textContent = 'Initializing...';
+    if (fetchingContainer) fetchingContainer.style.display = 'block';
+    if (extractionResults) extractionResults.style.display = 'none';
+    if (progressFill) progressFill.style.width = '0%';
+    if (progressText) progressText.textContent = 'Initializing...';
 
     // Reset edit mode
-    if (document.querySelector('.customer-info-section')) {
-        document.querySelector('.customer-info-section').classList.remove('edit-mode');
-    }
+    const customerInfoSection = document.querySelector('.customer-profile');
+    if (customerInfoSection) customerInfoSection.classList.remove('edit-mode');
 
     // Reset billing card states
     if (selectedChassis) selectedChassis.style.display = 'none';
@@ -1409,20 +1284,20 @@ function resetToSearch() {
 
     // Reset calculation preview
     const calculationPreview = document.getElementById('calculationPreview');
-    if (calculationPreview) {
-        calculationPreview.style.display = 'none';
-    }
+    if (calculationPreview) calculationPreview.style.display = 'none';
 
     // Reset section states
     document.querySelectorAll('.config-section').forEach(section => {
         section.classList.remove('has-selection');
         const sectionHeader = section.querySelector('.section-title');
-        if (sectionHeader) {
-            sectionHeader.classList.remove('completed');
-        }
+        if (sectionHeader) sectionHeader.classList.remove('completed');
     });
 
-    customerSearch.focus();
+    // Focus on upload area (no customer name input anymore)
+    const uploadCard = document.getElementById('searchCard');
+    if (uploadCard) {
+        uploadCard.scrollIntoView({ behavior: 'smooth' });
+    }
 }
 
 // Global keyboard shortcuts
@@ -1431,10 +1306,7 @@ document.addEventListener('keydown', (e) => {
         if (isEditMode) {
             exitEditMode();
         } else {
-            hideSuggestions();
-            if (selectedCustomerData) {
-                resetToSearch();
-            }
+            resetToSearch();
         }
     }
 
@@ -1477,10 +1349,56 @@ style.textContent = `
         gap: 0.5rem;
     }
 
-    .suggestion-content {
+    .result-item {
         display: flex;
-        flex-direction: column;
-        gap: 0.25rem;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .result-item:last-child {
+        border-bottom: none;
+    }
+
+    .result-label {
+        font-weight: 500;
+        color: #6b7280;
+        min-width: 150px;
+        flex-shrink: 0;
+    }
+
+    .result-value {
+        font-weight: 500;
+        color: #1f2937;
+        text-align: right;
+        flex: 1;
+        word-break: break-word;
+    }
+
+    .total-amount {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #d4af37;
+        background: linear-gradient(135deg, #fefce8, #fef3c7);
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        border-left: 4px solid #d4af37;
+    }
+
+    .amount-words {
+        font-family: 'Inter', sans-serif !important;
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #1565c0;
+        font-style: italic;
+    }
+
+    .bill-download-section {
+        text-align: center;
+        margin-top: 2rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e5e7eb;
     }
 
     .btn:disabled {
@@ -1498,20 +1416,26 @@ style.textContent = `
         to { transform: rotate(360deg); }
     }
 
-    .mobile-number-highlight {
-        background: linear-gradient(135deg, #e6f3ff, #cce7ff);
-        border-left: 4px solid #0066cc;
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        font-family: 'Monaco', 'Menlo', monospace;
-        font-weight: 600;
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        to {
+            opacity: 1;
+            transform: translateX(0);
+        }
     }
 
-    .mobile-number-display {
-        font-family: 'Monaco', 'Menlo', monospace;
-        font-weight: 600;
-        color: #0066cc;
-        letter-spacing: 0.5px;
+    @keyframes slideOut {
+        from {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        to {
+            opacity: 0;
+            transform: translateX(100%);
+        }
     }
 
     /* Battery Input Group Styles */
@@ -1632,32 +1556,6 @@ style.textContent = `
         transform: none !important;
     }
 
-    .battery-count-badge {
-        background: #10b981;
-        color: white;
-        font-size: 0.75rem;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.375rem;
-        font-weight: 600;
-        margin-left: 0.5rem;
-    }
-
-    /* Animation for new battery groups */
-    .battery-input-group {
-        animation: slideInUp 0.3s ease-out;
-    }
-
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
     /* Enhanced selected batteries summary */
     #allSelectedBatteries {
         background: linear-gradient(135deg, #d1fae5, #a7f3d0);
@@ -1684,227 +1582,23 @@ style.textContent = `
         margin-bottom: 0;
     }
 
-    .total-amount {
-        font-size: 1.1rem;
-        font-weight: 700;
-        color: #d4af37;
-        background: linear-gradient(135deg, #fefce8, #fef3c7);
-        padding: 0.5rem;
-        border-radius: 0.5rem;
-        border-left: 4px solid #d4af37;
+    /* Animation for new battery groups */
+    .battery-input-group {
+        animation: slideInUp 0.3s ease-out;
     }
 
-    .amount-words {
-        font-family: 'Inter', sans-serif !important;
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #1565c0;
-        font-style: italic;
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
     }
 `;
 document.head.appendChild(style);
-
-// API calls
-async function searchCustomers(query) {
-    try {
-        const response = await fetch('/search', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                customer_name: query
-            })
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Search failed');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Search error:', error);
-        return [];
-    }
-}
-
-async function processCustomer(folderPath) {
-    try {
-        const response = await fetch('/process', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                folder_path: folderPath
-            })
-        });
-
-        if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.detail || 'Processing failed');
-        }
-
-        return await response.json();
-    } catch (error) {
-        console.error('Processing error:', error);
-        throw error;
-    }
-}
-
-// UI functions
-function renderSuggestions(suggestions) {
-    currentSuggestions = suggestions;
-    customSuggestionsList.innerHTML = '';
-
-    if (suggestions.length === 0) {
-        customSuggestionsList.innerHTML = `
-            <div style="padding: 1.5rem; text-align: center; color: #6b7280; font-style: italic;">
-                <i class="fas fa-search"></i>
-                No customers found matching your search
-            </div>
-        `;
-        showSuggestions();
-        return;
-    }
-
-    suggestions.forEach((suggestion, index) => {
-        const suggestionElement = document.createElement('div');
-        suggestionElement.className = 'suggestion-item';
-        suggestionElement.dataset.index = index;
-        suggestionElement.style.cssText = `
-            padding: 1rem 1.5rem;
-            cursor: pointer;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            border-bottom: 1px solid #e5e7eb;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        `;
-
-        suggestionElement.innerHTML = `
-            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                <div style="font-weight: 600; color: #1a1a1a;">${suggestion.person_name}</div>
-                <div style="font-family: 'Monaco', 'Menlo', monospace; color: #4a4a4a; font-size: 0.875rem;">${suggestion.aadhaar_number}</div>
-            </div>
-            <i class="fas fa-arrow-right" style="color: #d4af37;"></i>
-        `;
-
-        suggestionElement.addEventListener('mouseenter', () => {
-            suggestionElement.style.background = 'linear-gradient(135deg, #fefce8, #fef3c7)';
-        });
-
-        suggestionElement.addEventListener('mouseleave', () => {
-            if (!suggestionElement.classList.contains('selected')) {
-                suggestionElement.style.background = 'white';
-            }
-        });
-
-        suggestionElement.addEventListener('click', () => selectCustomer(suggestion));
-        customSuggestionsList.appendChild(suggestionElement);
-    });
-
-    showSuggestions();
-}
-
-function selectCustomer(customer) {
-    selectedCustomerData = customer;
-    customerSearch.value = customer.display_text;
-    hideSuggestions();
-
-    hideAllCards();
-    extractionCard.style.display = 'block';
-    extractionCard.classList.add('active');
-
-    fetchingContainer.style.display = 'block';
-    extractionResults.style.display = 'none';
-
-    startFetchingProcess(customer);
-    extractionCard.scrollIntoView({ behavior: 'smooth' });
-}
-
-async function startFetchingProcess(customer) {
-    const steps = [
-        'Initializing document processor...',
-        'Locating customer documents...',
-        'Reading document contents...',
-        'Extracting Aadhaar information...',
-        'Extracting mobile number...',
-        'Processing address details...',
-        'Validating extracted data...',
-        'Finalizing information...'
-    ];
-
-    let currentStep = 0;
-    const stepDuration = 700;
-
-    const progressInterval = setInterval(() => {
-        if (currentStep < steps.length) {
-            progressText.textContent = steps[currentStep];
-            progressFill.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
-            currentStep++;
-        } else {
-            clearInterval(progressInterval);
-            performDataExtraction(customer);
-        }
-    }, stepDuration);
-}
-
-async function performDataExtraction(customer) {
-    try {
-        const result = await processCustomer(customer.full_path);
-
-        if (result.success) {
-            extractedData = {
-                name: customer.person_name,
-                aadhaar: result.aadhar_number,
-                address: result.address,
-                mobile: result.mobile_number,
-                folder: customer.folder_name
-            };
-
-            showExtractionResults();
-        } else {
-            showError(`Failed to extract information: ${result.error}`);
-        }
-
-    } catch (error) {
-        showError(`Processing failed: ${error.message}`);
-    }
-}
-
-function showExtractionResults() {
-    fetchingContainer.style.display = 'none';
-    extractionResults.style.display = 'block';
-
-    customerTitle.textContent = extractedData.name;
-    customerSubtitle.textContent = `Folder: ${extractedData.folder}`;
-
-    displayName.textContent = extractedData.name;
-    displayAadhaar.textContent = extractedData.aadhaar;
-    displayAddress.textContent = extractedData.address;
-    displayMobile.textContent = extractedData.mobile;
-    displayFolder.textContent = extractedData.folder;
-
-    displayMobile.classList.add('mobile-number-display');
-
-    editName.value = extractedData.name;
-    editAadhaar.value = extractedData.aadhaar;
-    editAddress.value = extractedData.address;
-    editMobile.value = extractedData.mobile;
-    editFolder.value = extractedData.folder;
-
-    console.log('\n' + '='.repeat(60));
-    console.log('DOCUMENT EXTRACTION SUCCESSFUL');
-    console.log('='.repeat(60));
-    console.log(`Customer: ${extractedData.name}`);
-    console.log(`Aadhaar: ${extractedData.aadhaar}`);
-    console.log(`Mobile: ${extractedData.mobile}`);
-    console.log(`Address: ${extractedData.address}`);
-    console.log(`Folder: ${extractedData.folder}`);
-    console.log('='.repeat(60) + '\n');
-}
 
 // Make functions globally available for onclick handlers
 window.clearSelectedChassis = clearSelectedChassis;
@@ -1912,120 +1606,80 @@ window.removeBatteryInputGroup = removeBatteryInputGroup;
 window.clearSelectedBatteryInGroup = clearSelectedBatteryInGroup;
 window.clearAllSelectedBatteries = clearAllSelectedBatteries;
 
+// Export function for use in main HTML
+window.showExtractionResults = function() {
+    console.log('showExtractionResults called with:', window.extractedData);
+
+    const fetchingContainer = document.getElementById('fetchingContainer');
+    const extractionResults = document.getElementById('extractionResults');
+
+    if (fetchingContainer) fetchingContainer.style.display = 'none';
+    if (extractionResults) extractionResults.style.display = 'block';
+
+    const customerTitle = document.getElementById('customerTitle');
+    const customerSubtitle = document.getElementById('customerSubtitle');
+    const displayName = document.getElementById('displayName');
+    const displayAadhaar = document.getElementById('displayAadhaar');
+    const displayAddress = document.getElementById('displayAddress');
+    const displayMobile = document.getElementById('displayMobile');
+    const displayFolder = document.getElementById('displayFolder');
+
+    // Use window.extractedData to ensure we're getting the global variable
+    const data = window.extractedData;
+
+    if (data) {
+        console.log('Populating display with data:', data);
+
+        if (customerTitle) customerTitle.textContent = data.name || 'Unknown Customer';
+        if (customerSubtitle) customerSubtitle.textContent = 'Extracted from uploaded images';
+        if (displayName) displayName.textContent = data.name || 'Not found';
+        if (displayAadhaar) displayAadhaar.textContent = data.aadhaar || 'Not found';
+        if (displayAddress) displayAddress.textContent = data.address || 'Not found';
+        if (displayMobile) displayMobile.textContent = data.mobile || 'Not found';
+        if (displayFolder) displayFolder.textContent = 'Image Upload';
+
+        // Add mobile number styling
+        if (displayMobile) displayMobile.classList.add('mobile-number-display');
+
+        // Also populate edit fields
+        if (editName) editName.value = data.name || '';
+        if (editAadhaar) editAadhaar.value = data.aadhaar || '';
+        if (editAddress) editAddress.value = data.address || '';
+        if (editMobile) editMobile.value = data.mobile || '';
+        if (editFolder) editFolder.value = 'Image Upload';
+
+        // Update global extractedData for other functions
+        extractedData = data;
+
+        console.log('\n' + '='.repeat(60));
+        console.log('IMAGE EXTRACTION SUCCESSFUL');
+        console.log('='.repeat(60));
+        console.log(`Customer: ${data.name}`);
+        console.log(`Aadhaar: ${data.aadhaar}`);
+        console.log(`Mobile: ${data.mobile}`);
+        console.log(`Address: ${data.address}`);
+        console.log(`Source: Image Upload`);
+        console.log('='.repeat(60) + '\n');
+    } else {
+        console.error('No extracted data found!');
+
+        // Show fallback message
+        if (customerTitle) customerTitle.textContent = 'No Data Extracted';
+        if (customerSubtitle) customerSubtitle.textContent = 'Unable to extract information from images';
+        if (displayName) displayName.textContent = 'Not found';
+        if (displayAadhaar) displayAadhaar.textContent = 'Not found';
+        if (displayAddress) displayAddress.textContent = 'Not found';
+        if (displayMobile) displayMobile.textContent = 'Not found';
+        if (displayFolder) displayFolder.textContent = 'Image Upload';
+    }
+};
+
 // Initialize the app
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Minato Enterprises - Document Processor & Billing System initialized');
-
-    // Focus on the search input
-    customerSearch.focus();
+    console.log('Minato Enterprises - Document Processor & Billing System (Upload Only) initialized');
 
     // Setup initial battery input event listeners
     setupBatteryInputEventListeners(0);
-
-    // Add helpful tips
-    setTimeout(() => {
-        const helpText = document.createElement('div');
-        helpText.style.cssText = `
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            font-size: 0.875rem;
-            color: #4a4a4a;
-            max-width: 320px;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-            border: 2px solid #d4af37;
-            z-index: 1000;
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        `;
-
-        const closeButton = document.createElement('button');
-        closeButton.innerHTML = '<i class="fas fa-times"></i>';
-        closeButton.style.cssText = `
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            background: none;
-            border: none;
-            color: #6b7280;
-            cursor: pointer;
-            padding: 0.25rem;
-            border-radius: 0.25rem;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 1.5rem;
-            height: 1.5rem;
-            font-size: 0.75rem;
-        `;
-
-        closeButton.addEventListener('mouseenter', () => {
-            closeButton.style.background = '#f8f9fa';
-            closeButton.style.color = '#d4af37';
-        });
-
-        closeButton.addEventListener('mouseleave', () => {
-            closeButton.style.background = 'none';
-            closeButton.style.color = '#6b7280';
-        });
-
-        // const closeTips = () => {
-        //     if (helpText.parentNode) {
-        //         helpText.style.transform = 'translateY(100px)';
-        //         helpText.style.opacity = '0';
-        //         setTimeout(() => {
-        //             if (helpText.parentNode) {
-        //                 helpText.remove();
-        //             }
-        //         }, 300);
-        //     }
-        // };
-
-        // closeButton.addEventListener('click', closeTips);
-
-        // helpText.innerHTML = `
-        //     <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; color: #d4af37; font-weight: 600;">
-        //         <i class="fas fa-file-invoice"></i>
-        //         <span>Smart Document Processor & Billing</span>
-        //     </div>
-        //     <div style="margin-bottom: 0.75rem;">
-        //         <strong style="color: #1a1a1a;">Workflow:</strong><br>
-        //         • Search customers<br>
-        //         • Extract document info<br>
-        //         • Select chassis & multiple batteries<br>
-        //         • Set pricing & calculate taxes<br>
-        //         • Generate Word bills
-        //     </div>
-        //     <div>
-        //         <strong style="color: #1a1a1a;">New Features:</strong><br>
-        //         • Add multiple battery inputs<br>
-        //         • Individual battery selection<br>
-        //         • Prevent duplicate selections<br>
-        //         • Battery summary with count<br>
-        //         • Remove specific battery groups<br>
-        //         • Enhanced battery tracking
-        //     </div>
-        // `;
-
-        // helpText.appendChild(closeButton);
-
-        // document.body.appendChild(helpText);
-
-        setTimeout(() => {
-            helpText.style.transform = 'translateY(0)';
-            helpText.style.opacity = '1';
-        }, 100);
-
-        setTimeout(() => {
-            closeTips();
-        }, 18000);
-    }, 3000);
 
     // Check data status on startup
     checkDataStatus();

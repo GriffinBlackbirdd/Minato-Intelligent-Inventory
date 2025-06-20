@@ -6,6 +6,8 @@
     <title>Minato Enterprises - Document Processing System</title>
     <link rel="stylesheet" href="/static/style.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script async src="https://docs.opencv.org/4.8.0/opencv.js" onload="onOpenCvReady();" type="text/javascript"></script>
+
 </head>
 <body>
     <div class="app-container">
@@ -30,174 +32,122 @@
                 <!-- Hero Section -->
                 <div class="hero-section">
                     <h2 class="hero-title">Intelligent Document Processing & Billing</h2>
-                    <p class="hero-subtitle">Search customers, extract information, and generate professional bills</p>
+                    <p class="hero-subtitle">Upload Aadhaar card images and generate professional bills</p>
                 </div>
 
                 <!-- Step Cards -->
                 <div class="steps-container">
-                    <!-- Step 1: Customer Search with Method Selection -->
+                    <!-- Step 1: Upload Images -->
                     <div class="step-card active" id="searchCard">
                         <div class="card-header">
-                            <h3>Customer Search</h3>
-                            <p>Choose your method and find customer records</p>
+                            <h3>Upload Aadhaar Images</h3>
+                            <p>Upload front and back images of the Aadhaar card</p>
                         </div>
                         <div class="card-body">
-                            <!-- Method Selection Tabs -->
-                            <div class="method-selection">
-                                <div class="method-tabs">
-                                    <button class="method-tab active" data-method="folder" id="folderMethodTab">
-                                        <i class="fas fa-folder-open"></i>
-                                        <span>Folder Method</span>
-                                        <small>Search existing folders</small>
-                                    </button>
-                                    <button class="method-tab" data-method="upload" id="uploadMethodTab">
-                                        <i class="fas fa-camera"></i>
-                                        <span>Upload Images</span>
-                                        <small>Upload Aadhaar photos</small>
-                                    </button>
-                                </div>
-                            </div>
+                            <div class="upload-section">
+                                <div class="upload-container">
+                                    <div class="upload-row">
+                                        <div class="upload-item">
+                                            <label class="upload-label">
+                                                <span><i class="fas fa-id-card"></i> Front Side</span>
 
-                            <!-- Folder Method Content -->
-                            <div class="method-content active" id="folderMethodContent">
-                                <div class="search-section">
-                                    <div class="search-input-group">
-                                        <i class="fas fa-search search-icon"></i>
-                                        <input
-                                            type="text"
-                                            id="customerSearch"
-                                            placeholder="Start typing customer name..."
-                                            class="search-input"
-                                            autocomplete="off"
-                                        >
-                                        <div class="search-loading" id="searchLoading">
-                                            <i class="fas fa-spinner fa-spin"></i>
+                                                <!-- Upload Method Tabs -->
+                                                <div class="upload-method-tabs">
+                                                    <button type="button" class="upload-method-tab active" data-method="camera" data-side="front">
+                                                        <i class="fas fa-camera"></i> Camera
+                                                    </button>
+                                                    <button type="button" class="upload-method-tab" data-method="upload" data-side="front">
+                                                        <i class="fas fa-upload"></i> Upload
+                                                    </button>
+                                                </div>
+
+                                                <!-- Camera Container -->
+                                                <div class="camera-container" id="frontCameraContainer">
+                                                    <div class="camera-placeholder" id="frontCameraPlaceholder">
+                                                        <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                                                        <p>Click to start camera</p>
+                                                    </div>
+                                                    <video id="frontCameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
+                                                    <div class="camera-controls" id="frontCameraControls" style="display: none;">
+                                                        <button type="button" class="camera-btn capture" id="frontCaptureBtn">
+                                                            <i class="fas fa-camera"></i>
+                                                        </button>
+                                                        <button type="button" class="camera-btn" id="frontStopBtn">
+                                                            <i class="fas fa-stop"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Upload Area (Hidden by default) -->
+                                                <div class="upload-area" id="frontUploadArea" style="display: none;">
+                                                    <input type="file" id="frontImageInput" accept="image/*" style="display: none;">
+                                                    <div class="upload-placeholder">
+                                                        <i class="fas fa-upload"></i>
+                                                        <span>Click or drag front image</span>
+                                                    </div>
+                                                    <div class="upload-preview" id="frontPreview" style="display: none;">
+                                                        <img id="frontPreviewImg" src="" alt="Front preview">
+                                                        <button type="button" class="remove-btn" id="removeFrontBtn">×</button>
+                                                    </div>
+                                                </div>
+                                            </label>
+                                        </div>
+
+                                        <div class="upload-item">
+                                            <label class="upload-label">
+                                                <span><i class="fas fa-id-card"></i> Back Side</span>
+
+                                                <!-- Upload Method Tabs -->
+                                                <div class="upload-method-tabs">
+                                                    <button type="button" class="upload-method-tab active" data-method="camera" data-side="back">
+                                                        <i class="fas fa-camera"></i> Camera
+                                                    </button>
+                                                    <button type="button" class="upload-method-tab" data-method="upload" data-side="back">
+                                                        <i class="fas fa-upload"></i> Upload
+                                                    </button>
+                                                </div>
+
+                                                <!-- Camera Container -->
+                                                <div class="camera-container" id="backCameraContainer">
+                                                    <div class="camera-placeholder" id="backCameraPlaceholder">
+                                                        <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+                                                        <p>Click to start camera</p>
+                                                    </div>
+                                                    <video id="backCameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
+                                                    <div class="camera-controls" id="backCameraControls" style="display: none;">
+                                                        <button type="button" class="camera-btn capture" id="backCaptureBtn">
+                                                            <i class="fas fa-camera"></i>
+                                                        </button>
+                                                        <button type="button" class="camera-btn" id="backStopBtn">
+                                                            <i class="fas fa-stop"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Upload Area (Hidden by default) -->
+                                                <div class="upload-area" id="backUploadArea" style="display: none;">
+                                                    <input type="file" id="backImageInput" accept="image/*" style="display: none;">
+                                                    <div class="upload-placeholder">
+                                                        <i class="fas fa-upload"></i>
+                                                        <span>Click or drag back image</span>
+                                                    </div>
+                                                    <div class="upload-preview" id="backPreview" style="display: none;">
+                                                        <img id="backPreviewImg" src="" alt="Back preview">
+                                                        <button type="button" class="remove-btn" id="removeBackBtn">×</button>
+                                                    </div>
+                                                </div>
+                                            </label>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="search-info">
-                                    <p><i class="fas fa-info-circle"></i> Search existing customer folders containing PDF and/or images</p>
-                                </div>
-                            </div>
 
-                            <!-- Upload Method Content -->
-                            <div class="method-content" id="uploadMethodContent">
-                                <div class="upload-section">
-                                    <div class="input-group">
-                                        <label for="uploadCustomerName">Customer Name *</label>
-                                        <input
-                                            type="text"
-                                            id="uploadCustomerName"
-                                            placeholder="Enter customer name"
-                                            class="search-input"
-                                            required
-                                        >
+                                    <div class="upload-info">
+                                        <p><i class="fas fa-lightbulb"></i> Upload both sides for best results. Ensure images are clear and well-lit.</p>
                                     </div>
 
-                                    <div class="upload-container">
-                                        <div class="upload-row">
-                                            <div class="upload-item">
-                                                <label class="upload-label">
-                                                    <span><i class="fas fa-id-card"></i> Front Side</span>
-
-                                                    <!-- Upload Method Tabs -->
-                                                    <div class="upload-method-tabs">
-                                                        <button type="button" class="upload-method-tab active" data-method="camera" data-side="front">
-                                                            <i class="fas fa-camera"></i> Camera
-                                                        </button>
-                                                        <button type="button" class="upload-method-tab" data-method="upload" data-side="front">
-                                                            <i class="fas fa-upload"></i> Upload
-                                                        </button>
-                                                    </div>
-
-                                                    <!-- Camera Container -->
-                                                    <div class="camera-container" id="frontCameraContainer">
-                                                        <div class="camera-placeholder" id="frontCameraPlaceholder">
-                                                            <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                                            <p>Click to start camera</p>
-                                                        </div>
-                                                        <video id="frontCameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
-                                                        <div class="camera-controls" id="frontCameraControls" style="display: none;">
-                                                            <button type="button" class="camera-btn capture" id="frontCaptureBtn">
-                                                                <i class="fas fa-camera"></i>
-                                                            </button>
-                                                            <button type="button" class="camera-btn" id="frontStopBtn">
-                                                                <i class="fas fa-stop"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Upload Area (Hidden by default) -->
-                                                    <div class="upload-area" id="frontUploadArea" style="display: none;">
-                                                        <input type="file" id="frontImageInput" accept="image/*" style="display: none;">
-                                                        <div class="upload-placeholder">
-                                                            <i class="fas fa-upload"></i>
-                                                            <span>Click or drag front image</span>
-                                                        </div>
-                                                        <div class="upload-preview" id="frontPreview" style="display: none;">
-                                                            <img id="frontPreviewImg" src="" alt="Front preview">
-                                                            <button type="button" class="remove-btn" id="removeFrontBtn">×</button>
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                            </div>
-
-                                            <div class="upload-item">
-                                                <label class="upload-label">
-                                                    <span><i class="fas fa-id-card"></i> Back Side</span>
-
-                                                    <!-- Upload Method Tabs -->
-                                                    <div class="upload-method-tabs">
-                                                        <button type="button" class="upload-method-tab active" data-method="camera" data-side="back">
-                                                            <i class="fas fa-camera"></i> Camera
-                                                        </button>
-                                                        <button type="button" class="upload-method-tab" data-method="upload" data-side="back">
-                                                            <i class="fas fa-upload"></i> Upload
-                                                        </button>
-                                                    </div>
-
-                                                    <!-- Camera Container -->
-                                                    <div class="camera-container" id="backCameraContainer">
-                                                        <div class="camera-placeholder" id="backCameraPlaceholder">
-                                                            <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                                                            <p>Click to start camera</p>
-                                                        </div>
-                                                        <video id="backCameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
-                                                        <div class="camera-controls" id="backCameraControls" style="display: none;">
-                                                            <button type="button" class="camera-btn capture" id="backCaptureBtn">
-                                                                <i class="fas fa-camera"></i>
-                                                            </button>
-                                                            <button type="button" class="camera-btn" id="backStopBtn">
-                                                                <i class="fas fa-stop"></i>
-                                                            </button>
-                                                        </div>
-                                                    </div>
-
-                                                    <!-- Upload Area (Hidden by default) -->
-                                                    <div class="upload-area" id="backUploadArea" style="display: none;">
-                                                        <input type="file" id="backImageInput" accept="image/*" style="display: none;">
-                                                        <div class="upload-placeholder">
-                                                            <i class="fas fa-upload"></i>
-                                                            <span>Click or drag back image</span>
-                                                        </div>
-                                                        <div class="upload-preview" id="backPreview" style="display: none;">
-                                                            <img id="backPreviewImg" src="" alt="Back preview">
-                                                            <button type="button" class="remove-btn" id="removeBackBtn">×</button>
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        </div>
-
-                                        <div class="upload-info">
-                                            <p><i class="fas fa-lightbulb"></i> Upload both sides for best results. Ensure images are clear and well-lit.</p>
-                                        </div>
-
-                                        <div class="upload-actions">
-                                            <button class="btn-primary" id="processImagesBtn" disabled>
-                                                <i class="fas fa-magic"></i> Extract Information
-                                            </button>
-                                        </div>
+                                    <div class="upload-actions">
+                                        <button class="btn-primary" id="processImagesBtn" disabled>
+                                            <i class="fas fa-magic"></i> Extract Information
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -216,7 +166,7 @@
                                 <div class="loading-spinner">
                                     <div class="spinner"></div>
                                 </div>
-                                <h4>Processing Documents</h4>
+                                <h4>Processing Images</h4>
                                 <p>Extracting customer information...</p>
                                 <div class="progress-bar-container">
                                     <div class="progress-bar">
@@ -269,8 +219,8 @@
                                         </div>
 
                                         <div class="info-item">
-                                            <label><i class="fas fa-folder"></i> Source</label>
-                                            <div class="info-display" id="displayFolder">-</div>
+                                            <label><i class="fas fa-camera"></i> Source</label>
+                                            <div class="info-display" id="displayFolder">Image Upload</div>
                                             <input type="text" id="editFolder" class="info-edit" readonly>
                                         </div>
                                     </div>
@@ -289,7 +239,7 @@
                                             <i class="fas fa-arrow-right"></i> Proceed to Billing
                                         </button>
                                         <button class="btn-secondary" id="backToSearchBtn">
-                                            <i class="fas fa-arrow-left"></i> Back to Search
+                                            <i class="fas fa-arrow-left"></i> Upload New Images
                                         </button>
                                     </div>
                                 </div>
@@ -437,43 +387,6 @@
                                             <h4>Final Amount</h4>
                                         </div>
                                         <input type="number" id="baseAmount" value="178899.90" class="number-input" placeholder="Enter final total amount (including taxes)" step="0.01">
-
-                                        <!-- Real-time Calculator -->
-                                        <!-- <div class="calculator-section" id="calculatorSection">
-                                            <div class="calculator-header">
-                                                <h5><i class="fas fa-calculator"></i> Tax Breakdown (Reverse Calculation)</h5>
-                                            </div>
-                                            <div class="calculation-grid" id="calculationGrid">
-                                                <div class="calc-item">
-                                                    <span class="calc-label">Base Amount (Calculated)</span>
-                                                    <span class="calc-value" id="subtotalAmount">₹0.00</span>
-                                                </div>
-                                                <div class="calc-item" id="cgstRow">
-                                                    <span class="calc-label">CGST (2.5%)</span>
-                                                    <span class="calc-value" id="cgstAmount">₹0.00</span>
-                                                </div>
-                                                <div class="calc-item" id="sgstRow">
-                                                    <span class="calc-label">SGST (2.5%)</span>
-                                                    <span class="calc-value" id="sgstAmount">₹0.00</span>
-                                                </div>
-                                                <div class="calc-item" id="igstRow" style="display: none;">
-                                                    <span class="calc-label">IGST (5%)</span>
-                                                    <span class="calc-value" id="igstAmount">₹0.00</span>
-                                                </div>
-                                                <div class="calc-item" id="roundOffRow" style="display: none;">
-                                                    <span class="calc-label">Round Off</span>
-                                                    <span class="calc-value" id="roundOffAmount">₹0.00</span>
-                                                </div>
-                                                <div class="calc-item total-calc">
-                                                    <span class="calc-label">Final Amount (Entered)</span>
-                                                    <span class="calc-value total" id="totalAmount">₹0.00</span>
-                                                </div>
-                                            </div>
-                                            <div class="amount-in-words" id="amountInWords">
-                                                <span class="words-label">Amount in Words:</span>
-                                                <span class="words-text" id="wordsText">Zero Rupees Only</span>
-                                            </div>
-                                        </div> -->
                                     </div>
                                 </div>
 
@@ -588,56 +501,26 @@
 
     <script src="/static/script.js"></script>
 <script>
-    // ADD ONLY THE NEW FUNCTIONALITY - Compatible with existing script.js
-
-    // Add these variables to track state
-    let currentExtractionMethod = 'folder';
+    // Simplified script for upload-only functionality
     let frontImageFile = null;
     let backImageFile = null;
-
-    // Camera functionality variables
+    let enhancedFrontFile = null;
+    let enhancedBackFile = null;
     let frontStream = null;
     let backStream = null;
     let frontCameraActive = false;
     let backCameraActive = false;
 
-    // Method switching functionality
-    function initializeMethodSwitching() {
-        const folderTab = document.getElementById('folderMethodTab');
-        const uploadTab = document.getElementById('uploadMethodTab');
-
-        if (folderTab) folderTab.addEventListener('click', () => switchMethod('folder'));
-        if (uploadTab) uploadTab.addEventListener('click', () => switchMethod('upload'));
-
+    // Initialize image upload functionality when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
         initializeImageUpload();
-    }
 
-    function switchMethod(method) {
-        currentExtractionMethod = method;
-
-        // Update tabs
-        document.querySelectorAll('.method-tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
-        const activeTab = document.getElementById(method + 'MethodTab');
-        if (activeTab) activeTab.classList.add('active');
-
-        // Update content
-        document.querySelectorAll('.method-content').forEach(content => {
-            content.classList.remove('active');
-        });
-        const activeContent = document.getElementById(method + 'MethodContent');
-        if (activeContent) activeContent.classList.add('active');
-
-        // Reset states
-        if (method === 'folder') {
-            resetImageUpload();
-        } else {
-            if (typeof hideSuggestions === 'function') hideSuggestions();
-            const customerSearch = document.getElementById('customerSearch');
-            if (customerSearch) customerSearch.value = '';
+        // Focus on customer name input
+        const customerNameInput = document.getElementById('uploadCustomerName');
+        if (customerNameInput) {
+            customerNameInput.focus();
         }
-    }
+    });
 
     function initializeImageUpload() {
         const frontInput = document.getElementById('frontImageInput');
@@ -645,7 +528,6 @@
         const frontUploadArea = document.getElementById('frontUploadArea');
         const backUploadArea = document.getElementById('backUploadArea');
         const processBtn = document.getElementById('processImagesBtn');
-        const customerNameInput = document.getElementById('uploadCustomerName');
 
         // Only initialize if elements exist
         if (!frontInput || !backInput) return;
@@ -654,9 +536,23 @@
         frontInput.addEventListener('change', (e) => handleImageUpload(e, 'front'));
         backInput.addEventListener('change', (e) => handleImageUpload(e, 'back'));
 
-        // Upload area click handlers
-        if (frontUploadArea) frontUploadArea.addEventListener('click', () => frontInput.click());
-        if (backUploadArea) backUploadArea.addEventListener('click', () => backInput.click());
+        // Upload area click handlers (only when upload tab is active)
+        if (frontUploadArea) {
+            frontUploadArea.addEventListener('click', () => {
+                const activeTab = document.querySelector('[data-side="front"].upload-method-tab.active');
+                if (activeTab && activeTab.dataset.method === 'upload') {
+                    frontInput.click();
+                }
+            });
+        }
+        if (backUploadArea) {
+            backUploadArea.addEventListener('click', () => {
+                const activeTab = document.querySelector('[data-side="back"].upload-method-tab.active');
+                if (activeTab && activeTab.dataset.method === 'upload') {
+                    backInput.click();
+                }
+            });
+        }
 
         // Drag and drop
         if (frontUploadArea) setupDragAndDrop(frontUploadArea, frontInput, 'front');
@@ -670,9 +566,6 @@
 
         // Process button
         if (processBtn) processBtn.addEventListener('click', processUploadedImages);
-
-        // Customer name validation
-        if (customerNameInput) customerNameInput.addEventListener('input', updateProcessButton);
 
         // Initialize camera functionality
         initializeCameraFunctionality();
@@ -785,55 +678,82 @@
                     </div>
                 `;
             }
-            if (typeof showErrorToast === 'function') {
-                showErrorToast('Camera access failed. Please allow camera permissions.');
-            }
+            console.error('Camera access failed. Please allow camera permissions.');
         }
     }
 
-    function captureImage(side) {
-        const video = document.getElementById(`${side}CameraVideo`);
-        if (!video) return;
+function showEnhancedCameraPreview(side, imageSrc) {
+    const container = document.getElementById(`${side}CameraContainer`);
+    if (!container) return;
+
+    container.innerHTML = `
+        <div style="position: relative; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+            <img src="${imageSrc}" style="max-width: 100%; max-height: 200px; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);" alt="${side} enhanced preview">
+            <div style="position: absolute; top: 8px; left: 8px; background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 600; z-index: 10; box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);">
+                ✨ Enhanced
+            </div>
+            <button type="button" class="remove-btn" onclick="resetCamera('${side}')" style="position: absolute; top: 0.5rem; right: 0.5rem;">×</button>
+        </div>
+    `;
+}
+
+// Updated camera capture function
+async function captureImage(side) {
+    const video = document.getElementById(`${side}CameraVideo`);
+    if (!video) return;
+
+    try {
+        console.log(`📸 Capturing ${side} image from camera...`);
 
         const canvas = document.createElement('canvas');
         const context = canvas.getContext('2d');
-
-        // Set canvas dimensions to video dimensions
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
-
-        // Draw video frame to canvas
         context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-        // Convert to blob
-        canvas.toBlob(blob => {
-            // Create a file from blob
-            const file = new File([blob], `${side}_aadhaar_${Date.now()}.jpg`, { type: 'image/jpeg' });
+        // Convert to blob and then to file
+        const blob = await canvasToBlob(canvas);
+        const file = new File([blob], `${side}_aadhaar_${Date.now()}.jpg`, { type: 'image/jpeg' });
 
-            // Store file reference
-            if (side === 'front') {
-                frontImageFile = file;
-            } else {
-                backImageFile = file;
-            }
+        // Store original
+        if (side === 'front') {
+            frontImageFile = file;
+        } else {
+            backImageFile = file;
+        }
 
-            // Show preview
-            const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
-            showCameraPreview(side, dataUrl);
+        // Show original preview
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        showCameraPreview(side, dataUrl);
 
-            // Stop camera after capture
-            stopCamera(side);
+        // Show processing indicator
+        showImageProcessingStatus(side, 'processing');
 
-            // Update process button
-            updateProcessButton();
+        // Enhance the captured image
+        const enhancedFile = await enhanceAadhaarImage(file, side);
 
-            if (typeof showSuccessToast === 'function') {
-                showSuccessToast(`${side} image captured successfully`);
-            }
+        // Store enhanced file
+        if (side === 'front') {
+            enhancedFrontFile = enhancedFile;
+        } else {
+            enhancedBackFile = enhancedFile;
+        }
 
-        }, 'image/jpeg', 0.8);
+        // Show enhanced preview
+        const enhancedDataUrl = await fileToDataUrl(enhancedFile);
+        showEnhancedCameraPreview(side, enhancedDataUrl);
+
+        stopCamera(side);
+        showImageProcessingStatus(side, 'completed');
+        updateProcessButton();
+
+        console.log(`✅ ${side} camera capture and enhancement completed`);
+
+    } catch (error) {
+        console.error(`❌ Error capturing/enhancing ${side} image:`, error);
+        showImageProcessingStatus(side, 'error');
     }
-
+}
     function showCameraPreview(side, imageSrc) {
         const container = document.getElementById(`${side}CameraContainer`);
         if (!container) return;
@@ -874,48 +794,52 @@
         }
     }
 
-    function resetCamera(side) {
-        // Clear file reference
-        if (side === 'front') {
-            frontImageFile = null;
-        } else {
-            backImageFile = null;
-        }
-
-        // Reset camera container
-        const container = document.getElementById(`${side}CameraContainer`);
-        if (!container) return;
-
-        container.innerHTML = `
-            <div class="camera-placeholder" id="${side}CameraPlaceholder">
-                <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
-                <p>Click to start camera</p>
-            </div>
-            <video id="${side}CameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
-            <div class="camera-controls" id="${side}CameraControls" style="display: none;">
-                <button type="button" class="camera-btn capture" id="${side}CaptureBtn">
-                    <i class="fas fa-camera"></i>
-                </button>
-                <button type="button" class="camera-btn" id="${side}StopBtn">
-                    <i class="fas fa-stop"></i>
-                </button>
-            </div>
-        `;
-
-        // Re-attach event listeners
-        const placeholder = document.getElementById(`${side}CameraPlaceholder`);
-        const captureBtn = document.getElementById(`${side}CaptureBtn`);
-        const stopBtn = document.getElementById(`${side}StopBtn`);
-
-        if (placeholder) placeholder.addEventListener('click', () => startCamera(side));
-        if (captureBtn) captureBtn.addEventListener('click', () => captureImage(side));
-        if (stopBtn) stopBtn.addEventListener('click', () => stopCamera(side));
-
-        updateProcessButton();
-        if (typeof showSuccessToast === 'function') {
-            showSuccessToast(`${side} image removed`);
-        }
+// Enhanced resetCamera function
+function resetCamera(side) {
+    // Clear file references
+    if (side === 'front') {
+        frontImageFile = null;
+        enhancedFrontFile = null;
+    } else {
+        backImageFile = null;
+        enhancedBackFile = null;
     }
+
+    // Reset camera container
+    const container = document.getElementById(`${side}CameraContainer`);
+    if (!container) return;
+
+    container.innerHTML = `
+        <div class="camera-placeholder" id="${side}CameraPlaceholder">
+            <i class="fas fa-camera" style="font-size: 2rem; margin-bottom: 0.5rem;"></i>
+            <p>Click to start camera</p>
+        </div>
+        <video id="${side}CameraVideo" class="camera-video" style="display: none;" autoplay muted></video>
+        <div class="camera-controls" id="${side}CameraControls" style="display: none;">
+            <button type="button" class="camera-btn capture" id="${side}CaptureBtn">
+                <i class="fas fa-camera"></i>
+            </button>
+            <button type="button" class="camera-btn" id="${side}StopBtn">
+                <i class="fas fa-stop"></i>
+            </button>
+        </div>
+    `;
+
+    // Remove enhancement classes
+    container.classList.remove('enhanced', 'processing');
+
+    // Re-attach event listeners
+    const placeholder = document.getElementById(`${side}CameraPlaceholder`);
+    const captureBtn = document.getElementById(`${side}CaptureBtn`);
+    const stopBtn = document.getElementById(`${side}StopBtn`);
+
+    if (placeholder) placeholder.addEventListener('click', () => startCamera(side));
+    if (captureBtn) captureBtn.addEventListener('click', () => captureImage(side));
+    if (stopBtn) stopBtn.addEventListener('click', () => stopCamera(side));
+
+    updateProcessButton();
+    console.log(`🔄 ${side} camera reset completed`);
+}
 
     function setupDragAndDrop(uploadArea, input, type) {
         ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
@@ -938,23 +862,145 @@
             }
         });
     }
+// New UI functions for enhancement feedback
+function showImageProcessingStatus(type, status) {
+    const container = document.getElementById(`${type}UploadArea`) || document.getElementById(`${type}CameraContainer`);
+    if (!container) return;
 
-    function handleImageUpload(e, type) {
-        const file = e.target.files[0];
-        if (!file || !file.type.startsWith('image/')) return;
+    // Create or update status indicator
+    let statusIndicator = container.querySelector('.enhancement-status');
+    if (!statusIndicator) {
+        statusIndicator = document.createElement('div');
+        statusIndicator.className = 'enhancement-status';
+        container.appendChild(statusIndicator);
+    }
 
-        if (type === 'front') frontImageFile = file;
-        else backImageFile = file;
+    const statusConfig = {
+        processing: {
+            icon: 'fas fa-cog fa-spin',
+            text: 'Enhancing image...',
+            color: '#007bff'
+        },
+        completed: {
+            icon: 'fas fa-check-circle',
+            text: 'Enhanced ✨',
+            color: '#28a745'
+        },
+        error: {
+            icon: 'fas fa-exclamation-triangle',
+            text: 'Using original',
+            color: '#ffc107'
+        }
+    };
+        const config = statusConfig[status];
+    statusIndicator.innerHTML = `
+        <i class="${config.icon}" style="color: ${config.color}; margin-right: 5px;"></i>
+        <span style="color: ${config.color}; font-size: 12px; font-weight: 500;">${config.text}</span>
+    `;
 
+    statusIndicator.style.cssText = `
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 4px 8px;
+        border-radius: 12px;
+        font-size: 11px;
+        z-index: 10;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    `;
+}
+
+function showEnhancedImagePreview(type, imageSrc) {
+    const preview = document.getElementById(`${type}Preview`);
+    const placeholder = document.getElementById(`${type}UploadArea`).querySelector('.upload-placeholder');
+    const img = document.getElementById(`${type}PreviewImg`);
+
+    if (img && preview && placeholder) {
+        img.src = imageSrc;
+        placeholder.style.display = 'none';
+        preview.style.display = 'flex';
+
+        // Add enhancement indicator
+        if (!preview.querySelector('.enhancement-badge')) {
+            const badge = document.createElement('div');
+            badge.className = 'enhancement-badge';
+            badge.innerHTML = '✨ Enhanced';
+            badge.style.cssText = `
+                position: absolute;
+                top: 8px;
+                left: 8px;
+                background: linear-gradient(135deg, #28a745, #20c997);
+                color: white;
+                padding: 4px 8px;
+                border-radius: 12px;
+                font-size: 10px;
+                font-weight: 600;
+                z-index: 10;
+                box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
+            `;
+            preview.appendChild(badge);
+        }
+    }
+}
+
+
+// Updated handleImageUpload function
+async function handleImageUpload(e, type) {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+
+    try {
+        console.log(`📸 Starting ${type} image processing...`);
+
+        // Show immediate preview of original
         const reader = new FileReader();
         reader.onload = (e) => showImagePreview(type, e.target.result);
         reader.readAsDataURL(file);
 
-        updateProcessButton();
-        if (typeof showSuccessToast === 'function') {
-            showSuccessToast(`${type === 'front' ? 'Front' : 'Back'} image uploaded`);
+        // Store original file
+        if (type === 'front') {
+            frontImageFile = file;
+        } else {
+            backImageFile = file;
         }
+
+        // Show processing indicator
+        showImageProcessingStatus(type, 'processing');
+
+        // Enhance the image with OpenCV
+        const enhancedFile = await enhanceAadhaarImage(file, type);
+
+        // Store enhanced file
+        if (type === 'front') {
+            enhancedFrontFile = enhancedFile;
+        } else {
+            enhancedBackFile = enhancedFile;
+        }
+
+        // Show enhanced preview
+        const enhancedDataUrl = await fileToDataUrl(enhancedFile);
+        showEnhancedImagePreview(type, enhancedDataUrl);
+
+        // Update UI
+        showImageProcessingStatus(type, 'completed');
+        updateProcessButton();
+
+        console.log(`✅ ${type} image processing completed successfully`);
+
+    } catch (error) {
+        console.error(`❌ Error processing ${type} image:`, error);
+        showImageProcessingStatus(type, 'error');
+
+        // Fallback to original file
+        if (type === 'front') {
+            enhancedFrontFile = file;
+        } else {
+            enhancedBackFile = file;
+        }
+        updateProcessButton();
     }
+}
 
     function showImagePreview(type, imageSrc) {
         const preview = document.getElementById(`${type}Preview`);
@@ -968,136 +1014,346 @@
         }
     }
 
-    function removeImage(type) {
-        const input = document.getElementById(`${type}ImageInput`);
-        const preview = document.getElementById(`${type}Preview`);
-        const placeholder = document.getElementById(`${type}UploadArea`).querySelector('.upload-placeholder');
+// Enhanced removeImage function
+function removeImage(type) {
+    const input = document.getElementById(`${type}ImageInput`);
+    const preview = document.getElementById(`${type}Preview`);
+    const placeholder = document.getElementById(`${type}UploadArea`)?.querySelector('.upload-placeholder');
 
-        if (input) input.value = '';
-        if (type === 'front') frontImageFile = null;
-        else backImageFile = null;
+    if (input) input.value = '';
 
-        if (preview && placeholder) {
-            preview.style.display = 'none';
-            placeholder.style.display = 'flex';
-        }
-
-        updateProcessButton();
-    }
-
-    function updateProcessButton() {
-        const processBtn = document.getElementById('processImagesBtn');
-        const customerName = document.getElementById('uploadCustomerName');
-        if (processBtn && customerName) {
-            processBtn.disabled = !customerName.value.trim() || (!frontImageFile && !backImageFile);
-        }
-    }
-
-    function resetImageUpload() {
+    // Reset both original and enhanced files
+    if (type === 'front') {
         frontImageFile = null;
+        enhancedFrontFile = null;
+    } else {
         backImageFile = null;
-
-        const uploadCustomerName = document.getElementById('uploadCustomerName');
-        const frontInput = document.getElementById('frontImageInput');
-        const backInput = document.getElementById('backImageInput');
-
-        if (uploadCustomerName) uploadCustomerName.value = '';
-        if (frontInput) frontInput.value = '';
-        if (backInput) backInput.value = '';
-
-        // Stop any active cameras
-        stopCamera('front');
-        stopCamera('back');
-
-        // Reset camera containers
-        resetCamera('front');
-        resetCamera('back');
-
-        // Reset upload areas
-        removeImage('front');
-        removeImage('back');
-
-        updateProcessButton();
+        enhancedBackFile = null;
     }
 
-    async function processUploadedImages() {
-        const customerName = document.getElementById('uploadCustomerName').value.trim();
-        const processBtn = document.getElementById('processImagesBtn');
+    if (preview && placeholder) {
+        preview.style.display = 'none';
+        placeholder.style.display = 'flex';
 
-        if (!customerName || (!frontImageFile && !backImageFile)) return;
+        // Remove all enhancement indicators
+        const badge = preview.querySelector('.enhancement-badge');
+        if (badge) badge.remove();
 
-        try {
-            if (processBtn) {
-                processBtn.disabled = true;
-                processBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-            }
+        const status = preview.querySelector('.enhancement-status');
+        if (status) status.remove();
 
-            // Show extraction card
-            if (typeof hideAllCards === 'function') hideAllCards();
-            const extractionCard = document.getElementById('extractionCard');
-            const fetchingContainer = document.getElementById('fetchingContainer');
-            const extractionResults = document.getElementById('extractionResults');
+        preview.classList.remove('enhanced');
+    }
 
-            if (extractionCard) {
-                extractionCard.style.display = 'block';
-                extractionCard.classList.add('active');
-            }
-            if (fetchingContainer) fetchingContainer.style.display = 'block';
-            if (extractionResults) extractionResults.style.display = 'none';
+    // Remove enhancement indicators from upload area
+    removeEnhancementIndicators(type);
 
-            // Start progress
-            startImageProcessingProgress();
+    updateProcessButton();
+    console.log(`🗑️ ${type} image removed`);
+}
 
-            // Prepare form data
-            const formData = new FormData();
-            formData.append('customer_name', customerName);
-            if (frontImageFile) formData.append('front_image', frontImageFile);
-            if (backImageFile) formData.append('back_image', backImageFile);
 
-            const response = await fetch('/upload-aadhaar-images', {
-                method: 'POST',
-                body: formData
+// Enhanced updateProcessButton function
+function updateProcessButton() {
+    const processBtn = document.getElementById('processImagesBtn');
+    if (!processBtn) return;
+
+    // Check for any available files (enhanced or original)
+    const hasEnhancedFiles = enhancedFrontFile || enhancedBackFile;
+    const hasOriginalFiles = frontImageFile || backImageFile;
+    const hasAnyFiles = hasEnhancedFiles || hasOriginalFiles;
+
+    processBtn.disabled = !hasAnyFiles;
+
+    if (hasAnyFiles) {
+        const enhancedCount = (enhancedFrontFile ? 1 : 0) + (enhancedBackFile ? 1 : 0);
+        const originalCount = (frontImageFile ? 1 : 0) + (backImageFile ? 1 : 0);
+
+        if (enhancedCount > 0) {
+            processBtn.innerHTML = `<i class="fas fa-magic"></i> Extract Information (${enhancedCount} Enhanced)`;
+            processBtn.classList.add('enhanced');
+        } else if (originalCount > 0) {
+            processBtn.innerHTML = `<i class="fas fa-magic"></i> Extract Information (${originalCount} Original)`;
+            processBtn.classList.remove('enhanced');
+        }
+    } else {
+        processBtn.innerHTML = '<i class="fas fa-magic"></i> Extract Information';
+        processBtn.classList.remove('enhanced');
+    }
+
+    // Update enhancement status tracking
+    updateEnhancementStatus('front', {
+        enhanced: !!enhancedFrontFile,
+        processing: false
+    });
+    updateEnhancementStatus('back', {
+        enhanced: !!enhancedBackFile,
+        processing: false
+    });
+}
+// Utility function to update enhancement status
+function updateEnhancementStatus(type, status) {
+    if (!window.enhancementStatus) {
+        window.enhancementStatus = {
+            front: { enhanced: false, processing: false },
+            back: { enhanced: false, processing: false }
+        };
+    }
+
+    if (window.enhancementStatus[type]) {
+        window.enhancementStatus[type] = {
+            ...window.enhancementStatus[type],
+            ...status
+        };
+    }
+}
+function resetImageUpload() {
+    // Reset all file references
+    frontImageFile = null;
+    backImageFile = null;
+    enhancedFrontFile = null;
+    enhancedBackFile = null;
+
+    const frontInput = document.getElementById('frontImageInput');
+    const backInput = document.getElementById('backImageInput');
+
+    if (frontInput) frontInput.value = '';
+    if (backInput) backInput.value = '';
+
+    // Stop any active cameras
+    stopCamera('front');
+    stopCamera('back');
+
+    // Reset camera containers
+    resetCamera('front');
+    resetCamera('back');
+
+    // Reset upload areas
+    removeImage('front');
+    removeImage('back');
+
+    // Remove all enhancement indicators and badges
+    removeEnhancementIndicators('front');
+    removeEnhancementIndicators('back');
+
+    // Reset process button to default state
+    const processBtn = document.getElementById('processImagesBtn');
+    if (processBtn) {
+        processBtn.disabled = true;
+        processBtn.innerHTML = '<i class="fas fa-magic"></i> Extract Information';
+        processBtn.classList.remove('enhanced');
+    }
+
+    // Reset enhancement status tracking
+    if (window.enhancementStatus) {
+        window.enhancementStatus.front = { enhanced: false, processing: false };
+        window.enhancementStatus.back = { enhanced: false, processing: false };
+    }
+
+    // Clear any processing overlays
+    clearProcessingOverlays();
+
+    // Reset upload area states
+    resetUploadAreaStates();
+
+    console.log('🔄 Complete image upload reset performed');
+}
+
+// Complete reset for the entire upload system
+function completeSystemReset() {
+    // Reset image upload system
+    resetImageUpload();
+
+    // Reset any active processing
+    const processBtn = document.getElementById('processImagesBtn');
+    if (processBtn) {
+        processBtn.disabled = true;
+        processBtn.innerHTML = '<i class="fas fa-magic"></i> Extract Information';
+        processBtn.classList.remove('enhanced');
+    }
+
+    // Clear extracted data
+    if (window.extractedData) {
+        window.extractedData = null;
+    }
+
+    // Reset card states
+    const cards = document.querySelectorAll('.step-card');
+    cards.forEach(card => {
+        card.style.display = 'none';
+        card.classList.remove('active');
+    });
+
+    // Show first card
+    const searchCard = document.getElementById('searchCard');
+    if (searchCard) {
+        searchCard.style.display = 'block';
+        searchCard.classList.add('active');
+    }
+
+    console.log('🔄 Complete system reset performed');
+    showSuccessToast('🔄 System reset complete - ready for new upload!');
+}
+
+function resetUploadAreaStates() {
+    const uploadAreas = document.querySelectorAll('.upload-area');
+    uploadAreas.forEach(area => {
+        area.classList.remove('enhanced', 'processing');
+    });
+
+    const cameraContainers = document.querySelectorAll('.camera-container');
+    cameraContainers.forEach(container => {
+        container.classList.remove('enhanced', 'processing');
+    });
+}
+function clearProcessingOverlays() {
+    const overlays = document.querySelectorAll('.processing-overlay');
+    overlays.forEach(overlay => overlay.remove());
+}
+function removeEnhancementIndicators(type) {
+    // Remove from upload areas
+    const uploadArea = document.getElementById(`${type}UploadArea`);
+    if (uploadArea) {
+        const statusIndicator = uploadArea.querySelector('.enhancement-status');
+        if (statusIndicator) statusIndicator.remove();
+
+        uploadArea.classList.remove('enhanced');
+    }
+
+    // Remove from camera containers
+    const cameraContainer = document.getElementById(`${type}CameraContainer`);
+    if (cameraContainer) {
+        const statusIndicator = cameraContainer.querySelector('.enhancement-status');
+        if (statusIndicator) statusIndicator.remove();
+
+        cameraContainer.classList.remove('enhanced');
+    }
+
+    // Remove from preview areas
+    const preview = document.getElementById(`${type}Preview`);
+    if (preview) {
+        const badge = preview.querySelector('.enhancement-badge');
+        if (badge) badge.remove();
+
+        const statusIndicator = preview.querySelector('.enhancement-status');
+        if (statusIndicator) statusIndicator.remove();
+
+        preview.classList.remove('enhanced');
+    }
+}
+// Updated processUploadedImages function
+async function processUploadedImages() {
+    const processBtn = document.getElementById('processImagesBtn');
+
+    // Use enhanced files instead of original files
+    if (!enhancedFrontFile && !enhancedBackFile) {
+        console.error('No enhanced images available for processing');
+        return;
+    }
+
+    try {
+        if (processBtn) {
+            processBtn.disabled = true;
+            processBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Extracting Information...';
+        }
+
+        // Show extraction card
+        if (typeof hideAllCards === 'function') {
+            hideAllCards();
+        } else {
+            document.querySelectorAll('.step-card').forEach(card => {
+                card.style.display = 'none';
+                card.classList.remove('active');
             });
+        }
 
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.detail || 'Image processing failed');
-            }
+        const extractionCard = document.getElementById('extractionCard');
+        const fetchingContainer = document.getElementById('fetchingContainer');
+        const extractionResults = document.getElementById('extractionResults');
 
-            const result = await response.json();
+        if (extractionCard) {
+            extractionCard.style.display = 'block';
+            extractionCard.classList.add('active');
+        }
+        if (fetchingContainer) fetchingContainer.style.display = 'block';
+        if (extractionResults) extractionResults.style.display = 'none';
 
-            if (result.success) {
-                // Set extracted data (compatible with existing code)
-                if (typeof extractedData !== 'undefined') {
-                    extractedData = {
-                        name: result.name || customerName,
-                        aadhaar: result.aadhar_number || '',
-                        address: result.address || '',
-                        mobile: result.mobile_number || '',
-                        folder: 'Image Upload',
-                        extraction_method: 'image_upload'
-                    };
-                }
+        startImageProcessingProgress();
 
-                if (typeof showExtractionResults === 'function') {
-                    showExtractionResults();
-                }
+        // Prepare form data with enhanced images
+        const formData = new FormData();
+        formData.append('customer_name', 'Enhanced Processing');
+
+        if (enhancedFrontFile) {
+            console.log('📤 Uploading enhanced front image to LLM...');
+            formData.append('front_image', enhancedFrontFile);
+        }
+
+        if (enhancedBackFile) {
+            console.log('📤 Uploading enhanced back image to LLM...');
+            formData.append('back_image', enhancedBackFile);
+        }
+
+        // Send enhanced images to your existing API
+        const response = await fetch('/upload-aadhaar-images', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Image processing failed');
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Set extracted data globally
+            window.extractedData = {
+                name: result.name || '',
+                aadhaar: result.aadhar_number || '',
+                address: result.address || '',
+                mobile: result.mobile_number || '',
+                folder: 'Enhanced Image Upload',
+                extraction_method: 'enhanced_image_upload'
+            };
+
+            console.log('Enhanced extraction data:', window.extractedData);
+
+            // Show results
+            if (typeof window.showExtractionResults === 'function') {
+                window.showExtractionResults();
             } else {
-                throw new Error(result.error || 'Processing failed');
+                showExtractionResultsFallback();
             }
 
-        } catch (error) {
-            console.error('Image processing error:', error);
-            if (typeof showError === 'function') {
-                showError(`Image processing failed: ${error.message}`);
-            }
-        } finally {
-            if (processBtn) {
-                processBtn.disabled = false;
-                processBtn.innerHTML = '<i class="fas fa-magic"></i> Extract Information';
-            }
+            // Log success with enhancement details
+            console.log('\n' + '='.repeat(60));
+            console.log('ENHANCED IMAGE EXTRACTION SUCCESSFUL');
+            console.log('='.repeat(60));
+            console.log(`Extracted Name: ${result.name}`);
+            console.log(`Aadhaar Number: ${result.aadhar_number}`);
+            console.log(`Address: ${result.address}`);
+            console.log(`Mobile Number: ${result.mobile_number}`);
+            console.log(`Enhancement: Auto-crop + Quality boost applied`);
+            console.log(`Method: Enhanced Image Upload`);
+            console.log('='.repeat(60) + '\n');
+
+        } else {
+            throw new Error(result.error || 'Processing failed');
+        }
+
+    } catch (error) {
+        console.error('Enhanced image processing error:', error);
+        showErrorFallback(`Enhanced image processing failed: ${error.message}`);
+    } finally {
+        if (processBtn) {
+            processBtn.disabled = false;
+            processBtn.innerHTML = '<i class="fas fa-magic"></i> Extract Information';
         }
     }
+}
+
 
     function startImageProcessingProgress() {
         const progressText = document.getElementById('progressText');
@@ -1128,67 +1384,76 @@
         }, 800);
     }
 
-    // Override existing performDataExtraction if it exists
-    document.addEventListener('DOMContentLoaded', function() {
-        // Initialize new functionality
-        initializeMethodSwitching();
+    function showExtractionResultsFallback() {
+        console.log('showExtractionResultsFallback called with:', window.extractedData);
 
-        // Override performDataExtraction to use enhanced endpoint for folder method
-        if (typeof window.performDataExtraction === 'function') {
-            const originalFunction = window.performDataExtraction;
+        const fetchingContainer = document.getElementById('fetchingContainer');
+        const extractionResults = document.getElementById('extractionResults');
 
-            window.performDataExtraction = async function(customer) {
-                try {
-                    let endpoint = '/process';
-                    let requestBody = { folder_path: customer.full_path };
+        if (fetchingContainer) fetchingContainer.style.display = 'none';
+        if (extractionResults) extractionResults.style.display = 'block';
 
-                    // Use enhanced endpoint for folder method
-                    if (currentExtractionMethod === 'folder') {
-                        endpoint = '/process-with-images';
-                        requestBody.use_images_if_pdf_fails = true;
-                    }
+        const customerTitle = document.getElementById('customerTitle');
+        const customerSubtitle = document.getElementById('customerSubtitle');
+        const displayName = document.getElementById('displayName');
+        const displayAadhaar = document.getElementById('displayAadhaar');
+        const displayAddress = document.getElementById('displayAddress');
+        const displayMobile = document.getElementById('displayMobile');
+        const displayFolder = document.getElementById('displayFolder');
 
-                    const result = await fetch(endpoint, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(requestBody)
-                    });
+        const data = window.extractedData;
 
-                    if (!result.ok) {
-                        const error = await result.json();
-                        throw new Error(error.detail || 'Processing failed');
-                    }
+        if (data) {
+            console.log('Fallback: Populating display with data:', data);
 
-                    const data = await result.json();
+            if (customerTitle) customerTitle.textContent = data.name || 'Unknown Customer';
+            if (customerSubtitle) customerSubtitle.textContent = 'Extracted from uploaded images';
+            if (displayName) displayName.textContent = data.name || 'Not found';
+            if (displayAadhaar) displayAadhaar.textContent = data.aadhaar || 'Not found';
+            if (displayAddress) displayAddress.textContent = data.address || 'Not found';
+            if (displayMobile) displayMobile.textContent = data.mobile || 'Not found';
+            if (displayFolder) displayFolder.textContent = 'Image Upload';
 
-                    if (data.success) {
-                        if (typeof extractedData !== 'undefined') {
-                            extractedData = {
-                                name: data.name || customer.person_name,
-                                aadhaar: data.aadhar_number,
-                                address: data.address,
-                                mobile: data.mobile_number,
-                                folder: customer.folder_name,
-                                extraction_method: data.extraction_method || 'folder_method'
-                            };
-                        }
+            // Also populate edit fields
+            const editName = document.getElementById('editName');
+            const editAadhaar = document.getElementById('editAadhaar');
+            const editAddress = document.getElementById('editAddress');
+            const editMobile = document.getElementById('editMobile');
+            const editFolder = document.getElementById('editFolder');
 
-                        if (typeof showExtractionResults === 'function') {
-                            showExtractionResults();
-                        }
-                    } else {
-                        if (typeof showError === 'function') {
-                            showError(`Failed to extract information: ${data.error}`);
-                        }
-                    }
-                } catch (error) {
-                    if (typeof showError === 'function') {
-                        showError(`Processing failed: ${error.message}`);
-                    }
-                }
-            };
+            if (editName) editName.value = data.name || '';
+            if (editAadhaar) editAadhaar.value = data.aadhaar || '';
+            if (editAddress) editAddress.value = data.address || '';
+            if (editMobile) editMobile.value = data.mobile || '';
+            if (editFolder) editFolder.value = 'Image Upload';
+        } else {
+            console.error('Fallback: No extracted data found!');
+
+            if (customerTitle) customerTitle.textContent = 'No Data Extracted';
+            if (customerSubtitle) customerSubtitle.textContent = 'Unable to extract information from images';
+            if (displayName) displayName.textContent = 'Not found';
+            if (displayAadhaar) displayAadhaar.textContent = 'Not found';
+            if (displayAddress) displayAddress.textContent = 'Not found';
+            if (displayMobile) displayMobile.textContent = 'Not found';
+            if (displayFolder) displayFolder.textContent = 'Image Upload';
         }
-    });
+    }
+
+    function showErrorFallback(message) {
+        document.querySelectorAll('.step-card').forEach(card => {
+            card.style.display = 'none';
+            card.classList.remove('active');
+        });
+
+        const errorCard = document.getElementById('errorCard');
+        const errorMessage = document.getElementById('errorMessage');
+
+        if (errorMessage) errorMessage.textContent = message;
+        if (errorCard) {
+            errorCard.style.display = 'block';
+            errorCard.classList.add('active');
+        }
+    }
 
     // Cleanup cameras when page unloads
     window.addEventListener('beforeunload', function() {
@@ -1200,79 +1465,1017 @@
     window.resetCamera = resetCamera;
 </script>
 
-   <!-- Add minimal CSS for new elements only -->
+   <!-- Updated CSS for upload-only interface -->
    <style>
-       /* Method Selection Styles */
-       .method-selection { margin-bottom: 2rem; }
-       .method-tabs { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
-       .method-tab {
-           flex: 1; background: white; border: 2px solid #e5e7eb; border-radius: 0.75rem;
-           padding: 1.5rem; cursor: pointer; transition: all 0.2s; text-align: center;
-           display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
-       }
-       .method-tab:hover { border-color: #6366f1; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transform: translateY(-2px); }
-       .method-tab.active { border-color: #6366f1; background: #eff6ff; }
-       .method-tab i { font-size: 2rem; color: #6366f1; margin-bottom: 0.5rem; }
-       .method-tab span { font-weight: 600; color: #1f2937; font-size: 1rem; }
-       .method-tab small { color: #6b7280; font-size: 0.875rem; }
-
-       .method-content { display: none; }
-       .method-content.active { display: block; }
-
-       .search-info, .upload-info {
-           margin-top: 1rem; padding: 1rem; background: #f9fafb; border-radius: 0.75rem;
-           color: #374151; font-size: 0.875rem;
-       }
-       .search-info i, .upload-info i { color: #6366f1; margin-right: 0.5rem; }
-
        /* Upload Section Styles */
-       .upload-section { display: flex; flex-direction: column; gap: 1.5rem; }
-       .input-group { display: flex; flex-direction: column; gap: 0.5rem; }
-       .input-group label { font-weight: 600; color: #374151; font-size: 0.875rem; }
+       .upload-section {
+           display: flex;
+           flex-direction: column;
+           gap: 1.5rem;
+           max-width: 800px;
+           margin: 0 auto;
+       }
 
-       .upload-container { display: flex; flex-direction: column; gap: 1.5rem; }
-       .upload-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-       .upload-item { display: flex; flex-direction: column; }
-       .upload-label { cursor: pointer; display: flex; flex-direction: column; gap: 0.75rem; }
-       .upload-label > span { font-weight: 600; color: #374151; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem; }
+       .input-group {
+           display: flex;
+           flex-direction: column;
+           gap: 0.5rem;
+       }
+
+       .input-group label {
+           font-weight: 600;
+           color: #374151;
+           font-size: 0.875rem;
+       }
+
+       .upload-container {
+           display: flex;
+           flex-direction: column;
+           gap: 1.5rem;
+       }
+
+       .upload-row {
+           display: grid;
+           grid-template-columns: 1fr 1fr;
+           gap: 1.5rem;
+       }
+
+       .upload-item {
+           display: flex;
+           flex-direction: column;
+       }
+
+       .upload-label {
+           cursor: pointer;
+           display: flex;
+           flex-direction: column;
+           gap: 0.75rem;
+       }
+
+       .upload-label > span {
+           font-weight: 600;
+           color: #374151;
+           font-size: 0.875rem;
+           display: flex;
+           align-items: center;
+           gap: 0.5rem;
+       }
 
        .upload-area {
-           position: relative; border: 2px dashed #d1d5db; border-radius: 0.75rem; background: #f9fafb;
-           transition: all 0.2s; min-height: 150px; display: flex; align-items: center; justify-content: center;
+           position: relative;
+           border: 2px dashed #d1d5db;
+           border-radius: 0.75rem;
+           background: #f9fafb;
+           transition: all 0.2s;
+           min-height: 200px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
        }
-       .upload-area:hover { border-color: #6366f1; background: #eff6ff; }
-       .upload-area.dragover { border-color: #6366f1; background: #dbeafe; border-style: solid; }
+
+       .upload-area:hover {
+           border-color: #6366f1;
+           background: #eff6ff;
+       }
+
+       .upload-area.dragover {
+           border-color: #6366f1;
+           background: #dbeafe;
+           border-style: solid;
+       }
 
        .upload-placeholder {
-           text-align: center; color: #6b7280; display: flex; flex-direction: column;
-           align-items: center; gap: 0.5rem; padding: 1rem;
+           text-align: center;
+           color: #6b7280;
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           gap: 0.5rem;
+           padding: 1rem;
        }
-       .upload-placeholder i { font-size: 1.5rem; color: #6366f1; }
+
+       .upload-placeholder i {
+           font-size: 1.5rem;
+           color: #6366f1;
+       }
 
        .upload-preview {
-           position: relative; width: 100%; height: 100%; display: flex;
-           align-items: center; justify-content: center;
+           position: relative;
+           width: 100%;
+           height: 100%;
+           display: flex;
+           align-items: center;
+           justify-content: center;
        }
-       .upload-preview img { max-width: 100%; max-height: 130px; border-radius: 0.5rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+
+       .upload-preview img {
+           max-width: 100%;
+           max-height: 180px;
+           border-radius: 0.5rem;
+           box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+       }
 
        .remove-btn {
-           position: absolute; top: 0.5rem; right: 0.5rem; background: #ef4444; color: white;
-           border: none; border-radius: 50%; width: 20px; height: 20px; display: flex;
-           align-items: center; justify-content: center; cursor: pointer; font-size: 0.75rem;
+           position: absolute;
+           top: 0.5rem;
+           right: 0.5rem;
+           background: #ef4444;
+           color: white;
+           border: none;
+           border-radius: 50%;
+           width: 24px;
+           height: 24px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           cursor: pointer;
+           font-size: 0.875rem;
+           transition: all 0.2s;
+           font-weight: bold;
+       }
+
+       .remove-btn:hover {
+           background: #dc2626;
+           transform: scale(1.1);
+       }
+
+       .upload-actions {
+           display: flex;
+           justify-content: center;
+           margin-top: 1rem;
+       }
+
+       .upload-actions .btn-primary {
+           min-width: 200px;
+       }
+
+       .upload-info {
+           margin-top: 1rem;
+           padding: 1rem;
+           background: #f0f9ff;
+           border-radius: 0.75rem;
+           color: #0369a1;
+           font-size: 0.875rem;
+           border-left: 4px solid #0ea5e9;
+       }
+
+       .upload-info i {
+           color: #0ea5e9;
+           margin-right: 0.5rem;
+       }
+
+       /* Camera Styles */
+       .camera-container {
+           position: relative;
+           background: #000;
+           border-radius: 0.75rem;
+           overflow: hidden;
+           min-height: 200px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+       }
+
+       .camera-video {
+           width: 100%;
+           height: auto;
+           max-height: 300px;
+           object-fit: cover;
+       }
+
+       .camera-controls {
+           position: absolute;
+           bottom: 1rem;
+           left: 50%;
+           transform: translateX(-50%);
+           display: flex;
+           gap: 1rem;
+           z-index: 10;
+       }
+
+       .camera-btn {
+           background: rgba(255, 255, 255, 0.9);
+           border: none;
+           border-radius: 50%;
+           width: 50px;
+           height: 50px;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           cursor: pointer;
+           transition: all 0.2s;
+           font-size: 1.2rem;
+       }
+
+       .camera-btn:hover {
+           background: white;
+           transform: scale(1.1);
+       }
+
+       .camera-btn.capture {
+           background: #ef4444;
+           color: white;
+       }
+
+       .camera-btn.capture:hover {
+           background: #dc2626;
+       }
+
+       .camera-placeholder {
+           color: #6b7280;
+           text-align: center;
+           padding: 2rem;
+           cursor: pointer;
            transition: all 0.2s;
        }
-       .remove-btn:hover { background: #dc2626; transform: scale(1.1); }
 
-       .upload-actions { display: flex; justify-content: center; margin-top: 1rem; }
-       .upload-actions .btn-primary { min-width: 200px; }
+       .camera-placeholder:hover {
+           color: #4b5563;
+       }
+
+       .camera-error {
+           color: #ef4444;
+           text-align: center;
+           padding: 2rem;
+           background: #fee2e2;
+           border-radius: 0.5rem;
+           margin: 1rem 0;
+       }
+
+       .upload-method-tabs {
+           display: flex;
+           gap: 0.5rem;
+           margin-bottom: 1rem;
+           background: #f3f4f6;
+           border-radius: 0.5rem;
+           padding: 0.25rem;
+       }
+
+       .upload-method-tab {
+           flex: 1;
+           background: transparent;
+           border: none;
+           padding: 0.5rem 1rem;
+           border-radius: 0.375rem;
+           cursor: pointer;
+           transition: all 0.2s;
+           font-size: 0.875rem;
+           font-weight: 500;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           gap: 0.5rem;
+       }
+
+       .upload-method-tab.active {
+           background: white;
+           box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+           color: #374151;
+       }
+
+       .upload-method-tab:not(.active) {
+           color: #6b7280;
+       }
+
+       .upload-method-tab:hover:not(.active) {
+           color: #374151;
+           background: rgba(255, 255, 255, 0.5);
+       }
 
        /* Responsive */
        @media (max-width: 768px) {
-           .method-tabs { flex-direction: column; }
-           .upload-row { grid-template-columns: 1fr; }
-           .method-tab { padding: 1rem; }
-           .method-tab i { font-size: 1.5rem; }
+           .upload-row {
+               grid-template-columns: 1fr;
+           }
+
+           .upload-section {
+               max-width: 100%;
+           }
+
+           .upload-area {
+               min-height: 150px;
+           }
        }
    </style>
+   <script>
+    // Global OpenCV variables
+    let cv = null;
+    let isOpenCvReady = false;
+
+    // OpenCV.js ready callback
+    function onOpenCvReady() {
+        cv = window.cv;
+        isOpenCvReady = true;
+        console.log('✅ OpenCV.js loaded successfully for image enhancement!');
+
+        // Show enhancement status in UI
+        showSuccessToast('🔧 Auto-crop & enhancement ready!');
+    }
+
+    // Enhanced image processing function
+    async function enhanceAadhaarImage(imageFile, side = 'unknown') {
+        if (!isOpenCvReady || !cv) {
+            console.warn('OpenCV not ready, using original image');
+            return imageFile;
+        }
+
+        try {
+            console.log(`🔄 Enhancing ${side} image:`, imageFile.name);
+
+            // Convert file to image element
+            const imageDataUrl = await fileToDataUrl(imageFile);
+            const imgElement = await createImageElement(imageDataUrl);
+
+            // Process with OpenCV
+            const enhancedCanvas = await processImageWithOpenCV(imgElement, side);
+
+            // Convert back to file
+            const enhancedBlob = await canvasToBlob(enhancedCanvas);
+            const enhancedFile = new File([enhancedBlob],
+                `enhanced_${side}_${Date.now()}.png`,
+                { type: 'image/png' }
+            );
+
+            console.log(`✅ ${side} image enhanced successfully`);
+            console.log(`Original size: ${(imageFile.size / 1024).toFixed(1)}KB → Enhanced size: ${(enhancedFile.size / 1024).toFixed(1)}KB`);
+
+            return enhancedFile;
+
+        } catch (error) {
+            console.error(`❌ Enhancement failed for ${side} image:`, error);
+            console.log(`📎 Using original ${side} image as fallback`);
+            return imageFile; // Return original if enhancement fails
+        }
+    }
+
+    // Core OpenCV processing function
+    async function processImageWithOpenCV(imgElement, side) {
+        return new Promise((resolve, reject) => {
+            try {
+                // Load image into OpenCV Mat
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = imgElement.width;
+                canvas.height = imgElement.height;
+                ctx.drawImage(imgElement, 0, 0);
+
+                const img = cv.imread(canvas);
+                console.log(`Processing ${side} - Original size: ${img.cols}x${img.rows}`);
+
+                // Step 1: Convert to grayscale
+                const gray = new cv.Mat();
+                cv.cvtColor(img, gray, cv.COLOR_RGBA2GRAY);
+
+                // Step 2: Enhanced edge detection
+                const processed = new cv.Mat();
+                const blurred = new cv.Mat();
+                const edges = new cv.Mat();
+
+                // Multiple blur and edge detection for better results
+                cv.bilateralFilter(gray, processed, 9, 75, 75);
+                cv.GaussianBlur(processed, blurred, new cv.Size(5, 5), 0);
+
+                // Canny edge detection
+                cv.Canny(blurred, edges, 30, 80, 3);
+
+                // Morphological operations
+                const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
+                cv.morphologyEx(edges, edges, cv.MORPH_CLOSE, kernel);
+                cv.morphologyEx(edges, edges, cv.MORPH_DILATE, kernel);
+
+                // Step 3: Find and score contours
+                const contours = new cv.MatVector();
+                const hierarchy = new cv.Mat();
+                cv.findContours(edges, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
+
+                let bestContour = null;
+                let maxScore = 0;
+                const imageArea = img.rows * img.cols;
+
+                for (let i = 0; i < contours.size(); i++) {
+                    const contour = contours.get(i);
+                    const area = cv.contourArea(contour);
+                    const perimeter = cv.arcLength(contour, true);
+
+                    if (area < imageArea * 0.1) {
+                        contour.delete();
+                        continue;
+                    }
+
+                    const approx = new cv.Mat();
+                    const epsilon = 0.02 * perimeter;
+                    cv.approxPolyDP(contour, approx, epsilon, true);
+
+                    let score = 0;
+                    const areaRatio = area / imageArea;
+
+                    if (areaRatio > 0.2 && areaRatio < 0.9) {
+                        score += areaRatio * 100;
+                    }
+
+                    if (approx.rows === 4) {
+                        score += 50;
+                    } else if (approx.rows >= 4 && approx.rows <= 8) {
+                        score += 30;
+                    }
+
+                    const rect = cv.boundingRect(contour);
+                    const aspectRatio = rect.width / rect.height;
+                    if (aspectRatio > 1.2 && aspectRatio < 2.0) {
+                        score += 30;
+                    }
+
+                    if (score > maxScore) {
+                        maxScore = score;
+                        if (bestContour) bestContour.delete();
+                        bestContour = approx.clone();
+                    }
+
+                    approx.delete();
+                    contour.delete();
+                }
+
+                // Step 4: Crop the image
+                let croppedImg;
+                if (bestContour && maxScore > 50) {
+                    console.log(`${side}: Using contour-based cropping (score: ${maxScore})`);
+                    croppedImg = applyPerspectiveTransformIntegrated(img, bestContour);
+                } else {
+                    console.log(`${side}: Using fallback smart cropping`);
+                    croppedImg = smartCropIntegrated(img, edges);
+                }
+
+                // Step 5: Enhance the cropped image
+                const enhanced = enhanceImageQuality(croppedImg);
+
+                // Step 6: Create output canvas
+                const outputCanvas = document.createElement('canvas');
+                cv.imshow(outputCanvas, enhanced);
+
+                // Cleanup
+                img.delete();
+                gray.delete();
+                processed.delete();
+                blurred.delete();
+                edges.delete();
+                kernel.delete();
+                contours.delete();
+                hierarchy.delete();
+                if (bestContour) bestContour.delete();
+                croppedImg.delete();
+                enhanced.delete();
+
+                console.log(`${side}: Processing completed successfully`);
+                resolve(outputCanvas);
+
+            } catch (error) {
+                console.error(`OpenCV processing error for ${side}:`, error);
+                reject(error);
+            }
+        });
+    }
+
+    // Integrated helper functions
+    function applyPerspectiveTransformIntegrated(img, contour) {
+        try {
+            const points = [];
+            const data = contour.data32S;
+
+            for (let i = 0; i < contour.rows; i++) {
+                points.push([data[i * 2], data[i * 2 + 1]]);
+            }
+
+            const cornerPoints = points.length === 4 ? points : findCornerPointsIntegrated(points);
+            const orderedPoints = orderPointsIntegrated(cornerPoints);
+
+            const widthA = Math.sqrt(Math.pow(orderedPoints[2][0] - orderedPoints[3][0], 2) +
+                                   Math.pow(orderedPoints[2][1] - orderedPoints[3][1], 2));
+            const widthB = Math.sqrt(Math.pow(orderedPoints[1][0] - orderedPoints[0][0], 2) +
+                                   Math.pow(orderedPoints[1][1] - orderedPoints[0][1], 2));
+            const maxWidth = Math.max(widthA, widthB);
+
+            const heightA = Math.sqrt(Math.pow(orderedPoints[1][0] - orderedPoints[2][0], 2) +
+                                    Math.pow(orderedPoints[1][1] - orderedPoints[2][1], 2));
+            const heightB = Math.sqrt(Math.pow(orderedPoints[0][0] - orderedPoints[3][0], 2) +
+                                    Math.pow(orderedPoints[0][1] - orderedPoints[3][1], 2));
+            const maxHeight = Math.max(heightA, heightB);
+
+            const aspectRatio = 1.58;
+            let finalWidth = Math.max(maxWidth, 600);
+            let finalHeight = Math.max(maxHeight, finalWidth / aspectRatio);
+
+            if (finalWidth / finalHeight > aspectRatio) {
+                finalHeight = finalWidth / aspectRatio;
+            } else {
+                finalWidth = finalHeight * aspectRatio;
+            }
+
+            const srcPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                orderedPoints[0][0], orderedPoints[0][1],
+                orderedPoints[1][0], orderedPoints[1][1],
+                orderedPoints[2][0], orderedPoints[2][1],
+                orderedPoints[3][0], orderedPoints[3][1]
+            ]);
+
+            const dstPoints = cv.matFromArray(4, 1, cv.CV_32FC2, [
+                0, 0, finalWidth, 0, finalWidth, finalHeight, 0, finalHeight
+            ]);
+
+            const transformMatrix = cv.getPerspectiveTransform(srcPoints, dstPoints);
+            const result = new cv.Mat();
+            cv.warpPerspective(img, result, transformMatrix, new cv.Size(finalWidth, finalHeight));
+
+            srcPoints.delete();
+            dstPoints.delete();
+            transformMatrix.delete();
+
+            return result;
+
+        } catch (error) {
+            console.error('Perspective transform error:', error);
+            const rect = cv.boundingRect(contour);
+            return img.roi(rect);
+        }
+    }
+
+    function findCornerPointsIntegrated(points) {
+        let topLeft = points[0], topRight = points[0], bottomLeft = points[0], bottomRight = points[0];
+
+        points.forEach(point => {
+            if (point[0] + point[1] < topLeft[0] + topLeft[1]) topLeft = point;
+            if (point[0] - point[1] > topRight[0] - topRight[1]) topRight = point;
+            if (point[0] - point[1] < bottomLeft[0] - bottomLeft[1]) bottomLeft = point;
+            if (point[0] + point[1] > bottomRight[0] + bottomRight[1]) bottomRight = point;
+        });
+
+        return [topLeft, topRight, bottomRight, bottomLeft];
+    }
+
+    function orderPointsIntegrated(points) {
+        const centerX = points.reduce((sum, p) => sum + p[0], 0) / points.length;
+        const centerY = points.reduce((sum, p) => sum + p[1], 0) / points.length;
+
+        const sortedPoints = points.slice().sort((a, b) => {
+            const angleA = Math.atan2(a[1] - centerY, a[0] - centerX);
+            const angleB = Math.atan2(b[1] - centerY, b[0] - centerX);
+            return angleA - angleB;
+        });
+
+        let topLeftIndex = 0;
+        let minDistance = Infinity;
+
+        sortedPoints.forEach((point, index) => {
+            const distance = Math.sqrt(point[0] * point[0] + point[1] * point[1]);
+            if (distance < minDistance) {
+                minDistance = distance;
+                topLeftIndex = index;
+            }
+        });
+
+        const orderedPoints = [];
+        for (let i = 0; i < 4; i++) {
+            orderedPoints.push(sortedPoints[(topLeftIndex + i) % 4]);
+        }
+
+        return orderedPoints;
+    }
+
+    function smartCropIntegrated(img, edges) {
+        const nonZero = new cv.Mat();
+        cv.findNonZero(edges, nonZero);
+
+        if (nonZero.rows === 0) {
+            nonZero.delete();
+            return smartCropBasic(img);
+        }
+
+        const boundingRect = cv.boundingRect(nonZero);
+        const padding = 20;
+        const x = Math.max(0, boundingRect.x - padding);
+        const y = Math.max(0, boundingRect.y - padding);
+        const width = Math.min(img.cols - x, boundingRect.width + 2 * padding);
+        const height = Math.min(img.rows - y, boundingRect.height + 2 * padding);
+
+        const cropRect = new cv.Rect(x, y, width, height);
+        const cropped = img.roi(cropRect);
+
+        nonZero.delete();
+        return cropped;
+    }
+
+    function smartCropBasic(img) {
+        const cropPercent = 0.1;
+        const cropX = Math.floor(img.cols * cropPercent);
+        const cropY = Math.floor(img.rows * cropPercent);
+        const cropWidth = img.cols - (2 * cropX);
+        const cropHeight = img.rows - (2 * cropY);
+
+        const rect = new cv.Rect(cropX, cropY, cropWidth, cropHeight);
+        return img.roi(rect);
+    }
+
+    function enhanceImageQuality(img) {
+        try {
+            const enhanced = new cv.Mat();
+            const lab = new cv.Mat();
+            cv.cvtColor(img, lab, cv.COLOR_BGR2Lab);
+
+            const labChannels = new cv.MatVector();
+            cv.split(lab, labChannels);
+
+            const lChannel = labChannels.get(0);
+            const enhancedL = new cv.Mat();
+
+            const clahe = new cv.CLAHE(2.0, new cv.Size(8, 8));
+            clahe.apply(lChannel, enhancedL);
+
+            labChannels.set(0, enhancedL);
+            cv.merge(labChannels, lab);
+            cv.cvtColor(lab, enhanced, cv.COLOR_Lab2BGR);
+
+            const sharpened = sharpenImageIntegrated(enhanced);
+
+            lab.delete();
+            labChannels.delete();
+            lChannel.delete();
+            enhancedL.delete();
+            enhanced.delete();
+
+            return sharpened;
+        } catch (error) {
+            console.error('Enhancement error:', error);
+            return img.clone();
+        }
+    }
+
+    function sharpenImageIntegrated(img) {
+        const kernel = cv.matFromArray(3, 3, cv.CV_32FC1, [0, -1, 0, -1, 5, -1, 0, -1, 0]);
+        const sharpened = new cv.Mat();
+        cv.filter2D(img, sharpened, cv.CV_8U, kernel);
+        kernel.delete();
+        return sharpened;
+    }
+
+    // Utility functions
+    function fileToDataUrl(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
+    function createImageElement(dataUrl) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = dataUrl;
+        });
+    }
+
+    function canvasToBlob(canvas) {
+        return new Promise((resolve) => {
+            canvas.toBlob(resolve, 'image/png', 0.95);
+        });
+    }
+
+    // Enhanced progress indicator
+    function showEnhancementProgress(side, step, total) {
+        const percentage = Math.round((step / total) * 100);
+        console.log(`🔄 ${side} enhancement: ${step}/${total} (${percentage}%)`);
+
+        // You can add visual progress indicator here
+        const processBtn = document.getElementById('processImagesBtn');
+        if (processBtn) {
+            processBtn.innerHTML = `<i class="fas fa-magic"></i> Enhancing ${side}... ${percentage}%`;
+        }
+    }
+// Enhanced success display with folder information
+function showExtractionResultsWithFolderInfo() {
+    console.log('showExtractionResults called with folder info:', window.extractedData);
+
+    const fetchingContainer = document.getElementById('fetchingContainer');
+    const extractionResults = document.getElementById('extractionResults');
+
+    if (fetchingContainer) fetchingContainer.style.display = 'none';
+    if (extractionResults) extractionResults.style.display = 'block';
+
+    const customerTitle = document.getElementById('customerTitle');
+    const customerSubtitle = document.getElementById('customerSubtitle');
+    const displayName = document.getElementById('displayName');
+    const displayAadhaar = document.getElementById('displayAadhaar');
+    const displayAddress = document.getElementById('displayAddress');
+    const displayMobile = document.getElementById('displayMobile');
+    const displayFolder = document.getElementById('displayFolder');
+
+    const data = window.extractedData;
+
+    if (data) {
+        console.log('Populating display with data and folder info:', data);
+
+        if (customerTitle) customerTitle.textContent = data.name || 'Unknown Customer';
+
+        // Enhanced subtitle with folder information
+        let subtitle = 'Extracted from uploaded images';
+        if (data.folder && data.folder !== 'Image Upload') {
+            subtitle += ' • Saved to user folder';
+        }
+        if (customerSubtitle) customerSubtitle.textContent = subtitle;
+
+        if (displayName) displayName.textContent = data.name || 'Not found';
+        if (displayAadhaar) displayAadhaar.textContent = data.aadhaar || 'Not found';
+        if (displayAddress) displayAddress.textContent = data.address || 'Not found';
+        if (displayMobile) displayMobile.textContent = data.mobile || 'Not found';
+
+        // Enhanced folder display
+        let folderText = data.folder || 'Image Upload';
+        if (data.folder && data.folder !== 'Image Upload') {
+            folderText = `📁 ${data.folder.split('\\').pop() || data.folder.split('/').pop()}`;
+        }
+        if (displayFolder) displayFolder.textContent = folderText;
+
+        // Add folder status indicator
+        addFolderStatusIndicator(data);
+
+        // Also populate edit fields
+        const editName = document.getElementById('editName');
+        const editAadhaar = document.getElementById('editAadhaar');
+        const editAddress = document.getElementById('editAddress');
+        const editMobile = document.getElementById('editMobile');
+        const editFolder = document.getElementById('editFolder');
+
+        if (editName) editName.value = data.name || '';
+        if (editAadhaar) editAadhaar.value = data.aadhaar || '';
+        if (editAddress) editAddress.value = data.address || '';
+        if (editMobile) editMobile.value = data.mobile || '';
+        if (editFolder) editFolder.value = folderText;
+
+        // Update global extractedData for other functions
+        extractedData = data;
+
+        // Enhanced console logging
+        console.log('\n' + '='.repeat(60));
+        console.log('ENHANCED IMAGE EXTRACTION WITH FOLDER SAVE');
+        console.log('='.repeat(60));
+        console.log(`Customer: ${data.name}`);
+        console.log(`Aadhaar: ${data.aadhaar}`);
+        console.log(`Mobile: ${data.mobile}`);
+        console.log(`Address: ${data.address}`);
+        console.log(`Folder: ${data.folder}`);
+        console.log(`Method: Enhanced Image Upload with Auto-Save`);
+        console.log('='.repeat(60) + '\n');
+    } else {
+        console.error('No extracted data found!');
+        // Show fallback message
+        if (customerTitle) customerTitle.textContent = 'No Data Extracted';
+        if (customerSubtitle) customerSubtitle.textContent = 'Unable to extract information from images';
+        if (displayName) displayName.textContent = 'Not found';
+        if (displayAadhaar) displayAadhaar.textContent = 'Not found';
+        if (displayAddress) displayAddress.textContent = 'Not found';
+        if (displayMobile) displayMobile.textContent = 'Not found';
+        if (displayFolder) displayFolder.textContent = 'Image Upload';
+    }
+}
+
+function addFolderStatusIndicator(data) {
+    // Add folder status indicator to the customer profile
+    const profileHeader = document.querySelector('.profile-header');
+    if (!profileHeader) return;
+
+    // Remove existing indicator
+    const existingIndicator = profileHeader.querySelector('.folder-status-indicator');
+    if (existingIndicator) existingIndicator.remove();
+
+    // Create new indicator
+    const indicator = document.createElement('div');
+    indicator.className = 'folder-status-indicator';
+
+    if (data.folder && data.folder !== 'Image Upload') {
+        indicator.innerHTML = `
+            <div class="folder-status saved">
+                <i class="fas fa-folder-open"></i>
+                <span>Saved to Folder</span>
+            </div>
+        `;
+        indicator.style.cssText = `
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            border: 1px solid #28a745;
+            color: #155724;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        `;
+
+        // Show success toast
+        showSuccessToast('📁 Images saved to existing user folder!');
+    } else {
+        indicator.innerHTML = `
+            <div class="folder-status upload-only">
+                <i class="fas fa-upload"></i>
+                <span>Upload Only</span>
+            </div>
+        `;
+        indicator.style.cssText = `
+            background: linear-gradient(135deg, #e2e3e5, #d6d8db);
+            border: 1px solid #6c757d;
+            color: #495057;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        `;
+    }
+
+    profileHeader.appendChild(indicator);
+}
+
+// Enhanced processUploadedImages with folder save feedback
+async function processUploadedImagesWithFolderSave() {
+    const processBtn = document.getElementById('processImagesBtn');
+
+    // Use enhanced files instead of original files
+    if (!enhancedFrontFile && !enhancedBackFile) {
+        console.error('No enhanced images available for processing');
+        return;
+    }
+
+    try {
+        if (processBtn) {
+            processBtn.disabled = true;
+            processBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing & Saving...';
+        }
+
+        // Show extraction card
+        if (typeof hideAllCards === 'function') {
+            hideAllCards();
+        } else {
+            document.querySelectorAll('.step-card').forEach(card => {
+                card.style.display = 'none';
+                card.classList.remove('active');
+            });
+        }
+
+        const extractionCard = document.getElementById('extractionCard');
+        const fetchingContainer = document.getElementById('fetchingContainer');
+        const extractionResults = document.getElementById('extractionResults');
+
+        if (extractionCard) {
+            extractionCard.style.display = 'block';
+            extractionCard.classList.add('active');
+        }
+        if (fetchingContainer) fetchingContainer.style.display = 'block';
+        if (extractionResults) extractionResults.style.display = 'none';
+
+        // Enhanced progress with folder save steps
+        startEnhancedImageProcessingProgress();
+
+        // Prepare form data with enhanced images
+        const formData = new FormData();
+        formData.append('customer_name', 'Enhanced Processing with Folder Save');
+
+        if (enhancedFrontFile) {
+            console.log('📤 Uploading enhanced front image for extraction & save...');
+            formData.append('front_image', enhancedFrontFile);
+        }
+
+        if (enhancedBackFile) {
+            console.log('📤 Uploading enhanced back image for extraction & save...');
+            formData.append('back_image', enhancedBackFile);
+        }
+
+        // Send enhanced images to your updated API
+        const response = await fetch('/upload-aadhaar-images', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.detail || 'Image processing failed');
+        }
+
+        const result = await response.json();
+
+        if (result.success) {
+            // Set extracted data globally with folder information
+            window.extractedData = {
+                name: result.name || '',
+                aadhaar: result.aadhar_number || '',
+                address: result.address || '',
+                mobile: result.mobile_number || '',
+                folder: result.folder_path || 'Image Upload',
+                extraction_method: 'enhanced_image_upload_with_folder_save',
+                images_saved: result.images_saved || null
+            };
+
+            console.log('Enhanced extraction data with folder save:', window.extractedData);
+
+            // Show results with folder information
+            showExtractionResultsWithFolderInfo();
+
+            // Enhanced success logging
+            console.log('\n' + '='.repeat(60));
+            console.log('ENHANCED EXTRACTION WITH FOLDER SAVE SUCCESSFUL');
+            console.log('='.repeat(60));
+            console.log(`Extracted Name: ${result.name}`);
+            console.log(`Aadhaar Number: ${result.aadhar_number}`);
+            console.log(`Address: ${result.address}`);
+            console.log(`Mobile Number: ${result.mobile_number}`);
+            console.log(`Enhancement: Auto-crop + Quality boost applied`);
+            console.log(`Folder: ${result.folder_path || 'No folder save'}`);
+            console.log(`Images Saved: ${JSON.stringify(result.images_saved || {})}`);
+            console.log(`Method: Enhanced Image Upload with Auto-Save`);
+            console.log('='.repeat(60) + '\n');
+
+        } else {
+            throw new Error(result.error || 'Processing failed');
+        }
+
+    } catch (error) {
+        console.error('Enhanced image processing with folder save error:', error);
+        showErrorFallback(`Enhanced processing failed: ${error.message}`);
+    } finally {
+        if (processBtn) {
+            processBtn.disabled = false;
+            processBtn.innerHTML = '<i class="fas fa-magic"></i> Extract Information';
+        }
+    }
+}
+
+function startEnhancedImageProcessingProgress() {
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+
+    if (!progressText || !progressFill) return;
+
+    const steps = [
+        'Uploading enhanced images...',
+        'Analyzing front image...',
+        'Analyzing back image...',
+        'Extracting Aadhaar number...',
+        'Extracting address...',
+        'Extracting mobile number...',
+        'Searching for existing folder...',
+        'Saving images to folder...',
+        'Finalizing...'
+    ];
+
+    let currentStep = 0;
+    const interval = setInterval(() => {
+        if (currentStep < steps.length) {
+            progressText.textContent = steps[currentStep];
+            progressFill.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+            currentStep++;
+        } else {
+            clearInterval(interval);
+        }
+    }, 800);
+}
+
+// Function to check if user folder exists (optional)
+async function checkUserFolder(name) {
+    try {
+        const response = await fetch(`/check-user-folder/${encodeURIComponent(name)}`);
+        const result = await response.json();
+
+        console.log('Folder check result:', result);
+        return result;
+    } catch (error) {
+        console.error('Error checking user folder:', error);
+        return { folder_exists: false, error: error.message };
+    }
+}
+
+    // Initialize enhancement status on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize enhancement status tracking
+    window.enhancementStatus = {
+        front: { enhanced: false, processing: false },
+        back: { enhanced: false, processing: false }
+    };
+
+    console.log('📸 Enhanced image upload system initialized');
+});
+document.addEventListener('DOMContentLoaded', function() {
+    // Replace existing process button event listener
+    const processBtn = document.getElementById('processImagesBtn');
+    if (processBtn) {
+        // Remove existing listener and add new one
+        processBtn.removeEventListener('click', processUploadedImages);
+        processBtn.addEventListener('click', processUploadedImagesWithFolderSave);
+    }
+
+    console.log('📁 Enhanced folder save system initialized');
+});
+</script>
 </body>
 </html>
